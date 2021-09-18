@@ -1,8 +1,9 @@
 package model;
 
+import java.util.Objects;
 import java.util.Set;
 
-public class User implements Entity<Long> {
+public class User implements Entity<Long>, Cloneable {
     private Long id;
     private String username;
     private String password;
@@ -15,6 +16,15 @@ public class User implements Entity<Long> {
     }
 
     public User(String username, String password, String firstName, String lastName, String email) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
+    public User(Long id, String username, String password, String firstName, String lastName, String email) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -90,5 +100,27 @@ public class User implements Entity<Long> {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.id) && username.equals(user.username) && password.equals(user.password) && firstName.equals(user.firstName) && lastName.equals(user.lastName) && email.equals(user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, firstName, lastName, email);
+    }
+
+    @Override
+    public User clone() {
+        try {
+            return (User) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
