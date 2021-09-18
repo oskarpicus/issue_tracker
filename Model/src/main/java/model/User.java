@@ -14,6 +14,14 @@ public class User implements Entity<Long> {
     public User() {
     }
 
+    public User(String username, String password, String firstName, String lastName, String email) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
     @Override
     public Long getId() {
         return id;
@@ -70,5 +78,17 @@ public class User implements Entity<Long> {
 
     public void setInvolvements(Set<Involvement> involvements) {
         this.involvements = involvements;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
