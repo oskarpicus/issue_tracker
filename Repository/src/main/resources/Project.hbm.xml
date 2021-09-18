@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="model.Project" lazy="false" table="projects">
+        <id name="id" type="java.lang.Long" column="id">
+            <generator class="increment"/>
+        </id>
+        <property name="title" column="title" type="java.lang.String"/>
+        <property name="description" column="description" type="java.lang.String"/>
+        <property name="createdAt" column="created_at"/>
+        <many-to-one name="involvements" column="project_id" lazy="false" class="model.Involvement" cascade="all"/>
+    </class>
+</hibernate-mapping>
