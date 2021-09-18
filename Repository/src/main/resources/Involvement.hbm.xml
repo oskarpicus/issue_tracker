@@ -13,7 +13,7 @@
                 <param name="useNamed">true</param>
             </type>
         </property>
-        <many-to-one name="user" column="user_id" class="model.User" cascade="all" lazy="false"/>
-        <many-to-one name="project" column="project_id" class="model.Project" cascade="all" lazy="false"/>
+        <many-to-one name="user" column="user_id" class="model.User" lazy="false"/>
+        <many-to-one name="project" column="project_id" class="model.Project" lazy="false"/>
     </class>
 </hibernate-mapping>

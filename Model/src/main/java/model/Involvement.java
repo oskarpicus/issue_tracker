@@ -1,13 +1,25 @@
 package model;
 
-public class Involvement implements Entity<Long> {
+import java.util.Objects;
+
+public class Involvement implements Entity<Long>, Cloneable {
     private Long id;
     private Role role;
     private User user;
     private Project project;
 
+    public Involvement() {
+    }
+
     public Involvement(Role role) {
         this.role = role;
+    }
+
+    public Involvement(Long id, Role role, User user, Project project) {
+        this.id = id;
+        this.role = role;
+        this.user = user;
+        this.project = project;
     }
 
     @Override
@@ -42,5 +54,35 @@ public class Involvement implements Entity<Long> {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Involvement that = (Involvement) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, role, user, project);
+    }
+
+    @Override
+    public String toString() {
+        return "Involvement{" +
+                "id=" + id +
+                ", role=" + role +
+                '}';
+    }
+
+    @Override
+    public Involvement clone() {
+        try {
+            return (Involvement) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
