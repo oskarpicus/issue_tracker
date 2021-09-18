@@ -1,9 +1,10 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
-public class Project implements Entity<Long> {
+public class Project implements Entity<Long>, Cloneable {
     private Long id;
     private String title;
     private String description;
@@ -14,6 +15,13 @@ public class Project implements Entity<Long> {
     }
 
     public Project(String title, String description, LocalDateTime createdAt) {
+        this.title = title;
+        this.description = description;
+        this.createdAt = createdAt;
+    }
+
+    public Project(Long id, String title, String description, LocalDateTime createdAt) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.createdAt = createdAt;
@@ -69,5 +77,27 @@ public class Project implements Entity<Long> {
                 ", description='" + description + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return Objects.equals(id, project.id) && Objects.equals(title, project.title) && Objects.equals(description, project.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, createdAt);
+    }
+
+    @Override
+    public Project clone() {
+        try {
+            return (Project) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
