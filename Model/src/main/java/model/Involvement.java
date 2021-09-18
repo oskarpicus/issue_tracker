@@ -6,6 +6,10 @@ public class Involvement implements Entity<Long> {
     private User user;
     private Project project;
 
+    public Involvement(Role role) {
+        this.role = role;
+    }
+
     @Override
     public Long getId() {
         return id;
