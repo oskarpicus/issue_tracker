@@ -13,6 +13,12 @@ public class Project implements Entity<Long> {
     public Project() {
     }
 
+    public Project(String title, String description, LocalDateTime createdAt) {
+        this.title = title;
+        this.description = description;
+        this.createdAt = createdAt;
+    }
+
     @Override
     public Long getId() {
         return id;
@@ -53,5 +59,15 @@ public class Project implements Entity<Long> {
 
     public void setInvolvements(Set<Involvement> involvements) {
         this.involvements = involvements;
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }
