@@ -6,6 +6,11 @@ import org.hibernate.query.Query;
 import repository.UserRepository;
 import validator.Validator;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 public class UserHbRepository extends AbstractHbRepository<Long, User> implements UserRepository {
     protected UserHbRepository(Validator<Long, User> validator) {
         super(validator);
@@ -20,5 +25,23 @@ public class UserHbRepository extends AbstractHbRepository<Long, User> implement
     @Override
     protected Query<User> getFindAllQuery(Session session) {
         return session.createQuery("from User", User.class);
+    }
+
+    @Override
+    public Optional<User> findUserByUsername(String username) {
+        if (username == null) {
+            throw new IllegalArgumentException();
+        }
+        try (Session session = sessionFactory.openSession()) {
+            Query<User> query = session
+                    .createQuery("from User where username=:username", User.class)
+                    .setParameter("username", username);
+            List<User> users = StreamSupport.stream(super.filter(session, query).spliterator(), false)
+                    .collect(Collectors.toList());
+            return users.stream().findAny();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return Optional.empty();
+        }
     }
 }
