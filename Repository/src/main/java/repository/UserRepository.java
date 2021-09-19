@@ -13,4 +13,12 @@ public interface UserRepository extends Repository<Long, User> {
      * @throws IllegalArgumentException if username is null
      */
     Optional<User> findUserByUsername(String username);
+
+    /**
+     * Method for obtaining the User with a specific email
+     * @param email: String, the desired email
+     * @return an {@code Optional} with the user with the given email, null if it does not exist
+     * @throws IllegalArgumentException if email is null
+     */
+    Optional<User> findUserByEmail(String email);
 }

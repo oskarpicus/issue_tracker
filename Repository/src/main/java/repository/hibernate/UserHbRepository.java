@@ -44,4 +44,22 @@ public class UserHbRepository extends AbstractHbRepository<Long, User> implement
             return Optional.empty();
         }
     }
+
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException();
+        }
+        try (Session session = sessionFactory.openSession()) {
+            Query<User> query = session
+                    .createQuery("from User where email=:email", User.class)
+                    .setParameter("email", email);
+            List<User> users = StreamSupport.stream(super.filter(session, query).spliterator(), false)
+                    .collect(Collectors.toList());
+            return users.stream().findAny();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return Optional.empty();
+        }
+    }
 }
