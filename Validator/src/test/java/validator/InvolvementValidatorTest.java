@@ -1,7 +1,9 @@
 package validator;
 
 import model.Involvement;
+import model.Project;
 import model.Role;
+import model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -31,7 +33,9 @@ class InvolvementValidatorTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Valid involvement", new Involvement(Role.BACK_END_DEVELOPER), false, ""),
+                new TestCase("Valid involvement", new Involvement(Role.BACK_END_DEVELOPER, new User(), new Project()), false, ""),
+                new TestCase("Invalid involvement all fields", new Involvement(), true, ErrorMessages.INVOLVEMENT_INVALID_ROLE + ErrorMessages.INVOLVEMENT_INVALID_USER + ErrorMessages.INVOLVEMENT_INVALID_PROJECT),
+                new TestCase("Invalid involvement user", new Involvement(Role.UX_DESIGNER, null, new Project()), true, ErrorMessages.INVOLVEMENT_INVALID_USER),
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);

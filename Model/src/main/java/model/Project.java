@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -9,7 +10,7 @@ public class Project implements Entity<Long>, Cloneable {
     private String title;
     private String description;
     private LocalDateTime createdAt;
-    private Set<Involvement> involvements;
+    private Set<Involvement> involvements = new HashSet<>();
 
     public Project() {
     }

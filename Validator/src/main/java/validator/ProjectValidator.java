@@ -21,7 +21,7 @@ public class ProjectValidator implements Validator<Long, Project> {
      *         false, otherwise
      */
     private boolean validateTitle(Project project) {
-        return !project.getTitle().equals("");
+        return project.getTitle() != null && !project.getTitle().equals("");
     }
 
     /**
@@ -31,6 +31,6 @@ public class ProjectValidator implements Validator<Long, Project> {
      *         false, otherwise
      */
     private boolean validateDescription(Project project) {
-        return !project.getDescription().equals("");
+        return project.getDescription() != null && !project.getDescription().equals("");
     }
 }

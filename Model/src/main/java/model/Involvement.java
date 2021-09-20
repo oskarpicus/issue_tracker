@@ -22,6 +22,12 @@ public class Involvement implements Entity<Long>, Cloneable {
         this.project = project;
     }
 
+    public Involvement(Role role, User user, Project project) {
+        this.role = role;
+        this.user = user;
+        this.project = project;
+    }
+
     @Override
     public Long getId() {
         return id;
