@@ -2,4 +2,5 @@ rootProject.name = 'issue_tracker'
 include 'Model'
 include 'Repository'
 include 'Validator'
+include 'Services'
 
