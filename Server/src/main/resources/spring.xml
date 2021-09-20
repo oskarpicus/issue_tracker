@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="userValidator" class="validator.UserValidator"/>
+    <bean id="projectValidator" class="validator.ProjectValidator"/>
+    <bean id="involvementValidator" class="validator.InvolvementValidator"/>
+
+    <bean class="repository.hibernate.UserHbRepository" id="userHbRepository">
+        <constructor-arg ref="userValidator"/>
+    </bean>
+
+    <bean class="service.MasterService" id="service">
+        <constructor-arg ref="userHbRepository"/>
+    </bean>
+</beans>
