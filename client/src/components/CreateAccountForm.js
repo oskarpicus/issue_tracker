@@ -3,6 +3,7 @@ import SubmitButton from "./SubmitButton";
 import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
 import websiteTitle from "./const";
 import {useState} from "react";
+import {Snackbar} from "@mui/material";
 
 const CreateAccountForm = () => {
     let [formValues, setFormValues] = useState({
@@ -15,13 +16,11 @@ const CreateAccountForm = () => {
     });
 
     let onInputValueChanged = (name, value) => {
-        let values = {...formValues};
-        values[name] = value;
-        setFormValues(values)
+        setFormValues((prev) => ({...prev, [name]: value}))
     };
 
     let onSubmit = (e) => {
-        console.log(`Form Values: ${formValues}`);
+        console.log(`${JSON.stringify(formValues)}`)
         e.preventDefault()
         if (formValues["password"] !== formValues["confirmedPassword"]) {
             // todo handle error when passwords do  not match
@@ -48,16 +47,17 @@ const CreateAccountForm = () => {
     }
 
     return (
-        <div>
+        <div id={"create-account-page"}>
+            <Snackbar/>
             <div className={"spaced"}>
-                <div>
-                    <BugReportOutlinedIcon/>
+                <div className={"website-title"}>
+                    <BugReportOutlinedIcon fontSize={"large"}/>
                     <span>{websiteTitle}</span>
                 </div>
                 <p>
-                    <span>Already have an account? </span>
+                    <span id={"already-have-account"}>Already have an account? </span>
                     {/* todo replace with the actual page URI */}
-                    <a href={"https://www.google.com"}>Sign in</a>
+                    <a id={"sign-in"} href={"https://www.google.com"}>Sign in</a>
                 </p>
             </div>
             <div>
