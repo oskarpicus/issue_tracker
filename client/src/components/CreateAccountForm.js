@@ -5,14 +5,17 @@ import {websiteTitle, serverErrorMessage, createdAccountMessage} from "./const";
 import {useState} from "react";
 
 const CreateAccountForm = ({setAlert}) => {
-    let [formValues, setFormValues] = useState({
+    let initialValues = {
         firstName: "",
         lastName: "",
         username: "",
         email: "",
         password: "",
         confirmedPassword: ""
-    });
+    }
+    let [formValues, setFormValues] = useState({...initialValues});
+
+    const labels = ["First Name", "Last Name", "Username", "Email", "Password", "Confirmed Password"];
 
     let onInputValueChanged = (name, value) => {
         setFormValues((prev) => ({...prev, [name]: value}))
@@ -39,6 +42,7 @@ const CreateAccountForm = ({setAlert}) => {
                     severity: "success",
                     message: createdAccountMessage
                 })
+                setFormValues({...initialValues});
             } else if (request.readyState === 4) {
                 setAlert({
                     state: true,
@@ -69,13 +73,17 @@ const CreateAccountForm = ({setAlert}) => {
             <div>
                 <p className={"action-title"}>Create an account</p>
                 <form method={"POST"} onSubmit={onSubmit}>
-                    <LabeledField text={"First name"} name={"firstName"} onChange={onInputValueChanged}/>
-                    <LabeledField text={"Last name"} name={"lastName"} onChange={onInputValueChanged}/>
-                    <LabeledField text={"Username"} name={"username"} onChange={onInputValueChanged}/>
-                    <LabeledField text={"Email"} name={"email"} onChange={onInputValueChanged}/>
-                    <LabeledField text={"Password"} name={"password"} isHidden={true} onChange={onInputValueChanged}/>
-                    <LabeledField text={"Confirm password"} name={"confirmedPassword"} isHidden={true}
-                                  onChange={onInputValueChanged}/>
+                    {
+                        Object.keys(formValues).map((key, index) => (
+                            <LabeledField
+                                key={key}
+                                text={labels[index]}
+                                name={key}
+                                onChange={onInputValueChanged}
+                                type={new RegExp("password", "i").exec(key) ? "password" : "text"}
+                            />
+                        ))
+                    }
                     <SubmitButton text={"Create Your Account"}/>
                 </form>
             </div>

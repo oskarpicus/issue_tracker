@@ -1,6 +1,12 @@
-const SubmitButton = (properties) => {
+/**
+ * Component for creating a submit button
+ * @param text: String, the text that the button will display
+ * @returns {JSX.Element}
+ * @constructor
+ */
+const SubmitButton = ({text}) => {
     return (
-        <input type="submit" value={properties.text} className={"submit-button"}/>
+        <input type="submit" value={text} className={"submit-button"}/>
     )
 };
 

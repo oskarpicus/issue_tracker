@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import service.Service;
 
 @RestController
+@CrossOrigin
 @RequestMapping(value = "users")
 public class UserController {
     private final Service service;
