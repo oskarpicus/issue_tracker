@@ -28,4 +28,9 @@ public class MasterService implements Service {
         Optional<User> result = userRepository.save(user);
         return result.isEmpty() ? user : null;
     }
+
+    @Override
+    public User login(String username, String password) {
+        return userRepository.findUserByUsernamePassword(username, password).orElse(null);
+    }
 }

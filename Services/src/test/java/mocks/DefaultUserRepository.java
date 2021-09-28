@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 public class DefaultUserRepository implements UserRepository {
     private final User[] defaultUsers = new User[]{
-            new User(1L, Constants.USERNAME, "anne_p", "Anne", "Victoria", Constants.EMAIL),
+            Constants.USER,
             new User(2L, "john", "johnOl", "John", "Smith", "john_smith@yahoo.com"),
     };
 
