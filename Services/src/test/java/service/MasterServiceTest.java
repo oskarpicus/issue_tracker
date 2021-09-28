@@ -1,6 +1,7 @@
 package service;
 
 import exceptions.EmailTakenException;
+import exceptions.UserNotFoundException;
 import exceptions.UsernameTakenException;
 import mocks.Constants;
 import mocks.DefaultUserRepository;
@@ -55,7 +56,7 @@ class MasterServiceTest {
         var testCases = new TestCase[] {
                 new TestCase("Login invalid data", new MasterService(new EmptyUserRepository()), null, null, null, IllegalArgumentException.class),
                 new TestCase("Login successful", new MasterService(new DefaultUserRepository()), Constants.USERNAME, Constants.PASSWORD, Constants.USER, null),
-                new TestCase("Login unsuccessful", new MasterService(new EmptyUserRepository()), Constants.USERNAME, Constants.PASSWORD, null, null)
+                new TestCase("Login unsuccessful", new MasterService(new EmptyUserRepository()), Constants.USERNAME, Constants.PASSWORD, null, UserNotFoundException.class)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);

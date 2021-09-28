@@ -2,6 +2,7 @@ package service;
 
 import exceptions.EmailTakenException;
 import exceptions.UsernameTakenException;
+import exceptions.UserNotFoundException;
 import model.User;
 
 public interface Service {
@@ -19,7 +20,8 @@ public interface Service {
      * Method for logging into the application based on the username and password
      * @param username: String, the desired username
      * @param password: String, the desired password
-     * @return the user, if there is a user with the specified username and password, null, otherwise
+     * @return the user, if there is a user with the specified username and password
+     * @throws UserNotFoundException, if there is no user
      */
-    User login(String username, String password);
+    User login(String username, String password) throws UserNotFoundException;
 }
