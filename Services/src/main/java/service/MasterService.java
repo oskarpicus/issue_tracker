@@ -1,6 +1,7 @@
 package service;
 
 import exceptions.EmailTakenException;
+import exceptions.UserNotFoundException;
 import exceptions.UsernameTakenException;
 import model.User;
 import repository.UserRepository;
@@ -30,7 +31,11 @@ public class MasterService implements Service {
     }
 
     @Override
-    public User login(String username, String password) {
-        return userRepository.findUserByUsernamePassword(username, password).orElse(null);
+    public User login(String username, String password) throws UserNotFoundException {
+        Optional<User> result = userRepository.findUserByUsernamePassword(username, password);
+        if (result.isEmpty()) {
+            throw new UserNotFoundException(Constants.USER_NOT_FOUND_ERROR_MESSAGE);
+        }
+        return result.get();
     }
 }
