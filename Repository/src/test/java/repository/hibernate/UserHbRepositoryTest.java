@@ -188,4 +188,52 @@ class UserHbRepositoryTest {
             Assertions.assertTrue(users.contains(user));
         }
     }
+
+    @TestFactory
+    Stream<DynamicTest> findUserByUsername() {
+        record TestCase(String name, String username, Optional<User> expected, Class<? extends Exception> exception) {
+            public void check() {
+                try {
+                    Optional<User> computed = repo.findUserByUsername(TestCase.this.username);
+                    Assertions.assertNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.expected, computed);
+                } catch (Exception e) {
+                    Assertions.assertNotNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                }
+            }
+        }
+
+        var testCases = new TestCase[]{
+                new TestCase("Find User by Username successful", defaultUsers[0].getUsername(), Optional.of(defaultUsers[0]), null),
+                new TestCase("Find User by Username unsuccessful", "x", Optional.empty(), null),
+                new TestCase("Find User by Username null", null, null, IllegalArgumentException.class),
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> findUserByEmail() {
+        record TestCase(String name, String email, Optional<User> expected, Class<? extends Exception> exception) {
+            public void check() {
+                try {
+                    Optional<User> computed = repo.findUserByEmail(TestCase.this.email);
+                    Assertions.assertNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.expected, computed);
+                } catch (Exception e) {
+                    Assertions.assertNotNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                }
+            }
+        }
+
+        var testCases = new TestCase[]{
+                new TestCase("Find User by Email successful", defaultUsers[0].getEmail(), Optional.of(defaultUsers[0]), null),
+                new TestCase("Find User by Email unsuccessful", "x", Optional.empty(), null),
+                new TestCase("Find User by Email null", null, null, IllegalArgumentException.class),
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
+    }
 }

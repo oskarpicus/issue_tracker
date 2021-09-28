@@ -41,7 +41,17 @@ public class ErrorMessages {
     public static final String PROJECT_INVALID_DESCRIPTION = "Invalid description\n";
 
     /**
-     * Error message for when the role of an {@code Involvement} is invalid
+     * Error message for when the user of a {@code Involvement} is invalid
+     */
+    public static final String INVOLVEMENT_INVALID_USER = "Invalid user\n";
+
+    /**
+     * Error message for when the project of a {@code Involvement} is invalid
+     */
+    public static final String INVOLVEMENT_INVALID_PROJECT = "Invalid project\n";
+
+    /**
+     * Error message for when the role of a {@code Involvement} is invalid
      */
     public static final String INVOLVEMENT_INVALID_ROLE = "Invalid role\n";
 }

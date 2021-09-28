@@ -156,6 +156,28 @@ abstract class AbstractHbRepository<ID extends Serializable, E extends Entity<ID
     }
 
     /**
+     * Generic method for filtering the entities, based on a query
+     * @param session: Session, an active working session
+     * @param query: Query, the filtering condition
+     * @return an {@code Iterable} of the entities that respect the query
+     */
+    protected Iterable<E> filter(Session session, Query<E> query) {
+        Transaction transaction = null;
+        List<E> result = null;
+        try {
+            transaction = session.beginTransaction();
+            result = query.list();
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            logger.error(e);
+            if (transaction != null)
+                transaction.rollback();
+        }
+        return result;
+    }
+
+    /**
      * Method for obtaining the "find" query, according to the current entity
      * @param session: Session, the current working session
      * @param id: ID, the ID of the entity to find

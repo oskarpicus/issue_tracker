@@ -1,5 +1,6 @@
 package model;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -10,7 +11,7 @@ public class User implements Entity<Long>, Cloneable {
     private String firstName;
     private String lastName;
     private String email;
-    private Set<Involvement> involvements;
+    private Set<Involvement> involvements = new HashSet<>();
 
     public User() {
     }

@@ -27,7 +27,7 @@ public class UserValidator implements Validator<Long, User> {
      *         false, otherwise
      */
     private boolean validateUsername(User user) {
-        return !user.getUsername().equals("");
+        return user.getUsername() != null && !user.getUsername().equals("");
     }
 
     /**
@@ -37,7 +37,7 @@ public class UserValidator implements Validator<Long, User> {
      *         false, otherwise
      */
     private boolean validatePassword(User user) {
-        return !user.getPassword().equals("");
+        return user.getPassword() != null && !user.getPassword().equals("");
     }
 
     /**
@@ -47,7 +47,7 @@ public class UserValidator implements Validator<Long, User> {
      *         false, otherwise
      */
     private boolean validateFirstName(User user) {
-        return !user.getFirstName().equals("");
+        return user.getFirstName() != null && !user.getFirstName().equals("");
     }
 
     /**
@@ -57,7 +57,7 @@ public class UserValidator implements Validator<Long, User> {
      *         false, otherwise
      */
     private boolean validateLastName(User user) {
-        return !user.getLastName().equals("");
+        return user.getLastName() != null && !user.getLastName().equals("");
     }
 
     /**
@@ -67,6 +67,6 @@ public class UserValidator implements Validator<Long, User> {
      *         false, otherwise
      */
     private boolean validateEmail(User user) {
-        return user.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+        return user.getEmail() != null && user.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
 }
