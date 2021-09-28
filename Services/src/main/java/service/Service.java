@@ -14,4 +14,12 @@ public interface Service {
      * @throws EmailTakenException, if the email is already used
      */
     User createAccount(User user) throws UsernameTakenException, EmailTakenException;
+
+    /**
+     * Method for logging into the application based on the username and password
+     * @param username: String, the desired username
+     * @param password: String, the desired password
+     * @return the user, if there is a user with the specified username and password, null, otherwise
+     */
+    User login(String username, String password);
 }
