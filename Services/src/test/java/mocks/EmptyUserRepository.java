@@ -59,4 +59,12 @@ public class EmptyUserRepository implements UserRepository {
         }
         return Optional.empty();
     }
+
+    @Override
+    public Optional<User> findUserByUsernamePassword(String username, String password) {
+        if (username == null || password == null) {
+            throw new IllegalArgumentException();
+        }
+        return Optional.empty();
+    }
 }
