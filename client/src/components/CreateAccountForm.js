@@ -1,7 +1,7 @@
 import LabeledField from "./LabeledField";
 import SubmitButton from "./SubmitButton";
 import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
-import {websiteTitle, serverErrorMessage, createdAccountMessage} from "./const";
+import {websiteTitle, serverErrorMessage, createdAccountMessage, createUserHttp, loginPage} from "./const";
 import {useState} from "react";
 
 const CreateAccountForm = ({setAlert}) => {
@@ -51,8 +51,7 @@ const CreateAccountForm = ({setAlert}) => {
                 });
             }
         };
-        // todo replace with just /users
-        request.open("POST", "http://localhost:8080/users");
+        request.open(createUserHttp.method, createUserHttp.URI);
         request.setRequestHeader("Content-Type", "application/json");
         request.send(JSON.stringify(formValues));
     }
@@ -66,8 +65,7 @@ const CreateAccountForm = ({setAlert}) => {
                 </div>
                 <p>
                     <span id={"already-have-account"}>Already have an account? </span>
-                    {/* todo replace with the actual page URI */}
-                    <a id={"sign-in"} href={"https://www.google.com"}>Sign in</a>
+                    <a id={"sign-in"} href={loginPage}>Sign in</a>
                 </p>
             </div>
             <div>
