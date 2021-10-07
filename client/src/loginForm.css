@@ -1,0 +1,32 @@
+@import "App.css";
+
+#div-login-form {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+}
+
+#div-left {
+    height: 100%;
+    width: 50%;
+    background-color: var(--color-dark-blue);
+}
+
+#div-left span, #div-left p {
+    color: var(--color-light-white);
+}
+
+#div-left * {
+    background-color: var(--color-dark-blue);
+}
+
+#div-right {
+    height: 100%;
+    width: 50%;
+    margin: 0;
+    background-color: var(--color-light-white);
+}
+
+#title {
+    justify-content: flex-start;
+}

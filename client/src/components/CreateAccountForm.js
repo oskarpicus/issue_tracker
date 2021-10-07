@@ -3,8 +3,10 @@ import SubmitButton from "./SubmitButton";
 import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
 import {websiteTitle, serverErrorMessage, createdAccountMessage, createUserHttp, loginPage} from "./const";
 import {useState} from "react";
+import {Link} from "react-router-dom";
 
 const CreateAccountForm = ({setAlert}) => {
+    console.log("A AINCEPUT CREATE ACCOUNT FORM")
     let initialValues = {
         firstName: "",
         lastName: "",
@@ -28,7 +30,8 @@ const CreateAccountForm = ({setAlert}) => {
             setAlert({
                 state: true,
                 severity: "error",
-                message: "Passwords do not match"
+                message: "Passwords do not match",
+                backgroundColor: "inherit"
             })
             return
         }
@@ -40,14 +43,16 @@ const CreateAccountForm = ({setAlert}) => {
                 setAlert({
                     state: true,
                     severity: "success",
-                    message: createdAccountMessage
+                    message: createdAccountMessage,
+                    backgroundColor: "inherit"
                 })
                 setFormValues({...initialValues});
             } else if (request.readyState === 4) {
                 setAlert({
                     state: true,
                     severity: "error",
-                    message: request.responseText === "" ? serverErrorMessage : request.responseText
+                    message: request.responseText === "" ? serverErrorMessage : request.responseText,
+                    backgroundColor: "inherit"
                 });
             }
         };
@@ -64,8 +69,8 @@ const CreateAccountForm = ({setAlert}) => {
                     <span>{websiteTitle}</span>
                 </div>
                 <p>
-                    <span id={"already-have-account"}>Already have an account? </span>
-                    <a id={"sign-in"} href={loginPage}>Sign in</a>
+                    <span className={"dark-text"}>Already have an account? </span>
+                    <Link className={"link"} to={loginPage}>Sign in</Link>
                 </p>
             </div>
             <div>

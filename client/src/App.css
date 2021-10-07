@@ -79,12 +79,12 @@ a:visited, a:link {
 }
 
 /* The sign in option */
-#already-have-account {
+.dark-text {
     color: var(--color-dark-blue);
     font-weight: lighter;
 }
 
-#sign-in {
+.link {
     color: var(--color-light-blue);
     font-weight: bolder;
     text-shadow: 0 0 0 var(--color-dark-blue);

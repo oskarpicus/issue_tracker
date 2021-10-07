@@ -27,6 +27,7 @@ const MySnackbar = React.forwardRef(({alert, setAlert}, ref) => {
                 vertical: "bottom"
             }}
             TransitionComponent={Slide}
+            style={{backgroundColor: alert.backgroundColor}}
         >
             <Alert
                 onClose={onClose}
