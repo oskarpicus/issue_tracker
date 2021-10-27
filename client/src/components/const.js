@@ -12,6 +12,12 @@ const createdAccountMessage = "Account created successfully";
 const createUserHttp = {method: "POST", URI: "http://localhost:8080/users"};
 
 /**
+ * Object that encapsulates the details of the request mde to the server to login
+ * @type {{method: string, URI: string}}
+ */
+const loginHttp = {method: "POST", URI: "http://localhost:8080/users/login"}
+
+/**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
  */
@@ -23,11 +29,19 @@ const createAccountPage = "/create-account";
  */
 const loginPage = "/";
 
+/**
+ * The page address for visiting the dashboard
+ * @type {string}
+ */
+const dashboardPage = "/dashboard";
+
 export {
     websiteTitle,
     serverErrorMessage,
     createdAccountMessage,
     createUserHttp,
+    loginHttp,
     loginPage,
-    createAccountPage
+    createAccountPage,
+    dashboardPage
 }
