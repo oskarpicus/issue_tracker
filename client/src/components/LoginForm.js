@@ -1,4 +1,4 @@
-import {createAccountPage, websiteTitle} from "./const";
+import {createAccountPage, dashboardPage, loginHttp, serverErrorMessage, websiteTitle} from "./const";
 import LabeledField from "./LabeledField";
 import SubmitButton from "./SubmitButton";
 import './../loginForm.css';
@@ -8,7 +8,7 @@ import {useState} from "react";
 import {Drawer} from "@mui/material";
 import PestControlIcon from '@mui/icons-material/PestControlOutlined';
 
-const LoginForm = ({setAlert}) => {
+const LoginForm = ({setAlert, setLoggedUser}) => {
     let initialValues = {
         username: "",
         password: ""
@@ -22,15 +22,25 @@ const LoginForm = ({setAlert}) => {
     };
 
     const onSubmit = (e) => {
-        // todo proper implement it
         e.preventDefault();
         const backgroundColorSnackbar = "#112D4E";
-        setAlert({
-            state: true,
-            severity: "error",
-            message: "Some message",
-            backgroundColor: backgroundColorSnackbar
-        });
+        let request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (request.readyState === 4 && request.status === 200) {
+                setLoggedUser(request.responseText)
+                window.location = dashboardPage
+            } else if (request.readyState === 4) {
+                setAlert({
+                    state: true,
+                    severity: "error",
+                    message: request.responseText === "" ? serverErrorMessage : request.responseText,
+                    backgroundColor: backgroundColorSnackbar
+                })
+            }
+        }
+        request.open(loginHttp.method, loginHttp.URI)
+        request.setRequestHeader("Content-Type", "application/json")
+        request.send(JSON.stringify(formValues))
     }
 
     return (

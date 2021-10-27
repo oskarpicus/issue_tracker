@@ -13,6 +13,7 @@ function App() {
         message: "",
         backgroundColor: "inherit"
     });
+    const [loggedUser, setLoggedUser] = useState({})
     const snackbarRef = createRef();
 
     return (
@@ -24,7 +25,7 @@ function App() {
                         <CreateAccountForm setAlert={setAlert}/>
                     </Route>
                     <Route exact={true} path={loginPage}>
-                        <LoginForm setAlert={setAlert}/>
+                        <LoginForm setAlert={setAlert} setLoggedUser={setLoggedUser}/>
                     </Route>
                 </Switch>
             </div>
