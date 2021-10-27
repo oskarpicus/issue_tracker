@@ -1,32 +1,99 @@
 @import "App.css";
 
 #div-login-form {
-    height: 100%;
-    width: 100%;
-    position: fixed;
+    display: flex;
 }
 
-#div-left {
-    height: 100%;
+.drawer {
+    background-color: rebeccapurple;
+}
+
+.drawer > div {
     width: 50%;
     background-color: var(--color-dark-blue);
 }
 
-#div-left span, #div-left p {
+.drawer div * {
+    background-color: var(--color-dark-blue);
+}
+
+.drawer div > * {
+    margin: 0 var(--margin-sides) var(--margin-bottom) var(--margin-sides);
+}
+
+#website-title-login * {
     color: var(--color-light-white);
 }
 
-#div-left * {
-    background-color: var(--color-dark-blue);
-}
-
-#div-right {
-    height: 100%;
-    width: 50%;
-    margin: 0;
-    background-color: var(--color-light-white);
-}
-
-#title {
+#website-title-login {
     justify-content: flex-start;
+}
+
+#website-title-login * {
+    margin: calc(0.5*var(--margin-bottom)) 0 var(--margin-bottom) 0;
+}
+
+#text-big, #text-small {
+    color: var(--color-light-white);
+}
+
+#text-big {
+    font-size: var(--font-size-large);
+    font-weight: bold;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#text-small {
+    font-size: var(--font-size-medium);
+}
+
+/* todo change these hardcoded values */
+#div-right {
+    margin-right: 15%;
+    margin-top: 1.5%;
+}
+
+#div-do-not-have-account {
+    margin-bottom: 22%;
+}
+
+#bugs-collection * {
+    position: absolute;
+    font-size: 10vh;
+}
+
+#bug1 {
+    bottom: 30vh;
+    left: 2vh;
+    transform: rotate(-50deg);
+}
+
+#bug2 {
+    bottom: 27vh;
+    transform: rotate(-50deg);
+    left: 15vh;
+}
+
+#bug3 {
+    transform: rotate(-20deg);
+    bottom: 20vh;
+    left: 6vh;
+}
+
+#bug4 {
+    transform: rotate(-50deg);
+    bottom: 16vh;
+    left: 20vh;
+}
+
+#bug5 {
+    transform: rotate(-20deg);
+    bottom: 9vh;
+    left: 10vh;
+}
+
+#bug6 {
+    transform: rotate(-40deg);
+    bottom: 2vh;
+    left: 19vh;
 }
