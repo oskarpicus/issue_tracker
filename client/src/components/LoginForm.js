@@ -3,7 +3,7 @@ import LabeledField from "./LabeledField";
 import SubmitButton from "./SubmitButton";
 import './../loginForm.css';
 import BugReportOutlinedIcon from "@mui/icons-material/BugReportOutlined";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {useState} from "react";
 import {Drawer} from "@mui/material";
 import PestControlIcon from '@mui/icons-material/PestControlOutlined';
@@ -21,14 +21,16 @@ const LoginForm = ({setAlert, setLoggedUser}) => {
         setFormValues((prev) => ({...prev, [name]: value}))
     };
 
+    let history = useHistory()
+
     const onSubmit = (e) => {
         e.preventDefault();
         const backgroundColorSnackbar = "#112D4E";
         let request = new XMLHttpRequest();
         request.onreadystatechange = function () {
             if (request.readyState === 4 && request.status === 200) {
-                setLoggedUser(request.responseText)
-                window.location = dashboardPage
+                setLoggedUser(JSON.parse(request.responseText))
+                history.push(dashboardPage)
             } else if (request.readyState === 4) {
                 setAlert({
                     state: true,

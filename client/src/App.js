@@ -3,8 +3,9 @@ import CreateAccountForm from "./components/CreateAccountForm";
 import {createRef, useState} from "react";
 import MySnackbar from "./components/MySnackbar";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
-import {createAccountPage, loginPage} from "./components/const";
+import {createAccountPage, dashboardPage, loginPage} from "./components/const";
 import LoginForm from "./components/LoginForm";
+import Dashboard from "./components/Dashboard";
 
 function App() {
     const [alert, setAlert] = useState({
@@ -13,7 +14,7 @@ function App() {
         message: "",
         backgroundColor: "inherit"
     });
-    const [loggedUser, setLoggedUser] = useState({})
+    const [loggedUser, setLoggedUser] = useState(undefined)
     const snackbarRef = createRef();
 
     return (
@@ -26,6 +27,9 @@ function App() {
                     </Route>
                     <Route exact={true} path={loginPage}>
                         <LoginForm setAlert={setAlert} setLoggedUser={setLoggedUser}/>
+                    </Route>
+                    <Route exact={true} path={dashboardPage}>
+                        <Dashboard loggedUser={loggedUser}/>
                     </Route>
                 </Switch>
             </div>
