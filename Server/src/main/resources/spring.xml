@@ -14,4 +14,8 @@
     <bean class="service.MasterService" id="service">
         <constructor-arg ref="userHbRepository"/>
     </bean>
+
+    <bean class="security.UserDetailsServiceImpl" id="userDetailsService">
+        <constructor-arg ref="service"/>
+    </bean>
 </beans>
