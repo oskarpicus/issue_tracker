@@ -42,15 +42,15 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, Object> data) {
-        try {
-            User result = service.login(data.get(USERNAME_KEY).toString(), data.get(PASSWORD_KEY).toString());
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Invalid data", HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PostMapping(value = "/login")
+//    public ResponseEntity<?> login(@RequestBody Map<String, Object> data) {
+//        try {
+//            User result = service.login(data.get(USERNAME_KEY).toString(), data.get(PASSWORD_KEY).toString());
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+//        } catch (UserNotFoundException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("Invalid data", HttpStatus.BAD_REQUEST);
+//        }
+//    }
 }
