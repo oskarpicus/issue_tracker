@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final Service service;
+    private model.User lastUser;
 
     public UserDetailsServiceImpl(Service service) {
         this.service = service;
@@ -19,10 +20,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            model.User user = service.login(username);
-            return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
+            lastUser = service.login(username);
+            return new User(lastUser.getUsername(), lastUser.getPassword(), new ArrayList<>());
         } catch (UserNotFoundException e) {
             throw new UsernameNotFoundException(username);
         }
+    }
+
+    public model.User getLastUser() {
+        return lastUser;
     }
 }
