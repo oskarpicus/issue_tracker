@@ -2,6 +2,7 @@ package service;
 
 import exceptions.EmailTakenException;
 import exceptions.UsernameTakenException;
+import exceptions.UserNotFoundException;
 import model.User;
 
 public interface Service {
@@ -14,4 +15,12 @@ public interface Service {
      * @throws EmailTakenException, if the email is already used
      */
     User createAccount(User user) throws UsernameTakenException, EmailTakenException;
+
+    /**
+     * Method for finding a user based on the username
+     * @param username: String, the desired username
+     * @return the user, if there is a user with the specified username and password
+     * @throws UserNotFoundException, if there is no user
+     */
+    User login(String username) throws UserNotFoundException;
 }
