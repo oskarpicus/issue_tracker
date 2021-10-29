@@ -55,7 +55,7 @@ public class AuthenticationController {
         UserDetails userDetails = service.loadUserByUsername(request.getUsername());
         String jwt = JwtUtils.generateToken(userDetails);
 
-        return new ResponseEntity<>(new AuthenticationResponse(jwt), HttpStatus.OK);
+        return new ResponseEntity<>(new AuthenticationResponse(jwt, service.getLastUser()), HttpStatus.OK);
     }
 }
 
