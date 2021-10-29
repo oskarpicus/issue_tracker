@@ -40,10 +40,10 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> login() {
-        record TestCase(String name, Service service, String username, String password, User expected, Class<? extends Exception> exception) {
+        record TestCase(String name, Service service, String username, User expected, Class<? extends Exception> exception) {
             public void check() {
                 try {
-                    User computed = TestCase.this.service.login(TestCase.this.username, TestCase.this.password);
+                    User computed = TestCase.this.service.login(TestCase.this.username);
                     Assertions.assertNull(TestCase.this.exception);
                     Assertions.assertEquals(TestCase.this.expected, computed);
                 } catch (Exception e) {
@@ -54,9 +54,9 @@ class MasterServiceTest {
         }
 
         var testCases = new TestCase[] {
-                new TestCase("Login invalid data", new MasterService(new EmptyUserRepository()), null, null, null, IllegalArgumentException.class),
-                new TestCase("Login successful", new MasterService(new DefaultUserRepository()), Constants.USERNAME, Constants.PASSWORD, Constants.USER, null),
-                new TestCase("Login unsuccessful", new MasterService(new EmptyUserRepository()), Constants.USERNAME, Constants.PASSWORD, null, UserNotFoundException.class)
+                new TestCase("Login invalid data", new MasterService(new EmptyUserRepository()), null, null, IllegalArgumentException.class),
+                new TestCase("Login successful", new MasterService(new DefaultUserRepository()), Constants.USERNAME, Constants.USER, null),
+                new TestCase("Login unsuccessful", new MasterService(new EmptyUserRepository()), Constants.USERNAME,null, UserNotFoundException.class)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);

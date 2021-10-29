@@ -1,5 +1,6 @@
 package security;
 
+import exceptions.UserNotFoundException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +18,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new User("foo", "foo", new ArrayList<>());  // todo change to use my service
+        try {
+            model.User user = service.login(username);
+            return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
+        } catch (UserNotFoundException e) {
+            throw new UsernameNotFoundException(username);
+        }
     }
 }
