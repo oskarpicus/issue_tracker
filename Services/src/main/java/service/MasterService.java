@@ -31,8 +31,8 @@ public class MasterService implements Service {
     }
 
     @Override
-    public User login(String username, String password) throws UserNotFoundException {
-        Optional<User> result = userRepository.findUserByUsernamePassword(username, password);
+    public User login(String username) throws UserNotFoundException {
+        Optional<User> result = userRepository.findUserByUsername(username);
         if (result.isEmpty()) {
             throw new UserNotFoundException(Constants.USER_NOT_FOUND_ERROR_MESSAGE);
         }

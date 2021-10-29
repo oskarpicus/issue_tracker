@@ -71,14 +71,4 @@ public class DefaultUserRepository implements UserRepository {
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst();
     }
-
-    @Override
-    public Optional<User> findUserByUsernamePassword(String username, String password) {
-        if (username == null || password == null) {
-            throw new IllegalArgumentException();
-        }
-        return Stream.of(defaultUsers)
-                .filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password))
-                .findFirst();
-    }
 }

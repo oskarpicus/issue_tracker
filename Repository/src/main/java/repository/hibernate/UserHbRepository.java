@@ -62,24 +62,4 @@ public class UserHbRepository extends AbstractHbRepository<Long, User> implement
             return Optional.empty();
         }
     }
-
-    @Override
-    public Optional<User> findUserByUsernamePassword(String username, String password) {
-        if (username == null || password == null) {
-            throw new IllegalArgumentException();
-        }
-        try (Session session = sessionFactory.openSession()) {
-            Query<User> query = session
-                    .createQuery("from User where username=:u and password=:p", User.class)
-                    .setParameter("u", username)
-                    .setParameter("p", password);
-            List<User> users = StreamSupport
-                    .stream(super.filter(session, query).spliterator(), false)
-                    .collect(Collectors.toList());
-            return users.stream().findAny();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return Optional.empty();
-        }
-    }
 }

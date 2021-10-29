@@ -17,11 +17,10 @@ public interface Service {
     User createAccount(User user) throws UsernameTakenException, EmailTakenException;
 
     /**
-     * Method for logging into the application based on the username and password
+     * Method for finding a user based on the username
      * @param username: String, the desired username
-     * @param password: String, the desired password
      * @return the user, if there is a user with the specified username and password
      * @throws UserNotFoundException, if there is no user
      */
-    User login(String username, String password) throws UserNotFoundException;
+    User login(String username) throws UserNotFoundException;
 }
