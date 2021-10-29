@@ -2,6 +2,9 @@ package security;
 
 import model.User;
 
+/**
+ * Abstraction of a response obtained after a successful authentication.
+ */
 public class AuthenticationResponse {
     private final String jwt;
     private final User user;

@@ -236,30 +236,4 @@ class UserHbRepositoryTest {
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
     }
-
-    @TestFactory
-    Stream<DynamicTest> findUserByUsernamePassword() {
-        record TestCase(String name, String username, String password, Optional<User> expected, Class<? extends Exception> exception) {
-            public void check() {
-                try {
-                    Optional<User> computed = repo.findUserByUsernamePassword(TestCase.this.username, TestCase.this.password);
-                    Assertions.assertNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.expected, computed);
-                } catch (Exception e) {
-                    Assertions.assertNotNull(TestCase.this.exception);
-                    Assertions.assertEquals(e.getClass(), TestCase.this.exception);
-                }
-            }
-        }
-
-        var testCases = new TestCase[]{
-                new TestCase("Find User by Username Password illegal username", null, "password", null, IllegalArgumentException.class),
-                new TestCase("Find User by Username Password illegal password", "username", null, null, IllegalArgumentException.class),
-                new TestCase("Find User by Username Password illegal parameters", null, null, null, IllegalArgumentException.class),
-                new TestCase("Find User by Username Password unsuccessful", "x", "y", Optional.empty(), null),
-                new TestCase("Find User by Username Password successful", defaultUsers[0].getUsername(), defaultUsers[0].getPassword(), Optional.of(defaultUsers[0]), null)
-        };
-
-        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
-    }
 }

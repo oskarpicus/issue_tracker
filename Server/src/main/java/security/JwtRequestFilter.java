@@ -1,6 +1,7 @@
 package security;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,11 +34,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String header = request.getHeader("Authorization");
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         String username = null, jwt = null;
 
-        if (header != null && header.startsWith("Bearer ")) {
+        if (header != null && header.startsWith(SecurityConstants.BEARER)) {
             jwt = header.substring(7);
             username = JwtUtils.extractUsername(jwt);
         }
