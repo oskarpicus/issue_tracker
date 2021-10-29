@@ -8,7 +8,7 @@ import {useState} from "react";
 import {Drawer} from "@mui/material";
 import PestControlIcon from '@mui/icons-material/PestControlOutlined';
 
-const LoginForm = ({setAlert, setLoggedUser}) => {
+const LoginForm = ({setAlert, setCredentials}) => {
     let initialValues = {
         username: "",
         password: ""
@@ -29,7 +29,7 @@ const LoginForm = ({setAlert, setLoggedUser}) => {
         let request = new XMLHttpRequest();
         request.onreadystatechange = function () {
             if (request.readyState === 4 && request.status === 200) {
-                setLoggedUser(JSON.parse(request.responseText))
+                setCredentials(JSON.parse(request.responseText))
                 history.push(dashboardPage)
             } else if (request.readyState === 4) {
                 setAlert({

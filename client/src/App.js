@@ -14,7 +14,10 @@ function App() {
         message: "",
         backgroundColor: "inherit"
     });
-    const [loggedUser, setLoggedUser] = useState(undefined)
+    const [credentials, setCredentials] = useState({
+        jwt: "",
+        user: undefined
+    })
     const snackbarRef = createRef();
 
     return (
@@ -26,10 +29,10 @@ function App() {
                         <CreateAccountForm setAlert={setAlert}/>
                     </Route>
                     <Route exact={true} path={loginPage}>
-                        <LoginForm setAlert={setAlert} setLoggedUser={setLoggedUser}/>
+                        <LoginForm setAlert={setAlert} setCredentials={setCredentials}/>
                     </Route>
                     <Route exact={true} path={dashboardPage}>
-                        <Dashboard loggedUser={loggedUser}/>
+                        <Dashboard credentials={credentials}/>
                     </Route>
                 </Switch>
             </div>
