@@ -1,5 +1,8 @@
 package security;
 
+/**
+ * Abstraction of a request to authenticate.
+ */
 public class AuthenticationRequest {
     private String username;
     private String password;

@@ -27,6 +27,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
+    /**
+     * Method for obtaining the last user that tried to authenticate using their username.
+     * The purpose of this method is to minimise the calls to the service, which holds data about its users.
+     * @return the last {@code User} that tried to login
+     */
     public model.User getLastUser() {
         return lastUser;
     }

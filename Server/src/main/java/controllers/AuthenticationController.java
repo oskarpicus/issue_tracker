@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import security.*;
+import utils.UriMapping;
 
 @Controller
 @CrossOrigin
@@ -39,17 +40,17 @@ public class AuthenticationController {
         service = context.getBean(UserDetailsServiceImpl.class);
     }
 
-    @GetMapping("/hello")
+    @GetMapping(UriMapping.HELLO)
     public ResponseEntity<?> hello() {
         return new ResponseEntity<>("Hello", HttpStatus.OK);
     }
 
-    @PostMapping("/users/login")
+    @PostMapping(UriMapping.LOGGING)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest request) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>("Incorrect username or password", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(SecurityConstants.AUTHENTICATION_FAILED_MESSAGE, HttpStatus.FORBIDDEN);
         }
 
         UserDetails userDetails = service.loadUserByUsername(request.getUsername());
@@ -83,7 +84,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/users/login", "/users")
+                .antMatchers(UriMapping.CREATE_ACCOUNT, UriMapping.LOGGING)
                 .permitAll()
                 .anyRequest().authenticated().and()
                 .exceptionHandling().and().sessionManagement()

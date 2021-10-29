@@ -7,46 +7,77 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class JwtUtils {
+    /**
+     * Method for extracting the username from a JSON Web Token
+     * @param token: String, the web token
+     * @return - the username, if the token is valid
+     *         - the empty string, otherwise
+     */
     public static String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        try {
+            return extractClaim(token, Claims::getSubject);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
-    public static Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+    /**
+     * Method for extracting the date from a JSON Web Token
+     * @param token: String, the web token
+     * @return an {@code Optional}
+     *         - with the date, if the token is valid
+     *         - empty, otherwise
+     */
+    public static Optional<Date> extractExpiration(String token) {
+        try {
+            return Optional.of(extractClaim(token, Claims::getExpiration));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    private static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
     private static Claims extractAllClaims(String token) {
-        // todo surround in a try catch block
         return Jwts.parser().setSigningKey(SecurityConstants.SECRET).parseClaimsJws(token).getBody();
     }
 
-    private static Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+    private static boolean isTokenExpired(String token) {
+        Optional<Date> date = extractExpiration(token);
+        return date.map(value -> value.before(new Date())).orElse(true);
     }
 
-    public static String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
-    }
-
-    private static String createToken(Map<String, Object> claims, String subject) {
-
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .signWith(SignatureAlgorithm.HS256, SecurityConstants.SECRET).compact();
-    }
-
-    public static Boolean validateToken(String token, UserDetails userDetails) {
+    /**
+     * Method for validating a JSON Web Token
+     * @param token: String, the web token
+     * @param userDetails: UserDetails, encapsulates the username and password of the user
+     * @return true, if the token is valid, according to the userDetails, false, otherwise
+     */
+    public static boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    /**
+     * Method for generating a JSON Web Token based on a user's details
+     * @param userDetails: UserDetails, encapsulates the username and the password of the user
+     * @return the corresponding JSON Web Token
+     */
+    public static String generateToken(UserDetails userDetails) {
+        Date now = new Date();
+        return Jwts.builder()
+                .setClaims(new HashMap<>())
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + SecurityConstants.JWT_EXPIRATION_MS))
+                .signWith(SignatureAlgorithm.HS256, SecurityConstants.SECRET)
+                .compact();
     }
 }
