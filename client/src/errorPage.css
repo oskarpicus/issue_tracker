@@ -37,3 +37,12 @@
 #error-icon {
     font-size: 30vh;
 }
+
+.link-error-page {
+    color: var(--color-light-white);
+    font-size: var(--font-size-medium);
+}
+
+.link-error-page:hover {
+    color: var(--color-grey);
+}

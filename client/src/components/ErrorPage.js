@@ -1,11 +1,13 @@
 import BugReportOutlinedIcon from "@mui/icons-material/BugReportOutlined";
-import {websiteTitle} from "./const";
+import {createAccountPage, loginPage, websiteTitle} from "./const";
 import ErrorIcon from '@mui/icons-material/Error';
 import "../errorPage.css"
 import {PestControlOutlined} from "@mui/icons-material";
 import {makeStyles} from "@material-ui/core/styles";
+import {Link} from "react-router-dom";
 
 const margin = "5vw";
+let intervals = [];
 
 let useStyles = makeStyles({
     walkingBug: {
@@ -21,7 +23,7 @@ const ErrorPage = () => {
     const idWalkingBug = "walking-bug";
     const classes = useStyles();
 
-    setInterval(function () {
+    let interval = setInterval(function () {
         let initialMargin = parseInt(margin.split("vw")[0]) * 2;
         let differenceRotation = 15;
 
@@ -55,6 +57,7 @@ const ErrorPage = () => {
         }
         bug.style.transform = `rotate(${sign}${rotation}deg)`;
     }, 150);
+    intervals.push(interval);
 
     return (
         <div id={"error-page"}>
@@ -64,8 +67,26 @@ const ErrorPage = () => {
             </div>
             <div id={"container"}>
                 <ErrorIcon htmlColor={"white"} id={"error-icon"}/>
-                <p>Oops.. This worked when I tested it... </p>
-                <p>Try logging in or create an account if you don't have one already</p>
+                <p>Oops.. This worked fine when I tested it... </p>
+                <p>
+                    Try&nbsp;
+                    <Link
+                        to={loginPage}
+                        className={"link-error-page"}
+                        onClick={() => intervals.forEach(i => clearInterval(i))}
+                    >
+                         logging in&nbsp;
+                    </Link>
+                    or&nbsp;
+                    <Link
+                        to={createAccountPage}
+                        className={"link-error-page"}
+                        onClick={() => intervals.forEach(i => clearInterval(i))}
+                    >
+                         create an account&nbsp;
+                    </Link>
+                    if you don't have one already
+                </p>
             </div>
             <PestControlOutlined htmlColor={"white"} className={classes.walkingBug} id={idWalkingBug}/>
         </div>
