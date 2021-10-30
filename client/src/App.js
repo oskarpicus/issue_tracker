@@ -6,6 +6,7 @@ import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {createAccountPage, dashboardPage, loginPage} from "./components/const";
 import LoginForm from "./components/LoginForm";
 import Dashboard from "./components/Dashboard";
+import ErrorPage from "./components/ErrorPage";
 
 function App() {
     const [alert, setAlert] = useState({
@@ -33,6 +34,10 @@ function App() {
                     </Route>
                     <Route exact={true} path={dashboardPage}>
                         <Dashboard credentials={credentials}/>
+                    </Route>
+                    {/* Will fallback to every other accessed URL */}
+                    <Route>
+                        <ErrorPage/>
                     </Route>
                 </Switch>
             </div>

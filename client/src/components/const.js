@@ -35,6 +35,12 @@ const loginPage = "/";
  */
 const dashboardPage = "/dashboard";
 
+/**
+ * The page address for accessing the error message page
+ * @type {string}
+ */
+const errorPage = "/error";
+
 export {
     websiteTitle,
     serverErrorMessage,
@@ -43,5 +49,6 @@ export {
     loginHttp,
     loginPage,
     createAccountPage,
-    dashboardPage
+    dashboardPage,
+    errorPage
 }

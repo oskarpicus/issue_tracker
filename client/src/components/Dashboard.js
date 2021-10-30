@@ -1,7 +1,9 @@
+import {Redirect} from "react-router-dom";
+import {errorPage} from "./const";
+
 const Dashboard = ({credentials}) => {
-    if (credentials === undefined) {
-        // todo replace with a dedicated page
-        return <p>You are not logged in</p>
+    if (credentials.user === undefined) {
+        return <Redirect to={errorPage}/>
     }
 
     // let request = new XMLHttpRequest();
