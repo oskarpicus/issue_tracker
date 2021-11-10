@@ -19,7 +19,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAccount(@RequestBody Project project) {
+    public ResponseEntity<?> createProject(@RequestBody Project project) {
         try {
             Project result = service.createProject(project);
             if (result != null) {
@@ -30,5 +30,14 @@ public class ProjectController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<?> getProjectById(@PathVariable long id) {
+        Project result = service.getProjectById(id);
+        if (result == null) {
+            return new ResponseEntity<>("Project does not exist", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

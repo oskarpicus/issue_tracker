@@ -3,10 +3,7 @@ package service;
 import exceptions.EmailTakenException;
 import exceptions.UserNotFoundException;
 import exceptions.UsernameTakenException;
-import mocks.Constants;
-import mocks.DefaultUserRepository;
-import mocks.EmptyProjectRepository;
-import mocks.EmptyUserRepository;
+import mocks.*;
 import model.Project;
 import model.User;
 import org.junit.jupiter.api.Assertions;
@@ -85,6 +82,29 @@ class MasterServiceTest {
         Project project = new Project("title", "Description", LocalDateTime.now());
         var testCases = new TestCase[]{
                 new TestCase("Create project successfully", new MasterService(new EmptyUserRepository(), new EmptyProjectRepository()), project, project, null)
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> getProjectById() {
+        record TestCase(String name, Service service, long id, Project expected, Class<? extends Exception> exception) {
+            public void check() {
+                try {
+                    Project computed = TestCase.this.service.getProjectById(TestCase.this.id);
+                    Assertions.assertNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.expected, computed);
+                } catch (Exception e) {
+                    Assertions.assertNotNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                }
+            }
+        }
+
+        var testCases = new TestCase[]{
+                new TestCase("Get project non-existent id", new MasterService(null, new EmptyProjectRepository()), 0L, null, null),
+                new TestCase("Get project successfully", new MasterService(null, new DefaultProjectRepository()), Constants.PROJECT.getId(), Constants.PROJECT, null)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);

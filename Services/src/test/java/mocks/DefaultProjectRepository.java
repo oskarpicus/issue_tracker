@@ -3,10 +3,15 @@ package mocks;
 import model.Project;
 import repository.ProjectRepository;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Stream;
 
-public class EmptyProjectRepository implements ProjectRepository {
+public class DefaultProjectRepository implements ProjectRepository {
+    private final Project[] defaultProjects = new Project[]{
+            Constants.PROJECT
+    };
+
     @Override
     public Optional<Project> save(Project entity) {
         if (entity == null) {
@@ -36,11 +41,13 @@ public class EmptyProjectRepository implements ProjectRepository {
         if (aLong == null) {
             throw new IllegalArgumentException();
         }
-        return Optional.empty();
+        return Stream.of(defaultProjects)
+                .filter(project -> project.getId().equals(aLong))
+                .findFirst();
     }
 
     @Override
     public Iterable<Project> findAll() {
-        return new ArrayList<>();
+        return Arrays.asList(defaultProjects);
     }
 }
