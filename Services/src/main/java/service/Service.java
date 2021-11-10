@@ -3,6 +3,7 @@ package service;
 import exceptions.EmailTakenException;
 import exceptions.UsernameTakenException;
 import exceptions.UserNotFoundException;
+import model.Project;
 import model.User;
 
 public interface Service {
@@ -23,4 +24,12 @@ public interface Service {
      * @throws UserNotFoundException, if there is no user
      */
     User login(String username) throws UserNotFoundException;
+
+    /**
+     * Method for creating a new account
+     * @param project, the project to add
+     * @return - the project with an assigned identifier, if the operation is successful
+     *         - null, otherwise
+     */
+    Project createProject(Project project);
 }
