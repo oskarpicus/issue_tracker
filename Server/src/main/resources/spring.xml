@@ -11,8 +11,13 @@
         <constructor-arg ref="userValidator"/>
     </bean>
 
+    <bean class="repository.hibernate.ProjectHbRepository" id="projectHbRepository">
+        <constructor-arg ref="projectValidator"/>
+    </bean>
+
     <bean class="service.MasterService" id="service">
         <constructor-arg ref="userHbRepository"/>
+        <constructor-arg ref="projectHbRepository"/>
     </bean>
 
     <bean class="security.UserDetailsServiceImpl" id="userDetailsService">

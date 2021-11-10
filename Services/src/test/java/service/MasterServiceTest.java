@@ -5,12 +5,15 @@ import exceptions.UserNotFoundException;
 import exceptions.UsernameTakenException;
 import mocks.Constants;
 import mocks.DefaultUserRepository;
+import mocks.EmptyProjectRepository;
 import mocks.EmptyUserRepository;
+import model.Project;
 import model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 class MasterServiceTest {
@@ -30,9 +33,9 @@ class MasterServiceTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Create account successful", new MasterService(new EmptyUserRepository()), new User("a", "b", "AB", "BA", "a@g.com"), null),
-                new TestCase("Create account duplicate username", new MasterService(new DefaultUserRepository()), new User(Constants.USERNAME, "b", "AB", "BA", "a@g.c"), UsernameTakenException.class),
-                new TestCase("Create account duplicate email", new MasterService(new DefaultUserRepository()), new User("a", "b", "AB", "BA", Constants.EMAIL), EmailTakenException.class),
+                new TestCase("Create account successful", new MasterService(new EmptyUserRepository(), null), new User("a", "b", "AB", "BA", "a@g.com"), null),
+                new TestCase("Create account duplicate username", new MasterService(new DefaultUserRepository(), null), new User(Constants.USERNAME, "b", "AB", "BA", "a@g.c"), UsernameTakenException.class),
+                new TestCase("Create account duplicate email", new MasterService(new DefaultUserRepository(), null), new User("a", "b", "AB", "BA", Constants.EMAIL), EmailTakenException.class),
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -40,7 +43,8 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> login() {
-        record TestCase(String name, Service service, String username, User expected, Class<? extends Exception> exception) {
+        record TestCase(String name, Service service, String username, User expected,
+                        Class<? extends Exception> exception) {
             public void check() {
                 try {
                     User computed = TestCase.this.service.login(TestCase.this.username);
@@ -53,10 +57,34 @@ class MasterServiceTest {
             }
         }
 
-        var testCases = new TestCase[] {
-                new TestCase("Login invalid data", new MasterService(new EmptyUserRepository()), null, null, IllegalArgumentException.class),
-                new TestCase("Login successful", new MasterService(new DefaultUserRepository()), Constants.USERNAME, Constants.USER, null),
-                new TestCase("Login unsuccessful", new MasterService(new EmptyUserRepository()), Constants.USERNAME,null, UserNotFoundException.class)
+        var testCases = new TestCase[]{
+                new TestCase("Login invalid data", new MasterService(new EmptyUserRepository(), null), null, null, IllegalArgumentException.class),
+                new TestCase("Login successful", new MasterService(new DefaultUserRepository(), null), Constants.USERNAME, Constants.USER, null),
+                new TestCase("Login unsuccessful", new MasterService(new EmptyUserRepository(), null), Constants.USERNAME, null, UserNotFoundException.class)
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> createProject() {
+        record TestCase(String name, Service service, Project project, Project expected,
+                        Class<? extends Exception> exception) {
+            public void check() {
+                try {
+                    Project computed = TestCase.this.service.createProject(TestCase.this.project);
+                    Assertions.assertNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.expected, computed);
+                } catch (Exception e) {
+                    Assertions.assertNotNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                }
+            }
+        }
+
+        Project project = new Project("title", "Description", LocalDateTime.now());
+        var testCases = new TestCase[]{
+                new TestCase("Create project successfully", new MasterService(new EmptyUserRepository(), new EmptyProjectRepository()), project, project, null)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
