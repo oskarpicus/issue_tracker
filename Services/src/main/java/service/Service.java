@@ -32,4 +32,12 @@ public interface Service {
      *         - null, otherwise
      */
     Project createProject(Project project);
+
+    /**
+     * Method for retrieving the information of a project, based on its id
+     * @param id, the id of the desired project
+     * @return - the project, if there is a project with the given id
+     *         - null, otherwise
+     */
+    Project getProjectById(long id);
 }

@@ -53,4 +53,9 @@ public class MasterService implements Service {
         }
         return null;
     }
+
+    @Override
+    public Project getProjectById(long id) {
+        return projectRepository.find(id).orElse(null);
+    }
 }
