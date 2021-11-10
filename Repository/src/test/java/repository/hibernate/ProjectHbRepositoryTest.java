@@ -1,6 +1,7 @@
 package repository.hibernate;
 
 import model.Project;
+import model.User;
 import org.junit.jupiter.api.*;
 import validator.ErrorMessages;
 import validator.ProjectValidator;
@@ -16,11 +17,6 @@ import java.util.stream.StreamSupport;
 class ProjectHbRepositoryTest {
 
     private static final ProjectHbRepository repo = new ProjectHbRepository(new ProjectValidator());
-    private static final Project[] defaultProjects = new Project[]{
-            new Project(1L, "architecture_map", "Architecture", LocalDateTime.now()),
-            new Project(2L, "google", "Browser", LocalDateTime.now()),
-            new Project(3L, "Bugzilla", "Issue tracker", LocalDateTime.now()),
-    };
 
     /**
      * Method for inserting the default projects in the database.
@@ -29,7 +25,7 @@ class ProjectHbRepositoryTest {
      */
     @BeforeEach
     void insertDefaultProjects() {
-        Stream.of(defaultProjects).forEach(repo::save);
+        Stream.of(Constants.defaultProjects).forEach(repo::save);
     }
 
     /**
@@ -96,7 +92,7 @@ class ProjectHbRepositoryTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Delete Project successfully", defaultProjects[0].getId(), Optional.of(defaultProjects[0]), null, null),
+                new TestCase("Delete Project successfully", Constants.defaultProjects[0].getId(), Optional.of(Constants.defaultProjects[0]), null, null),
                 new TestCase("Delete Project non-existent id", Long.MAX_VALUE, Optional.empty(), null, null),
                 new TestCase("Delete Project null", null, null, IllegalArgumentException.class, null),
         };
@@ -128,12 +124,12 @@ class ProjectHbRepositoryTest {
             }
         }
 
-        Project projectExisting = defaultProjects[0].clone();
+        Project projectExisting = Constants.defaultProjects[0].clone();
         projectExisting.setTitle("apache");
 
         final Project projectNotExisting = new Project(Long.MAX_VALUE, "abc", "abc", LocalDateTime.now());
 
-        Project invalidProject = defaultProjects[0].clone();
+        Project invalidProject = Constants.defaultProjects[0].clone();
         invalidProject.setTitle("");
 
         var testCases = new TestCase[]{
@@ -168,7 +164,7 @@ class ProjectHbRepositoryTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Find Project successfully", defaultProjects[0].getId(), Optional.of(defaultProjects[0]), null),
+                new TestCase("Find Project successfully", Constants.defaultProjects[0].getId(), Optional.of(Constants.defaultProjects[0]), null),
                 new TestCase("Find Project id not found", Long.MAX_VALUE, Optional.empty(), null),
                 new TestCase("Find Project null id", null, null, IllegalArgumentException.class),
         };
@@ -180,7 +176,7 @@ class ProjectHbRepositoryTest {
     void findAll() {
         var projectsIterable = repo.findAll();
         List<Project> projects = StreamSupport.stream(projectsIterable.spliterator(), false).collect(Collectors.toList());
-        Assertions.assertEquals(defaultProjects.length, projects.size());
-        Stream.of(defaultProjects).forEach(project -> Assertions.assertTrue(projects.contains(project)));
+        Assertions.assertEquals(Constants.defaultProjects.length, projects.size());
+        Stream.of(Constants.defaultProjects).forEach(project -> Assertions.assertTrue(projects.contains(project)));
     }
 }

@@ -17,10 +17,6 @@ class UserHbRepositoryTest {
 
     // connecting to the test database
     private static final UserHbRepository repo = new UserHbRepository(new UserValidator());
-    private static final User[] defaultUsers = new User[]{
-            new User(1L, "anne", "anne_p", "Anne", "Victoria", "anne@gmail.com"),
-            new User(2L, "john", "johnOl", "John", "Smith", "john_smith@yahoo.com"),
-    };
 
     /**
      * Method for inserting predetermined users.
@@ -28,7 +24,7 @@ class UserHbRepositoryTest {
      */
     @BeforeEach
     void insertDefaultUsers() {
-        Stream.of(defaultUsers).forEach(repo::save);
+        Stream.of(Constants.defaultUsers).forEach(repo::save);
     }
 
     /**
@@ -62,7 +58,7 @@ class UserHbRepositoryTest {
         }
 
         final User userToSave = new User(Long.MAX_VALUE, "michael_k", "mmk", "Michael", "K", "m_k@outlook.com");
-        final User userDuplicatedId = defaultUsers[0].clone();
+        final User userDuplicatedId = Constants.defaultUsers[0].clone();
         var testCases = new TestCase[]{
                 new TestCase("Save User successfully", userToSave, Optional.empty(), null, ""),
                 new TestCase("Save User duplicate id", userDuplicatedId, Optional.of(userDuplicatedId), null, ""),
@@ -96,7 +92,7 @@ class UserHbRepositoryTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Delete User successfully", defaultUsers[0].getId(), Optional.of(defaultUsers[0]), null, null),
+                new TestCase("Delete User successfully", Constants.defaultUsers[0].getId(), Optional.of(Constants.defaultUsers[0]), null, null),
                 new TestCase("Delete User non-existent id", Long.MAX_VALUE, Optional.empty(), null, null),
                 new TestCase("Delete User null", null, null, IllegalArgumentException.class, null),
         };
@@ -128,12 +124,12 @@ class UserHbRepositoryTest {
             }
         }
 
-        User userExisting = defaultUsers[0].clone();
+        User userExisting = Constants.defaultUsers[0].clone();
         userExisting.setUsername("isabelle");
 
         final User userNotExisting = new User(Long.MAX_VALUE, "abc", "abc", "abc", "abc", "abc@gmail.com");
 
-        User invalidUser = defaultUsers[0].clone();
+        User invalidUser = Constants.defaultUsers[0].clone();
         invalidUser.setPassword("");
 
         var testCases = new TestCase[]{
@@ -156,7 +152,7 @@ class UserHbRepositoryTest {
         }
 
         final Long idToFind = 1L;
-        Optional<User> userToFind = Arrays.stream(defaultUsers)
+        Optional<User> userToFind = Arrays.stream(Constants.defaultUsers)
                 .filter(user -> user.getId().equals(idToFind))
                 .findFirst();
 
@@ -183,8 +179,8 @@ class UserHbRepositoryTest {
         // check if every default user is in the database
         var usersIterable = repo.findAll();
         List<User> users = StreamSupport.stream(usersIterable.spliterator(), false).collect(Collectors.toList());
-        Assertions.assertEquals(defaultUsers.length, users.size());
-        for (User user : defaultUsers) {
+        Assertions.assertEquals(Constants.defaultUsers.length, users.size());
+        for (User user : Constants.defaultUsers) {
             Assertions.assertTrue(users.contains(user));
         }
     }
@@ -205,7 +201,7 @@ class UserHbRepositoryTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Find User by Username successful", defaultUsers[0].getUsername(), Optional.of(defaultUsers[0]), null),
+                new TestCase("Find User by Username successful", Constants.defaultUsers[0].getUsername(), Optional.of(Constants.defaultUsers[0]), null),
                 new TestCase("Find User by Username unsuccessful", "x", Optional.empty(), null),
                 new TestCase("Find User by Username null", null, null, IllegalArgumentException.class),
         };
@@ -229,7 +225,7 @@ class UserHbRepositoryTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Find User by Email successful", defaultUsers[0].getEmail(), Optional.of(defaultUsers[0]), null),
+                new TestCase("Find User by Email successful", Constants.defaultUsers[0].getEmail(), Optional.of(Constants.defaultUsers[0]), null),
                 new TestCase("Find User by Email unsuccessful", "x", Optional.empty(), null),
                 new TestCase("Find User by Email null", null, null, IllegalArgumentException.class),
         };
