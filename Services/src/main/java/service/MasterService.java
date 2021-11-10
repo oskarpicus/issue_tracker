@@ -3,22 +3,29 @@ package service;
 import exceptions.EmailTakenException;
 import exceptions.UserNotFoundException;
 import exceptions.UsernameTakenException;
+import model.Involvement;
 import model.Project;
 import model.User;
+import repository.InvolvementRepository;
 import repository.ProjectRepository;
 import repository.UserRepository;
 import utils.Constants;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class MasterService implements Service {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
+    private final InvolvementRepository involvementRepository;
 
-    public MasterService(UserRepository userRepository, ProjectRepository projectRepository) {
+    public MasterService(UserRepository userRepository, ProjectRepository projectRepository, InvolvementRepository involvementRepository) {
         this.userRepository = userRepository;
         this.projectRepository = projectRepository;
+        this.involvementRepository = involvementRepository;
     }
 
     @Override
@@ -57,5 +64,17 @@ public class MasterService implements Service {
     @Override
     public Project getProjectById(long id) {
         return projectRepository.find(id).orElse(null);
+    }
+
+    @Override
+    public Set<Involvement> getInvolvementsByUsername(String username) throws UserNotFoundException {
+        Optional<User> user = userRepository.findUserByUsername(username);
+        if (user.isEmpty()) {  // the user does not exist
+            throw new UserNotFoundException(Constants.USER_DOES_NOT_EXIST_ERROR_MESSAGE);
+        }
+
+        return StreamSupport
+                .stream(involvementRepository.findInvolvementsByUser(user.get()).spliterator(), false)
+                .collect(Collectors.toSet());
     }
 }
