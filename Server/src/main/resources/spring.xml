@@ -15,9 +15,14 @@
         <constructor-arg ref="projectValidator"/>
     </bean>
 
+    <bean class="repository.hibernate.InvolvementHbRepository" id="involvementHbRepository">
+        <constructor-arg ref="involvementValidator"/>
+    </bean>
+
     <bean class="service.MasterService" id="service">
         <constructor-arg ref="userHbRepository"/>
         <constructor-arg ref="projectHbRepository"/>
+        <constructor-arg ref="involvementHbRepository"/>
     </bean>
 
     <bean class="security.UserDetailsServiceImpl" id="userDetailsService">
