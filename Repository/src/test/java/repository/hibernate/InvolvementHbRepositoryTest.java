@@ -9,7 +9,8 @@ import validator.InvolvementValidator;
 import validator.ProjectValidator;
 import validator.UserValidator;
 
-import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -195,5 +196,40 @@ class InvolvementHbRepositoryTest {
                 .collect(Collectors.toList());
         Assertions.assertEquals(Constants.defaultInvolvements.length, involvements.size());
         Stream.of(Constants.defaultInvolvements).map(involvements::contains).forEach(Assertions::assertTrue);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> findInvolvementsByUser() {
+        record TestCase(String name, User user, Iterable<Involvement> expected, Class<? extends Exception> exception) {
+            public void check() {
+                try {
+                    Iterable<Involvement> computed = involvementRepo.findInvolvementsByUser(TestCase.this.user);
+                    Assertions.assertNull(TestCase.this.exception);
+                    Assertions.assertEquals(expected, computed);
+                } catch (Exception e) {
+                    Assertions.assertNotNull(TestCase.this.exception);
+                    Assertions.assertEquals(e.getClass(), exception);
+                }
+            }
+        }
+
+        User nonExistentUser = new User(Long.MAX_VALUE, "", "", "", "", "");
+
+        List<Involvement> involvementsUser0 = Arrays.stream(Constants.defaultInvolvements)
+                .filter(involvement -> involvement.getUser().equals(Constants.defaultUsers[0]))
+                .collect(Collectors.toList());
+
+        List<Involvement> involvementsUser2 = Arrays.stream(Constants.defaultInvolvements)
+                .filter(involvement -> involvement.getUser().equals(Constants.defaultUsers[2]))
+                .collect(Collectors.toList());
+
+        var testCases = new TestCase[]{
+                new TestCase("Find Involvements non-existent user", nonExistentUser, Collections.emptyList(), null),
+                new TestCase("Find Involvements null user", null, null, IllegalArgumentException.class),
+                new TestCase("Find Involvements successful empty", Constants.defaultUsers[2], involvementsUser2, null),
+                new TestCase("Find Involvements successful non zero size", Constants.defaultUsers[0], involvementsUser0, null)
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
     }
 }

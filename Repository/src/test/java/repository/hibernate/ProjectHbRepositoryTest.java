@@ -1,7 +1,6 @@
 package repository.hibernate;
 
 import model.Project;
-import model.User;
 import org.junit.jupiter.api.*;
 import validator.ErrorMessages;
 import validator.ProjectValidator;
