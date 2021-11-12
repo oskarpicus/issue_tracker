@@ -73,8 +73,6 @@ public class MasterService implements Service {
             throw new UserNotFoundException(Constants.USER_DOES_NOT_EXIST_ERROR_MESSAGE);
         }
 
-        return StreamSupport
-                .stream(involvementRepository.findInvolvementsByUser(user.get()).spliterator(), false)
-                .collect(Collectors.toSet());
+        return user.get().getInvolvements();
     }
 }

@@ -132,7 +132,6 @@ class MasterServiceTest {
         var testCases = new TestCase[]{
                 new TestCase("Get Involvements by User username non-existent", new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new EmptyInvolvementRepository()), "", null, UserNotFoundException.class),
                 new TestCase("Get Involvements by User zero size", new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new EmptyInvolvementRepository()), Constants.USER.getUsername(), Collections.emptySet(), null),
-                new TestCase("Get Involvements by User non-zero size", new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new DefaultInvolvementRepository()), Constants.USER.getUsername(), Set.of(Constants.INVOLVEMENT), null),
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
