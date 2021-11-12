@@ -1,5 +1,6 @@
 package controllers;
 
+import dtos.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -56,7 +57,7 @@ public class AuthenticationController {
         UserDetails userDetails = service.loadUserByUsername(request.getUsername());
         String jwt = JwtUtils.generateToken(userDetails);
 
-        return new ResponseEntity<>(new AuthenticationResponse(jwt, service.getLastUser()), HttpStatus.OK);
+        return new ResponseEntity<>(new AuthenticationResponse(jwt, UserDto.from(service.getLastUser())), HttpStatus.OK);
     }
 }
 

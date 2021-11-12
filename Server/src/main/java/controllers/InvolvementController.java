@@ -1,6 +1,6 @@
 package controllers;
 
-import dtos.InvolvementDTO;
+import dtos.InvolvementDto;
 import exceptions.UserNotFoundException;
 import model.Involvement;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -27,9 +27,9 @@ public class InvolvementController {
     public ResponseEntity<?> getInvolvementsByUsername(@RequestParam(value = "username") String username) {
         try {
             Set<Involvement> involvements = service.getInvolvementsByUsername(username);
-            Set<InvolvementDTO> result = involvements
+            Set<InvolvementDto> result = involvements
                     .stream()
-                    .map(InvolvementDTO::new)
+                    .map(InvolvementDto::from)
                     .collect(Collectors.toSet());
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (UserNotFoundException e) {

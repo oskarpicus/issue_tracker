@@ -1,5 +1,6 @@
 package controllers;
 
+import dtos.ProjectDto;
 import model.Project;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,6 @@ public class ProjectController {
         if (result == null) {
             return new ResponseEntity<>("Project does not exist", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(ProjectDto.from(result), HttpStatus.OK);
     }
 }

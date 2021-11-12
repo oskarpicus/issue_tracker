@@ -1,15 +1,15 @@
 package security;
 
-import model.User;
+import dtos.UserDto;
 
 /**
  * Abstraction of a response obtained after a successful authentication.
  */
 public class AuthenticationResponse {
     private final String jwt;
-    private final User user;
+    private final UserDto user;
 
-    public AuthenticationResponse(String jwt, User user) {
+    public AuthenticationResponse(String jwt, UserDto user) {
         this.jwt = jwt;
         this.user = user;
     }
@@ -18,7 +18,7 @@ public class AuthenticationResponse {
         return jwt;
     }
 
-    public User getUser() {
+    public UserDto getUser() {
         return user;
     }
 }
