@@ -9,7 +9,8 @@ import validator.InvolvementValidator;
 import validator.ProjectValidator;
 import validator.UserValidator;
 
-import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,21 +23,6 @@ class InvolvementHbRepositoryTest {
     private static final UserHbRepository userRepo = new UserHbRepository(new UserValidator());
     private static final ProjectHbRepository projectRepo = new ProjectHbRepository(new ProjectValidator());
 
-    private static final User[] defaultUsers = new User[]{
-            new User(1L, "anne", "anne_p", "Anne", "Victoria", "anne@gmail.com"),
-            new User(2L, "john", "johnOl", "John", "Smith", "john_smith@yahoo.com"),
-    };
-    private static final Project[] defaultProjects = new Project[]{
-            new Project(1L, "architecture_map", "Architecture", LocalDateTime.now()),
-            new Project(2L, "google", "Browser", LocalDateTime.now()),
-            new Project(3L, "Bugzilla", "Issue tracker", LocalDateTime.now()),
-    };
-    private static final Involvement[] defaultInvolvements = new Involvement[]{
-            new Involvement(1L, Role.TESTER, defaultUsers[0], defaultProjects[0]),
-            new Involvement(2L, Role.PRODUCT_OWNER, defaultUsers[1], defaultProjects[2]),
-            new Involvement(3L, Role.QA_LEAD, defaultUsers[0], defaultProjects[2])
-    };
-
     /**
      * Method for inserting the default involvements in the database.
      * Thanks to the @BeforeEach annotation, for each test it is guaranteed that these involvements will be
@@ -44,9 +30,9 @@ class InvolvementHbRepositoryTest {
      */
     @BeforeEach
     void insertDefaultInvolvements() {
-        Stream.of(defaultUsers).forEach(userRepo::save);
-        Stream.of(defaultProjects).forEach(projectRepo::save);
-        Stream.of(defaultInvolvements).forEach(involvementRepo::save);
+        Stream.of(Constants.defaultUsers).forEach(userRepo::save);
+        Stream.of(Constants.defaultProjects).forEach(projectRepo::save);
+        Stream.of(Constants.defaultInvolvements).forEach(involvementRepo::save);
     }
 
     /**
@@ -88,7 +74,7 @@ class InvolvementHbRepositoryTest {
             }
         }
 
-        final Involvement toSave = new Involvement(null, Role.UI_DESIGNER, defaultUsers[1], defaultProjects[2]);
+        final Involvement toSave = new Involvement(null, Role.UI_DESIGNER, Constants.defaultUsers[1], Constants.defaultProjects[2]);
         var testCases = new TestCase[]{
                 new TestCase("Save Involvement successful", toSave, Optional.empty(), null, null),
                 new TestCase("Save Involvement null", null, null, IllegalArgumentException.class, null),
@@ -129,7 +115,7 @@ class InvolvementHbRepositoryTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Delete Involvement successful", defaultInvolvements[0].getId(), Optional.of(defaultInvolvements[0]), null, null),
+                new TestCase("Delete Involvement successful", Constants.defaultInvolvements[0].getId(), Optional.of(Constants.defaultInvolvements[0]), null, null),
                 new TestCase("Delete Involvement non-existing id", Long.MAX_VALUE, Optional.empty(), null, null),
                 new TestCase("Delete Involvement null", null, null, IllegalArgumentException.class, null),
         };
@@ -162,7 +148,7 @@ class InvolvementHbRepositoryTest {
             }
         }
 
-        Involvement toUpdate = defaultInvolvements[0].clone();
+        Involvement toUpdate = Constants.defaultInvolvements[0].clone();
         toUpdate.setRole(Role.UX_DESIGNER);
         var testCases = new TestCase[]{
                 new TestCase("Update Involvement successful", toUpdate, Optional.empty(), null, null),
@@ -195,7 +181,7 @@ class InvolvementHbRepositoryTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Find Involvement successful", defaultInvolvements[0].getId(), Optional.of(defaultInvolvements[0]), null, null),
+                new TestCase("Find Involvement successful", Constants.defaultInvolvements[0].getId(), Optional.of(Constants.defaultInvolvements[0]), null, null),
                 new TestCase("Find Involvement unsuccessful", Long.MAX_VALUE, Optional.empty(), null, null),
                 new TestCase("Find Involvement null id", null, null, IllegalArgumentException.class, null),
         };
@@ -208,7 +194,42 @@ class InvolvementHbRepositoryTest {
         List<Involvement> involvements = StreamSupport
                 .stream(involvementRepo.findAll().spliterator(), false)
                 .collect(Collectors.toList());
-        Assertions.assertEquals(defaultInvolvements.length, involvements.size());
-        Stream.of(defaultInvolvements).map(involvements::contains).forEach(Assertions::assertTrue);
+        Assertions.assertEquals(Constants.defaultInvolvements.length, involvements.size());
+        Stream.of(Constants.defaultInvolvements).map(involvements::contains).forEach(Assertions::assertTrue);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> findInvolvementsByUser() {
+        record TestCase(String name, User user, Iterable<Involvement> expected, Class<? extends Exception> exception) {
+            public void check() {
+                try {
+                    Iterable<Involvement> computed = involvementRepo.findInvolvementsByUser(TestCase.this.user);
+                    Assertions.assertNull(TestCase.this.exception);
+                    Assertions.assertEquals(expected, computed);
+                } catch (Exception e) {
+                    Assertions.assertNotNull(TestCase.this.exception);
+                    Assertions.assertEquals(e.getClass(), exception);
+                }
+            }
+        }
+
+        User nonExistentUser = new User(Long.MAX_VALUE, "", "", "", "", "");
+
+        List<Involvement> involvementsUser0 = Arrays.stream(Constants.defaultInvolvements)
+                .filter(involvement -> involvement.getUser().equals(Constants.defaultUsers[0]))
+                .collect(Collectors.toList());
+
+        List<Involvement> involvementsUser2 = Arrays.stream(Constants.defaultInvolvements)
+                .filter(involvement -> involvement.getUser().equals(Constants.defaultUsers[2]))
+                .collect(Collectors.toList());
+
+        var testCases = new TestCase[]{
+                new TestCase("Find Involvements non-existent user", nonExistentUser, Collections.emptyList(), null),
+                new TestCase("Find Involvements null user", null, null, IllegalArgumentException.class),
+                new TestCase("Find Involvements successful empty", Constants.defaultUsers[2], involvementsUser2, null),
+                new TestCase("Find Involvements successful non zero size", Constants.defaultUsers[0], involvementsUser0, null)
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
     }
 }

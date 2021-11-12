@@ -1,5 +1,6 @@
 package controllers;
 
+import dtos.UserDto;
 import model.User;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class UserController {
     public ResponseEntity<?> createAccount(@RequestBody User user) {
         try {
             User result = service.createAccount(user);
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(UserDto.from(result), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>("Invalid data", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

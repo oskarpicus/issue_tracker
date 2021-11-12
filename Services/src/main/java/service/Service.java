@@ -3,8 +3,11 @@ package service;
 import exceptions.EmailTakenException;
 import exceptions.UsernameTakenException;
 import exceptions.UserNotFoundException;
+import model.Involvement;
 import model.Project;
 import model.User;
+
+import java.util.Set;
 
 public interface Service {
 
@@ -40,4 +43,13 @@ public interface Service {
      *         - null, otherwise
      */
     Project getProjectById(long id);
+
+    /**
+     * Method for retrieving all the involvements of a certain user, based on their username
+     * @param username, the username of the user to retrieve the involvements
+     * @return a {@code Set} containing the involvements of the user with the specified username.
+     * Returns an empty set if there are no involvements to retrieve.
+     * @throws UserNotFoundException if there is no user with the specified username
+     */
+    Set<Involvement> getInvolvementsByUsername(String username) throws UserNotFoundException;
 }
