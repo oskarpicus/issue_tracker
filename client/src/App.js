@@ -1,12 +1,12 @@
 import './App.css';
-import CreateAccountForm from "./components/CreateAccountForm";
+import CreateAccountForm from "./pages/CreateAccountForm";
 import {createRef, useState} from "react";
 import MySnackbar from "./components/MySnackbar";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {createAccountPage, dashboardPage, loginPage} from "./components/const";
-import LoginForm from "./components/LoginForm";
-import Dashboard from "./components/Dashboard";
-import ErrorPage from "./components/ErrorPage";
+import LoginForm from "./pages/loginForm/LoginForm";
+import Dashboard from "./pages/Dashboard";
+import ErrorPage from "./pages/errorPage/ErrorPage";
 
 function App() {
     const [alert, setAlert] = useState({

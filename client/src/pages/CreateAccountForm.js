@@ -1,7 +1,7 @@
-import LabeledField from "./LabeledField";
-import SubmitButton from "./SubmitButton";
+import LabeledField from "../components/LabeledField";
+import SubmitButton from "../components/SubmitButton";
 import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
-import {createdAccountMessage, loginPage, responseTypes, websiteTitle} from "./const";
+import {createdAccountMessage, loginPage, responseTypes, websiteTitle} from "../components/const";
 import {useState} from "react";
 import {Link} from "react-router-dom";
 import {createAccount} from "../services/userService";

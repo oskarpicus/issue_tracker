@@ -1,13 +1,13 @@
-import {createAccountPage, dashboardPage, responseTypes, websiteTitle} from "./const";
-import LabeledField from "./LabeledField";
-import SubmitButton from "./SubmitButton";
-import './../loginForm.css';
+import {createAccountPage, dashboardPage, responseTypes, websiteTitle} from "../../components/const";
+import LabeledField from "../../components/LabeledField";
+import SubmitButton from "../../components/SubmitButton";
+import './loginForm.css';
 import BugReportOutlinedIcon from "@mui/icons-material/BugReportOutlined";
 import {Link, useHistory} from "react-router-dom";
 import {useState} from "react";
 import {Drawer} from "@mui/material";
 import PestControlIcon from '@mui/icons-material/PestControlOutlined';
-import {login} from "../services/userService";
+import {login} from "../../services/userService";
 
 const LoginForm = ({setAlert, setCredentials}) => {
     let initialValues = {
