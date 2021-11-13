@@ -15,7 +15,6 @@
 }
 
 * {
-    background-color: var(--color-light-white);
     font-family: 'Noto Sans', sans-serif;
     font-size: var(--font-size-small);
 }
