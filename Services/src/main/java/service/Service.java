@@ -1,8 +1,6 @@
 package service;
 
-import exceptions.EmailTakenException;
-import exceptions.UsernameTakenException;
-import exceptions.UserNotFoundException;
+import exceptions.*;
 import model.Involvement;
 import model.Project;
 import model.User;
@@ -52,4 +50,18 @@ public interface Service {
      * @throws UserNotFoundException if there is no user with the specified username
      */
     Set<Involvement> getInvolvementsByUsername(String username) throws UserNotFoundException;
+
+    /**
+     * Method for adding a participant to the project
+     * @param involvement, encapsulation of the project and the user, along with their role in the project.
+     *                     It is expected that the {@code User} of involvement has a valid username set and the {@code Project}, a valid id.
+     * @param requester, the user that initiated the process. It is expected that the requester has a valid identifier set.
+     * @return - the involvement with an identifier assigned, if the operation is successful
+     *         - null, otherwise
+     * @throws UserNotInProjectException if the requester is not a participant to the project
+     * @throws UserNotFoundException if either the desired participant or the requester do not exist
+     * @throws ProjectNotFoundException if the project of the involvement does not exist
+     * @throws UserAlreadyInProjectException if the user is already a participant in the project
+     */
+    Involvement addParticipant(Involvement involvement, User requester) throws UserNotInProjectException, UserNotFoundException, ProjectNotFoundException, UserAlreadyInProjectException;
 }
