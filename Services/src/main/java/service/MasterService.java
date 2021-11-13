@@ -1,8 +1,6 @@
 package service;
 
-import exceptions.EmailTakenException;
-import exceptions.UserNotFoundException;
-import exceptions.UsernameTakenException;
+import exceptions.*;
 import model.Involvement;
 import model.Project;
 import model.User;
@@ -14,8 +12,6 @@ import utils.Constants;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class MasterService implements Service {
     private final UserRepository userRepository;
@@ -74,5 +70,47 @@ public class MasterService implements Service {
         }
 
         return user.get().getInvolvements();
+    }
+
+    @Override
+    public Involvement addParticipant(Involvement involvement, User requester) throws UserNotInProjectException, UserNotFoundException, ProjectNotFoundException, UserAlreadyInProjectException {
+        // verify if the users are valid
+        Optional<User> userRequester = userRepository.find(requester.getId());
+        if (userRequester.isEmpty()) {
+            throw new UserNotFoundException("Requester does not exist");
+        }
+
+        boolean isParticipant = userRequester.get()
+                .getInvolvements()
+                .stream()
+                .anyMatch(involvement1 -> involvement1.getUser().equals(userRequester.get()));
+        if (!isParticipant) {
+            throw new UserNotInProjectException("Requester is not in the project");
+        }
+
+        Optional<User> userParticipant = userRepository.findUserByUsername(involvement.getUser().getUsername());
+        if (userParticipant.isEmpty()) {
+            throw new UserNotFoundException(Constants.USER_DOES_NOT_EXIST_ERROR_MESSAGE);
+        }
+
+        Optional<Project> projectOptional = projectRepository.find(involvement.getProject().getId());
+        if (projectOptional.isEmpty()) {
+            throw new ProjectNotFoundException("Project does not exist");
+        }
+
+        // verify if the user is already a participant
+        isParticipant = userParticipant.get()
+                .getInvolvements()
+                .stream()
+                .anyMatch(involvement1 -> involvement1.getProject().equals(projectOptional.get()));
+        if (isParticipant) {
+            throw new UserAlreadyInProjectException("The user is already a participant");
+        }
+
+        involvement.setUser(userParticipant.get());
+        involvement.setProject(projectOptional.get());
+
+        Optional<Involvement> result = involvementRepository.save(involvement);
+        return result.isEmpty() ? involvement : null;
     }
 }

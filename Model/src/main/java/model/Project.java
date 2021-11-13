@@ -35,6 +35,10 @@ public class Project implements Entity<Long>, Cloneable {
         this.createdAt = createdAt;
     }
 
+    public Project(Long id) {
+        this.id = id;
+    }
+
     @Override
     public Long getId() {
         return id;

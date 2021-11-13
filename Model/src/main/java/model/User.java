@@ -40,6 +40,14 @@ public class User implements Entity<Long>, Cloneable {
         this.email = email;
     }
 
+    public User(Long id) {
+        this.id = id;
+    }
+
+    public User(String username) {
+        this.username = username;
+    }
+
     @Override
     public Long getId() {
         return id;

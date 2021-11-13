@@ -10,7 +10,8 @@ import java.util.stream.Stream;
 public class DefaultUserRepository implements UserRepository {
     private final User[] defaultUsers = new User[]{
             Constants.USER,
-            new User(2L, "john", "johnOl", "John", "Smith", "john_smith@yahoo.com"),
+            Constants.OTHER_USER,
+            new User(3L, "john", "johnOl", "John", "Smith", "john_smith@yahoo.com"),
     };
 
     @Override
