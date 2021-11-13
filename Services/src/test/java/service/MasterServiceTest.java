@@ -1,15 +1,15 @@
 package service;
 
-import exceptions.EmailTakenException;
-import exceptions.UserNotFoundException;
-import exceptions.UsernameTakenException;
+import exceptions.*;
 import mocks.*;
 import model.Involvement;
 import model.Project;
+import model.Role;
 import model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -132,6 +132,69 @@ class MasterServiceTest {
         var testCases = new TestCase[]{
                 new TestCase("Get Involvements by User username non-existent", new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new EmptyInvolvementRepository()), "", null, UserNotFoundException.class),
                 new TestCase("Get Involvements by User zero size", new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new EmptyInvolvementRepository()), Constants.USER.getUsername(), Collections.emptySet(), null),
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> addParticipant() {
+        record TestCase(String name, Service service, Involvement involvement, User requester, Involvement expected,
+                        Class<? extends Exception> exception) {
+            public void check() {
+                try {
+                    Involvement result = TestCase.this.service.addParticipant(TestCase.this.involvement, TestCase.this.requester);
+                    Assertions.assertNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.expected, result);
+                } catch (Exception e) {
+                    Assertions.assertNotNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                }
+            }
+        }
+
+        User userNonExistent = new User(Long.MAX_VALUE);
+        userNonExistent.setUsername("a");
+        Project projectNonExistent = new Project(Long.MAX_VALUE);
+
+        UserRepository defaultUserRepository = new DefaultUserRepository();
+
+        var testCases = new TestCase[]{
+                new TestCase("Add Participant non existent requester",
+                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new EmptyInvolvementRepository()),
+                        new Involvement(Role.UX_DESIGNER, Constants.USER, Constants.PROJECT),
+                        userNonExistent,
+                        null,
+                        UserNotFoundException.class
+                ),
+                new TestCase("Add Participant requester not a participant",
+                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new EmptyInvolvementRepository()),
+                        new Involvement(Role.BACK_END_DEVELOPER, userNonExistent, Constants.PROJECT),
+                        Constants.USER,
+                        null,
+                        UserNotInProjectException.class
+                ),
+                new TestCase("Add participant non existent user",
+                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new DefaultInvolvementRepository()),
+                        new Involvement(Role.TESTER, userNonExistent, Constants.PROJECT),
+                        Constants.OTHER_USER,
+                        null,
+                        UserNotFoundException.class
+                ),
+                new TestCase("Add participant non existent project",
+                        new MasterService(defaultUserRepository, new EmptyProjectRepository(), new EmptyInvolvementRepository()),
+                        new Involvement(Role.QA_LEAD, Constants.OTHER_USER, projectNonExistent),
+                        Constants.OTHER_USER,
+                        null,
+                        ProjectNotFoundException.class
+                ),
+                new TestCase("Add participant already added",
+                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new DefaultInvolvementRepository()),
+                        new Involvement(Role.FULL_STACK_DEVELOPER, Constants.OTHER_USER, Constants.PROJECT),
+                        Constants.OTHER_USER,
+                        null,
+                        UserAlreadyInProjectException.class
+                ),
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
