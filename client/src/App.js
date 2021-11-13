@@ -1,7 +1,7 @@
 import './App.css';
-import CreateAccountForm from "./pages/CreateAccountForm";
+import CreateAccountForm from "./pages/createAccountForm/CreateAccountForm";
 import {createRef, useState} from "react";
-import MySnackbar from "./components/MySnackbar";
+import MySnackbar from "./components/mySnackbar/MySnackbar";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {createAccountPage, dashboardPage, loginPage} from "./components/const";
 import LoginForm from "./pages/loginForm/LoginForm";

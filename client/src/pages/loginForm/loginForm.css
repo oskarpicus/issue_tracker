@@ -97,3 +97,8 @@
     bottom: 2vh;
     left: 19vh;
 }
+
+.dark-text {
+    color: var(--color-dark-blue);
+    font-weight: lighter;
+}

@@ -1,6 +1,6 @@
 import {createAccountPage, dashboardPage, responseTypes, websiteTitle} from "../../components/const";
-import LabeledField from "../../components/LabeledField";
-import SubmitButton from "../../components/SubmitButton";
+import LabeledField from "../../components/labeledField/LabeledField";
+import SubmitButton from "../../components/submitButton/SubmitButton";
 import './loginForm.css';
 import BugReportOutlinedIcon from "@mui/icons-material/BugReportOutlined";
 import {Link, useHistory} from "react-router-dom";
