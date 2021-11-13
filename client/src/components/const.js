@@ -41,6 +41,16 @@ const dashboardPage = "/dashboard";
  */
 const errorPage = "/error";
 
+/**
+ * Defines how a call to the backend can result. This information will be added in the "key" field of the response.
+ * @type {{success: string, error: string, key: string}}
+ */
+const responseTypes = {
+    key: "type",
+    error: "error",
+    success: "success"
+}
+
 export {
     websiteTitle,
     serverErrorMessage,
@@ -50,5 +60,6 @@ export {
     loginPage,
     createAccountPage,
     dashboardPage,
-    errorPage
+    errorPage,
+    responseTypes
 }
