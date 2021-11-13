@@ -1,4 +1,4 @@
-import {createAccountPage, dashboardPage, loginHttp, responseTypes, serverErrorMessage, websiteTitle} from "./const";
+import {createAccountPage, dashboardPage, responseTypes, websiteTitle} from "./const";
 import LabeledField from "./LabeledField";
 import SubmitButton from "./SubmitButton";
 import './../loginForm.css';

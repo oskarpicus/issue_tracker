@@ -1,12 +1,12 @@
 import LabeledField from "./LabeledField";
 import SubmitButton from "./SubmitButton";
 import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
-import {websiteTitle, serverErrorMessage, createdAccountMessage, createUserHttp, loginPage} from "./const";
+import {createdAccountMessage, loginPage, responseTypes, websiteTitle} from "./const";
 import {useState} from "react";
 import {Link} from "react-router-dom";
+import {createAccount} from "../services/userService";
 
 const CreateAccountForm = ({setAlert}) => {
-    console.log("A AINCEPUT CREATE ACCOUNT FORM")
     let initialValues = {
         firstName: "",
         lastName: "",
@@ -24,7 +24,6 @@ const CreateAccountForm = ({setAlert}) => {
     };
 
     let onSubmit = (e) => {
-        console.log(`${JSON.stringify(formValues)}`)
         e.preventDefault()
         if (formValues["password"] !== formValues["confirmedPassword"]) {
             setAlert({
@@ -36,29 +35,16 @@ const CreateAccountForm = ({setAlert}) => {
             return
         }
 
-        let request = new XMLHttpRequest();
-        request.onreadystatechange = function () {
-            if (request.readyState === 4 && request.status === 200) {
-                console.log(request.responseText);
+        createAccount(formValues)
+            .then(response => {
+                let message = response[responseTypes.key] === responseTypes.success ? createdAccountMessage : response.data;
                 setAlert({
                     state: true,
-                    severity: "success",
-                    message: createdAccountMessage,
-                    backgroundColor: "inherit"
-                })
-                setFormValues({...initialValues});
-            } else if (request.readyState === 4) {
-                setAlert({
-                    state: true,
-                    severity: "error",
-                    message: request.responseText === "" ? serverErrorMessage : request.responseText,
+                    severity: response[responseTypes.key],
+                    message: message,
                     backgroundColor: "inherit"
                 });
-            }
-        };
-        request.open(createUserHttp.method, createUserHttp.URI);
-        request.setRequestHeader("Content-Type", "application/json");
-        request.send(JSON.stringify(formValues));
+            });
     }
 
     return (
