@@ -1,3 +1,5 @@
+import './labeledField.css';
+
 /**
  * Component for creating a label, followed by a corresponding input tag
  * @param text: String, the label text

@@ -1,12 +1,13 @@
-import {createAccountPage, dashboardPage, loginHttp, serverErrorMessage, websiteTitle} from "./const";
-import LabeledField from "./LabeledField";
-import SubmitButton from "./SubmitButton";
-import './../loginForm.css';
+import {createAccountPage, dashboardPage, responseTypes, websiteTitle} from "../../components/const";
+import LabeledField from "../../components/labeledField/LabeledField";
+import SubmitButton from "../../components/submitButton/SubmitButton";
+import './loginForm.css';
 import BugReportOutlinedIcon from "@mui/icons-material/BugReportOutlined";
 import {Link, useHistory} from "react-router-dom";
 import {useState} from "react";
 import {Drawer} from "@mui/material";
 import PestControlIcon from '@mui/icons-material/PestControlOutlined';
+import {login} from "../../services/userService";
 
 const LoginForm = ({setAlert, setCredentials}) => {
     let initialValues = {
@@ -26,23 +27,20 @@ const LoginForm = ({setAlert, setCredentials}) => {
     const onSubmit = (e) => {
         e.preventDefault();
         const backgroundColorSnackbar = "#112D4E";
-        let request = new XMLHttpRequest();
-        request.onreadystatechange = function () {
-            if (request.readyState === 4 && request.status === 200) {
-                setCredentials(JSON.parse(request.responseText))
-                history.push(dashboardPage)
-            } else if (request.readyState === 4) {
-                setAlert({
-                    state: true,
-                    severity: "error",
-                    message: request.responseText === "" ? serverErrorMessage : request.responseText,
-                    backgroundColor: backgroundColorSnackbar
-                })
-            }
-        }
-        request.open(loginHttp.method, loginHttp.URI)
-        request.setRequestHeader("Content-Type", "application/json")
-        request.send(JSON.stringify(formValues))
+        login(formValues)
+            .then(response => {
+                if (response[responseTypes.key] === responseTypes.error) {
+                    setAlert({
+                        state: true,
+                        severity: "error",
+                        message: response.data,
+                        backgroundColor: backgroundColorSnackbar
+                    })
+                } else {
+                    setCredentials(response);
+                    history.push(dashboardPage);
+                }
+            });
     }
 
     return (

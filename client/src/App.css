@@ -20,11 +20,6 @@
     font-size: var(--font-size-small);
 }
 
-/* The main page for creating a new account */
-#create-account-page {
-    margin: 0 var(--margin-sides);
-}
-
 .spaced {
     display: flex;
     align-items: center;
@@ -40,48 +35,8 @@
     padding: var(--margin-inputs) 0;  /* extra space to differentiate between texts */
 }
 
-/* The buttons */
-.submit-button {
-    background-color: var(--color-light-blue);
-    color: var(--color-light-white);
-    border: 1px solid var(--color-grey);
-    font-size: large;
-    padding: 5px 10px;
-    border-radius: var(--border-radius);
-    margin-top: var(--margin-inputs);
-    margin-bottom: var(--margin-bottom);
-}
-
-.submit-button:hover {
-    cursor: pointer;
-    background-color: var(--color-dark-blue);
-}
-
-/* (text, input) pairs */
-.labeled-field {
-    margin: var(--margin-inputs) 0;
-}
-
-.labeled-field p {
-    color: var(--color-dark-blue);
-    font-size: var(--font-size-small);
-}
-
-.labeled-field input {
-    border: 1px solid var(--color-grey);
-    border-radius: var(--border-radius);
-    font-size: var(--font-size-small);
-    width: 100%;
-}
-
 a:visited, a:link {
     text-decoration: none;
-}
-
-/* The sign in option */
-.dark-text {
-    color: var(--color-dark-blue);
-    font-weight: lighter;
 }
 
 .link {
@@ -102,8 +57,4 @@ a:visited, a:link {
     color: var(--color-dark-blue);
     font-size: var(--font-size-large);
     font-family: 'Open Sans', sans-serif;
-}
-
-.my-snackbar * {
-    background-color: inherit;
 }

@@ -1,7 +1,7 @@
 import BugReportOutlinedIcon from "@mui/icons-material/BugReportOutlined";
-import {createAccountPage, loginPage, websiteTitle} from "./const";
+import {createAccountPage, loginPage, websiteTitle} from "../../components/const";
 import ErrorIcon from '@mui/icons-material/Error';
-import "../errorPage.css"
+import "./errorPage.css"
 import {PestControlOutlined} from "@mui/icons-material";
 import {makeStyles} from "@material-ui/core/styles";
 import {Link} from "react-router-dom";

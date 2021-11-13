@@ -1,4 +1,4 @@
-@import "App.css";
+@import "../../App.css";
 
 #div-login-form {
     display: flex;
@@ -96,4 +96,9 @@
     transform: rotate(-40deg);
     bottom: 2vh;
     left: 19vh;
+}
+
+.dark-text {
+    color: var(--color-dark-blue);
+    font-weight: lighter;
 }
