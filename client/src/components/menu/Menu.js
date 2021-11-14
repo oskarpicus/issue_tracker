@@ -113,13 +113,14 @@ const actions = [
         icon: <BarChartOutlined htmlColor={"white"} fontSize={"large"}/>,
         description: "Statistics",
         destination: "/"
-    },
-    {
-        icon: <LogoutOutlined htmlColor={"white"} fontSize={"large"}/>,
-        description: "Log out",
-        destination: "/"
     }
 ];
+
+const logout = {
+    icon: <LogoutOutlined htmlColor={"white"} fontSize={"large"}/>,
+    description: "Log out",
+    destination: "/"
+};
 
 const Menu = ({content}) => {
     const theme = useTheme();
@@ -132,8 +133,6 @@ const Menu = ({content}) => {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-
-    let stylesLogout = {bottom: "0", position: "fixed", paddingBottom: "10px"};
 
     return (
         <Box sx={{display: 'flex'}}>
@@ -171,7 +170,7 @@ const Menu = ({content}) => {
                     {
                         actions.map(action => (
                             <Link to={action.destination} key={action.description}>
-                                <ListItem button style={action.description === "Log out" ? stylesLogout : {}}>
+                                <ListItem button>
                                     <ListItemIcon>
                                         {action.icon}
                                     </ListItemIcon>
@@ -179,6 +178,18 @@ const Menu = ({content}) => {
                                 </ListItem>
                             </Link>
                         ))
+                    }
+                </List>
+                <List style={{marginTop: "auto"}}>
+                    {
+                        <Link to={logout.destination} key={logout.description}>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    {logout.icon}
+                                </ListItemIcon>
+                                <ListItemText primary={logout.description}/>
+                            </ListItem>
+                        </Link>
                     }
                 </List>
             </Drawer>)
