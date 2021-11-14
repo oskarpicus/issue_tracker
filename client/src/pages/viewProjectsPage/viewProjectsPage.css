@@ -1,0 +1,18 @@
+#p-username-projects {
+    margin-left: 15px;
+}
+
+.title-button-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.action-button {
+    background-color: var(--color-light-blue) !important;
+    font-family: 'Noto Sans', sans-serif !important;
+}
+
+#add-project-button {
+    margin-right: 15px;
+}

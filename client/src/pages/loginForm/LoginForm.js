@@ -1,4 +1,4 @@
-import {createAccountPage, dashboardPage, responseTypes, websiteTitle} from "../../components/const";
+import {createAccountPage, responseTypes, viewProjectsPage, websiteTitle} from "../../components/const";
 import LabeledField from "../../components/labeledField/LabeledField";
 import SubmitButton from "../../components/submitButton/SubmitButton";
 import './loginForm.css';
@@ -38,7 +38,7 @@ const LoginForm = ({setAlert, setCredentials}) => {
                     })
                 } else {
                     setCredentials(response);
-                    history.push(dashboardPage);
+                    history.push(viewProjectsPage.replace(":username", response.user.username));
                 }
             });
     }

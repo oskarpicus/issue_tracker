@@ -3,10 +3,10 @@ import CreateAccountForm from "./pages/createAccountForm/CreateAccountForm";
 import {createRef, useState} from "react";
 import MySnackbar from "./components/mySnackbar/MySnackbar";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
-import {createAccountPage, dashboardPage, loginPage} from "./components/const";
+import {createAccountPage, loginPage, viewProjectsPage} from "./components/const";
 import LoginForm from "./pages/loginForm/LoginForm";
-import Dashboard from "./pages/Dashboard";
 import ErrorPage from "./pages/errorPage/ErrorPage";
+import ViewProjectsPage from "./pages/viewProjectsPage/ViewProjectsPage";
 
 function App() {
     const [alert, setAlert] = useState({
@@ -32,8 +32,8 @@ function App() {
                     <Route exact={true} path={loginPage}>
                         <LoginForm setAlert={setAlert} setCredentials={setCredentials}/>
                     </Route>
-                    <Route exact={true} path={dashboardPage}>
-                        <Dashboard credentials={credentials}/>
+                    <Route exact={true} path={viewProjectsPage}>
+                        <ViewProjectsPage credentials={credentials}/>
                     </Route>
                     {/* Will fallback to every other accessed URL */}
                     <Route>
