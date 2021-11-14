@@ -30,16 +30,16 @@ const createAccountPage = "/create-account";
 const loginPage = "/";
 
 /**
- * The page address for visiting the dashboard
- * @type {string}
- */
-const dashboardPage = "/dashboard";
-
-/**
  * The page address for accessing the error message page
  * @type {string}
  */
 const errorPage = "/error";
+
+/**
+ * The page address for visiting the projects of a specific user, based on their username
+ * @type {string}
+ */
+const viewProjectsPage = "/:username/projects";
 
 /**
  * Defines how a call to the backend can result. This information will be added in the "key" field of the response.
@@ -59,7 +59,7 @@ export {
     loginHttp,
     loginPage,
     createAccountPage,
-    dashboardPage,
     errorPage,
+    viewProjectsPage,
     responseTypes
 }
