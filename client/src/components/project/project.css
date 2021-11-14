@@ -1,0 +1,29 @@
+.project {
+    border: 1px solid var(--color-grey);
+    border-radius: calc(var(--border-radius) * 2);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-dark-blue);
+    background-color: white;
+}
+
+.project-information {
+    display: flex;
+    justify-content: space-between;
+}
+
+.project-information p {
+    font-size: var(--font-size-medium);
+    margin: 0;
+    padding: 20px;
+}
+
+.project-description {
+    padding: 0 20px 20px 20px;
+    flex: 1 1 100%;
+    word-wrap: break-word;
+    word-break: break-all;
+    font-size: var(--font-size-smaller);
+    font-weight: normal;
+}
