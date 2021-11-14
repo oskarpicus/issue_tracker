@@ -5,8 +5,14 @@ import {useEffect, useState} from "react";
 import {viewProjects} from "../../services/projectService";
 import List from "@mui/material/List";
 import ListItem from '@mui/material/ListItem';
-import {ListItemText} from "@mui/material";
 import Menu from "../../components/menu/Menu";
+import Project from "../../components/project/Project";
+import {Box, Button} from "@mui/material";
+import './viewProjectsPage.css';
+
+const getFullName = (credentials) => {
+    return `${credentials.user.firstName} ${credentials.user.lastName}`;
+}
 
 const ViewProjects = ({match, credentials}) => {
     const [involvements, setInvolvements] = useState([]);
@@ -19,33 +25,41 @@ const ViewProjects = ({match, credentials}) => {
                 .then(response => {
                     if (response[responseTypes.key] === responseTypes.success) {
                         setInvolvements(response.data);
-                        console.log(response);
                     } else {
                         // todo possible handle errors
-                        console.log(response);
                         history.push(errorPage);
                     }
                 });
         };
         getInvolvements();
-    }, [match, credentials]);
+    }, [match, credentials, history]);
 
     if (credentials.user === undefined) {
         return <Redirect to={errorPage}/>
     }
 
-    const content = <div>
-        You are {match.params.username}
-        <List>
-            {
-                involvements.map(involvement => (
-                    <ListItem key={involvement.id} >
-                        <ListItemText secondary={involvement.role} primary={involvement.project.title}/>
-                    </ListItem>
-                ))
-            }
-        </List>
-    </div>;
+    const handleClick = () => {
+        // todo redirect to add project page
+        history.push("/");
+    }
+
+    const content = (
+        <Box id={"view-projects-page"}>
+            <Box className={"title-button-inline"}>
+                <p className={"action-title"} id={"p-username-projects"}>{getFullName(credentials)}'s projects</p>
+                <Button variant={"contained"} className={"action-button"} id={"add-project-button"} onClick={handleClick}>Add project</Button>
+            </Box>
+            <List>
+                {
+                    involvements.map(involvement => (
+                        <ListItem key={`involvement_${involvement.id}`}>
+                            <Project involvement={involvement}/>
+                        </ListItem>
+                    ))
+                }
+            </List>
+        </Box>
+    );
 
     return <Menu content={content}/>
 };
