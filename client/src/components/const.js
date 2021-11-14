@@ -12,10 +12,16 @@ const createdAccountMessage = "Account created successfully";
 const createUserHttp = {method: "POST", URI: "http://localhost:8080/users"};
 
 /**
- * Object that encapsulates the details of the request mde to the server to login
+ * Object that encapsulates the details of the request made to the server to login
  * @type {{method: string, URI: string}}
  */
 const loginHttp = {method: "POST", URI: "http://localhost:8080/users/login"}
+
+/**
+ * Object that encapsulates the details of the request made to the server for accessing the projects of a user
+ * @type {{method: string, URI: string}}
+ */
+const getInvolvementsHttp = {method: "GET", URI: "http://localhost:8080/involvements?username=:username"}
 
 /**
  * The page address for visiting the page dedicated for creating an account
@@ -57,6 +63,7 @@ export {
     createdAccountMessage,
     createUserHttp,
     loginHttp,
+    getInvolvementsHttp,
     loginPage,
     createAccountPage,
     errorPage,
