@@ -1,3 +1,7 @@
 #create-account-page {
     margin: 0 var(--margin-sides);
 }
+
+.App {
+    background-color: var(--color-light-white);
+}

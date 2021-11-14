@@ -1,0 +1,10 @@
+.MuiAppBar-root, .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper.MuiDrawer-paperAnchorLeft.MuiDrawer-paperAnchorDockedLeft.css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
+    background-color: var(--color-dark-blue) !important;
+}
+
+.MuiTypography-root.MuiTypography-body1.MuiListItemText-primary.css-10hburv-MuiTypography-root {
+    color: var(--color-light-white);
+    font-size: var(--font-size-small);
+    font-weight: bold;
+    font-family: 'Noto Sans', sans-serif;
+}
