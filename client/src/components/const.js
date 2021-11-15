@@ -54,6 +54,12 @@ const errorPage = "/error";
 const viewProjectsPage = "/:username/projects";
 
 /**
+ * The page address for visiting the details page of a single project
+ * @type {string}
+ */
+const viewSingleProjectPage = "/projects/:id";
+
+/**
  * Defines how a call to the backend can result. This information will be added in the "key" field of the response.
  * @type {{success: string, error: string, key: string}}
  */
@@ -75,5 +81,6 @@ export {
     createAccountPage,
     errorPage,
     viewProjectsPage,
+    viewSingleProjectPage,
     responseTypes
 }
