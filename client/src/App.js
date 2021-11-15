@@ -1,6 +1,6 @@
 import './App.css';
 import CreateAccountForm from "./pages/createAccountForm/CreateAccountForm";
-import {createRef, useState} from "react";
+import {createRef, useEffect, useState} from "react";
 import MySnackbar from "./components/mySnackbar/MySnackbar";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {createAccountPage, loginPage, viewProjectsPage} from "./components/const";
@@ -15,11 +15,20 @@ function App() {
         message: "",
         backgroundColor: "inherit"
     });
-    const [credentials, setCredentials] = useState({
-        jwt: "",
-        user: undefined
-    })
+
+    const [credentials, setCredentials] = useState(
+        JSON.parse(window.localStorage.getItem("credentials")) ||
+        {
+            jwt: "",
+            user: undefined
+        }
+    );
+
     const snackbarRef = createRef();
+
+    useEffect(() => {
+        window.localStorage.setItem("credentials", JSON.stringify(credentials));
+    }, [credentials]);
 
     return (
         <BrowserRouter>
