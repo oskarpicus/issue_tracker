@@ -16,7 +16,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import './menu.css';
 import BugReportOutlinedIcon from "@mui/icons-material/BugReportOutlined";
-import {websiteTitle} from "../const";
+import {loginPage, websiteTitle} from "../const";
 import {
     AccountCircleOutlined,
     BarChartOutlined,
@@ -153,7 +153,9 @@ const Menu = ({content}) => {
                     </IconButton>
                     <div className={"website-title"}>
                         <BugReportOutlinedIcon fontSize={"large"}/>
-                        <span style={{color: "var(--color-light-white)"}}>{websiteTitle}</span>
+                        <Link to={loginPage}>
+                            <span style={{color: "var(--color-light-white)"}}>{websiteTitle}</span>
+                        </Link>
                     </div>
                 </Toolbar>
             </AppBar>

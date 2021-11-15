@@ -24,6 +24,12 @@ const loginHttp = {method: "POST", URI: "http://localhost:8080/users/login"}
 const getInvolvementsHttp = {method: "GET", URI: "http://localhost:8080/involvements?username=:username"}
 
 /**
+ * Object that encapsulates the details of the request made to the server for accessing a user by their username
+ * @type {{method: string, URI: string}}
+ */
+const getUserByUsernameHttp = {method: "GET", URI: "http://localhost:8080/users?username=:username"}
+
+/**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
  */
@@ -64,6 +70,7 @@ export {
     createUserHttp,
     loginHttp,
     getInvolvementsHttp,
+    getUserByUsernameHttp,
     loginPage,
     createAccountPage,
     errorPage,
