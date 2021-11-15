@@ -1,6 +1,7 @@
 package controllers;
 
 import dtos.UserDto;
+import exceptions.UserNotFoundException;
 import model.User;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,22 @@ public class UserController {
             return new ResponseEntity<>("Invalid data", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Handler responsible for retrieving the information of a user, based on their username
+     * @param username, the username of the desired user
+     * @return  - a response containing the user, if there is a user with the given username
+     *          - a 404 Not Found, otherwise
+     */
+    @GetMapping
+    public ResponseEntity<?> getUser(@RequestParam(value = "username") String username) {
+        try {
+            User user = service.login(username);
+            return new ResponseEntity<>(UserDto.from(user), HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
         }
     }
 }
