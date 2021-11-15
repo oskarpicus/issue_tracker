@@ -31,7 +31,9 @@ const ViewProjects = ({match, credentials}) => {
                     }
                 });
         };
-        getInvolvements();
+        if (credentials.user !== undefined) {
+            getInvolvements();
+        }
     }, [match, credentials, history]);
 
     if (credentials.user === undefined) {
@@ -46,7 +48,7 @@ const ViewProjects = ({match, credentials}) => {
     const content = (
         <Box id={"view-projects-page"}>
             <Box className={"title-button-inline"}>
-                <p className={"action-title"} id={"p-username-projects"}>{getFullName(credentials)}'s projects</p>
+                {/*<p className={"action-title"} id={"p-username-projects"}>{getFullName(credentials)}'s projects</p>*/}
                 <Button variant={"contained"} className={"action-button"} id={"add-project-button"} onClick={handleClick}>Add project</Button>
             </Box>
             <List>
