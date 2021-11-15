@@ -13,6 +13,10 @@
     font-family: 'Noto Sans', sans-serif !important;
 }
 
+.action-button:hover {
+    background-color: var(--color-dark-blue) !important;
+}
+
 #add-project-button {
     margin-right: 15px;
 }
