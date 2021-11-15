@@ -1,4 +1,4 @@
-import {createUserHttp, loginHttp, responseTypes} from "../components/const";
+import {createUserHttp, getUserByUsernameHttp, loginHttp, responseTypes} from "../components/const";
 import axios from "axios";
 
 const sendAxiosPost = async (uri, formValues) => {
@@ -24,3 +24,22 @@ export const login = async (formValues) => {
 export const createAccount = async (userData) => {
     return sendAxiosPost(createUserHttp.URI, userData);
 };
+
+export const getUser = async (username, token) => {
+    try {
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        };
+        let url = getUserByUsernameHttp.URI;
+        url = url.replace(":username", username);
+        const response = await axios.get(url, config);
+        response[responseTypes.key] = responseTypes.success;
+        return response;
+    } catch (error) {
+        error.response[responseTypes.key] = responseTypes.error;
+        return error.response;
+    }
+}

@@ -9,6 +9,7 @@ import Menu from "../../components/menu/Menu";
 import Project from "../../components/project/Project";
 import {Box, Button} from "@mui/material";
 import './viewProjectsPage.css';
+import {getUser} from "../../services/userService";
 
 const getFullName = (userDetails) => {
     return `${userDetails.firstName} ${userDetails.lastName}`;
@@ -36,6 +37,20 @@ const ViewProjects = ({match, credentials}) => {
         if (credentials.user !== undefined) {
             getInvolvements();
         }
+    }, [match, credentials, history]);
+
+    useEffect(() => {
+        const getUserDetails = () => {
+            getUser(match.params.username, credentials.jwt)
+                .then(response => {
+                    if (response[responseTypes.key] === responseTypes.success) {
+                        setUserDetails(response.data);
+                    } else {
+                        history.push(errorPage);
+                    }
+                })
+        }
+        getUserDetails();
     }, [match, credentials, history]);
 
     if (credentials.user === undefined) {
