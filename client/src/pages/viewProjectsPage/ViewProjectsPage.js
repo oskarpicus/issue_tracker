@@ -10,12 +10,14 @@ import Project from "../../components/project/Project";
 import {Box, Button} from "@mui/material";
 import './viewProjectsPage.css';
 
-const getFullName = (credentials) => {
-    return `${credentials.user.firstName} ${credentials.user.lastName}`;
+const getFullName = (userDetails) => {
+    return `${userDetails.firstName} ${userDetails.lastName}`;
 }
 
 const ViewProjects = ({match, credentials}) => {
     const [involvements, setInvolvements] = useState([]);
+
+    const [userDetails, setUserDetails] = useState({});
 
     const history = useHistory();
 
@@ -48,7 +50,7 @@ const ViewProjects = ({match, credentials}) => {
     const content = (
         <Box id={"view-projects-page"}>
             <Box className={"title-button-inline"}>
-                {/*<p className={"action-title"} id={"p-username-projects"}>{getFullName(credentials)}'s projects</p>*/}
+                <p className={"action-title"} id={"p-username-projects"}>{getFullName(userDetails)}'s projects</p>
                 <Button variant={"contained"} className={"action-button"} id={"add-project-button"} onClick={handleClick}>Add project</Button>
             </Box>
             <List>
