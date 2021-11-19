@@ -30,6 +30,12 @@ const getInvolvementsHttp = {method: "GET", URI: "http://localhost:8080/involvem
 const getUserByUsernameHttp = {method: "GET", URI: "http://localhost:8080/users?username=:username"}
 
 /**
+ * Object that encapsulates the details of the request made to the server for accessing a project by its identifier
+ * @type {{method: string, URI: string}}
+ */
+const getProjectByIdHttp = {method: "GET", URI: "http://localhost:8080/projects/:id"}
+
+/**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
  */
@@ -77,6 +83,7 @@ export {
     loginHttp,
     getInvolvementsHttp,
     getUserByUsernameHttp,
+    getProjectByIdHttp,
     loginPage,
     createAccountPage,
     errorPage,
