@@ -54,6 +54,12 @@ const addProjectHttp = {method: "POST", URI: "http://localhost:8080/projects"};
 const getAllUsernamesHttp = {method: "GET", URI: "http://localhost:8080/users/usernames"}
 
 /**
+ * Object that encapsulates the details of the request made to the server for adding a participant to a project
+ * @type {{method: string, URI: string}}
+ */
+const addParticipantHttp = {method: "POST", URI: "http://localhost:8080/involvements"};
+
+/**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
  */
@@ -108,6 +114,7 @@ export {
     getInvolvementsHttp,
     getUserByUsernameHttp,
     getProjectByIdHttp,
+    addParticipantHttp,
     loginPage,
     createAccountPage,
     errorPage,
