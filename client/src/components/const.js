@@ -36,6 +36,12 @@ const getUserByUsernameHttp = {method: "GET", URI: "http://localhost:8080/users?
 const getProjectByIdHttp = {method: "GET", URI: "http://localhost:8080/projects/:id"}
 
 /**
+ * Object that encapsulates the details of the request made to the server for accessing all the available project roles
+ * @type {{method: string, URI: string}}
+ */
+const getRoles = {method: "GET", URI: "http://localhost:8080/roles"}
+
+/**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
  */
@@ -96,5 +102,6 @@ export {
     viewProjectsPage,
     viewSingleProjectPage,
     addProjectPage,
+    getRoles,
     responseTypes
 }
