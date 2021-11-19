@@ -36,6 +36,18 @@ const getUserByUsernameHttp = {method: "GET", URI: "http://localhost:8080/users?
 const getProjectByIdHttp = {method: "GET", URI: "http://localhost:8080/projects/:id"}
 
 /**
+ * Object that encapsulates the details of the request made to the server for accessing all the available project roles
+ * @type {{method: string, URI: string}}
+ */
+const getRolesHttp = {method: "GET", URI: "http://localhost:8080/roles"}
+
+/**
+ * Object that encapsulates the details of the request made to the server for adding a project
+ * @type {{method: string, URI: string}}
+ */
+const addProjectHttp = {method: "POST", URI: "http://localhost:8080/projects"};
+
+/**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
  */
@@ -66,6 +78,12 @@ const viewProjectsPage = "/:username/projects";
 const viewSingleProjectPage = "/projects/:id";
 
 /**
+ * The page address for visiting the form to add a project
+ * @type {string}
+ */
+const addProjectPage = "/add-project";
+
+/**
  * Defines how a call to the backend can result. This information will be added in the "key" field of the response.
  * @type {{success: string, error: string, key: string}}
  */
@@ -89,5 +107,8 @@ export {
     errorPage,
     viewProjectsPage,
     viewSingleProjectPage,
+    addProjectPage,
+    getRolesHttp,
+    addProjectHttp,
     responseTypes
 }

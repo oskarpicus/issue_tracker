@@ -3,11 +3,18 @@ import CreateAccountForm from "./pages/createAccountForm/CreateAccountForm";
 import {createRef, useEffect, useState} from "react";
 import MySnackbar from "./components/mySnackbar/MySnackbar";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
-import {createAccountPage, loginPage, viewProjectsPage, viewSingleProjectPage} from "./components/const";
+import {
+    addProjectPage,
+    createAccountPage,
+    loginPage,
+    viewProjectsPage,
+    viewSingleProjectPage
+} from "./components/const";
 import LoginForm from "./pages/loginForm/LoginForm";
 import ErrorPage from "./pages/errorPage/ErrorPage";
 import ViewProjectsPage from "./pages/viewProjectsPage/ViewProjectsPage";
 import ViewSingleProjectPage from "./pages/viewSingleProjectPage/ViewSingleProjectPage";
+import AddProjectPage from "./pages/addProjectPage/AddProjectPage";
 
 function App() {
     const [alert, setAlert] = useState({
@@ -47,6 +54,9 @@ function App() {
                     </Route>
                     <Route exact={true} path={viewSingleProjectPage}>
                         <ViewSingleProjectPage credentials={credentials}/>
+                    </Route>
+                    <Route exact={true} path={addProjectPage}>
+                        <AddProjectPage credentials={credentials} setAlert={setAlert}/>
                     </Route>
                     {/* Will fallback to every other accessed URL */}
                     <Route>
