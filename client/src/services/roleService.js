@@ -1,5 +1,5 @@
 import axios from "axios";
-import {getRoles, responseTypes} from "../components/const";
+import {getRolesHttp, responseTypes} from "../components/const";
 
 export const getAllProjectRoles = async (token) => {
     try {
@@ -10,7 +10,7 @@ export const getAllProjectRoles = async (token) => {
             }
         };
 
-        const response = await axios.get(getRoles.URI, config);
+        const response = await axios.get(getRolesHttp.URI, config);
         response[responseTypes.key] = responseTypes.success;
         return response;
     } catch (error) {

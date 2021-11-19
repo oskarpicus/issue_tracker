@@ -39,7 +39,13 @@ const getProjectByIdHttp = {method: "GET", URI: "http://localhost:8080/projects/
  * Object that encapsulates the details of the request made to the server for accessing all the available project roles
  * @type {{method: string, URI: string}}
  */
-const getRoles = {method: "GET", URI: "http://localhost:8080/roles"}
+const getRolesHttp = {method: "GET", URI: "http://localhost:8080/roles"}
+
+/**
+ * Object that encapsulates the details of the request made to the server for adding a project
+ * @type {{method: string, URI: string}}
+ */
+const addProjectHttp = {method: "POST", URI: "http://localhost:8080/projects"};
 
 /**
  * The page address for visiting the page dedicated for creating an account
@@ -102,6 +108,7 @@ export {
     viewProjectsPage,
     viewSingleProjectPage,
     addProjectPage,
-    getRoles,
+    getRolesHttp,
+    addProjectHttp,
     responseTypes
 }

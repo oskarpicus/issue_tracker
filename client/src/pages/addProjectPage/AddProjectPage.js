@@ -8,6 +8,7 @@ import {getAllProjectRoles} from "../../services/roleService";
 import {errorPage, responseTypes} from "../../components/const";
 import {useHistory} from "react-router-dom";
 import MyComboBox from "../../components/myComboBox/MyComboBox";
+import {addProject} from "../../services/projectService";
 
 const AddProject = (properties) => {
     const credentials = properties.location.state.credentials;
@@ -47,8 +48,11 @@ const AddProject = (properties) => {
     }, [credentials, history]);
 
     const handleClick = () => {
-        // todo send request
-        console.log(formValues);
+        addProject(formValues, credentials.jwt)
+            .then(response => {
+                // todo display feedback
+                console.log(response);
+            })
     };
 
     const content = (
@@ -71,7 +75,7 @@ const AddProject = (properties) => {
                 label={"Your role in the project"}
                 options={projectRoles}
                 onChange={(event, value) => {
-                    formValues.involvements[0].user.role = value;
+                    formValues.involvements[0].role = value;
                     setFormValues(formValues);
                 }}
                 getOptionLabel={(option) => option.replaceAll("_", " ")}
