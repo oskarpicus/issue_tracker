@@ -16,7 +16,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import './menu.css';
 import BugReportOutlinedIcon from "@mui/icons-material/BugReportOutlined";
-import {loginPage, websiteTitle} from "../const";
+import {loginPage, viewProjectsPage, websiteTitle} from "../const";
 import {
     AccountCircleOutlined,
     BarChartOutlined,
@@ -93,36 +93,13 @@ const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== 'open'})
     }),
 );
 
-const actions = [
-    {
-        icon: <AccountCircleOutlined htmlColor={"white"} fontSize={"large"}/>,
-        description: "My Account",
-        destination: "/"
-    },
-    {
-        icon: <CodeOutlined htmlColor={"white"} fontSize={"large"}/>,
-        description: "Projects",
-        destination: "/"
-    },
-    {
-        icon: <PestControlOutlined htmlColor={"white"} fontSize={"large"}/>,
-        description: "Issues",
-        destination: "/"
-    },
-    {
-        icon: <BarChartOutlined htmlColor={"white"} fontSize={"large"}/>,
-        description: "Statistics",
-        destination: "/"
-    }
-];
-
 const logout = {
     icon: <LogoutOutlined htmlColor={"white"} fontSize={"large"}/>,
     description: "Log out",
     destination: "/"
 };
 
-const Menu = ({content}) => {
+const Menu = ({content, credentials}) => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
@@ -133,6 +110,29 @@ const Menu = ({content}) => {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    const actions = [
+        {
+            icon: <AccountCircleOutlined htmlColor={"white"} fontSize={"large"}/>,
+            description: "My Account",
+            destination: "/"
+        },
+        {
+            icon: <CodeOutlined htmlColor={"white"} fontSize={"large"}/>,
+            description: "Projects",
+            destination: viewProjectsPage.replaceAll(":username", credentials.user.username)
+        },
+        {
+            icon: <PestControlOutlined htmlColor={"white"} fontSize={"large"}/>,
+            description: "Issues",
+            destination: "/"
+        },
+        {
+            icon: <BarChartOutlined htmlColor={"white"} fontSize={"large"}/>,
+            description: "Statistics",
+            destination: "/"
+        }
+    ];
 
     return (
         <Box sx={{display: 'flex'}}>

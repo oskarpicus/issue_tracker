@@ -80,7 +80,7 @@ const ViewProjects = ({match, credentials}) => {
         </Box>
     );
 
-    return <Menu content={content}/>
+    return <Menu content={content} credentials={credentials}/>
 };
 
 const ViewProjectsPage = withRouter(ViewProjects)
