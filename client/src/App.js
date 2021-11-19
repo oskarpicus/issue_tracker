@@ -53,7 +53,7 @@ function App() {
                         <ViewProjectsPage credentials={credentials}/>
                     </Route>
                     <Route exact={true} path={viewSingleProjectPage}>
-                        <ViewSingleProjectPage credentials={credentials}/>
+                        <ViewSingleProjectPage credentials={credentials} setAlert={setAlert}/>
                     </Route>
                     <Route exact={true} path={addProjectPage}>
                         <AddProjectPage credentials={credentials} setAlert={setAlert}/>

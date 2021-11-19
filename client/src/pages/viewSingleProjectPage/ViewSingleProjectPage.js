@@ -7,18 +7,21 @@ import {Redirect, useHistory} from "react-router-dom";
 import {errorPage, responseTypes} from "../../components/const";
 import {Box, Button, List, ListItem} from "@mui/material";
 import ParticipantDetails from "../../components/participantDetails/ParticipantDetails";
+import AddParticipantModal from "../../components/addParticipantModal/AddParticipantModal";
 
 const isParticipant = (project, user) => {
     return project.involvements
         .find(involvement => involvement.user.username === user.username) !== undefined;
 }
 
-const ViewProjectPage = ({match, credentials}) => {
+const ViewProjectPage = ({match, credentials, setAlert}) => {
     const [project, setProject] = useState({
         title: "",
         description: "",
         involvements: []
     });
+
+    const [openModal, setOpenModal] = useState(false);
 
     const history = useHistory();
 
@@ -43,10 +46,9 @@ const ViewProjectPage = ({match, credentials}) => {
         return <Redirect to={errorPage}/>
     }
 
-    const handleClick = () => {
-        // todo add functionality of adding a participant
-        console.log("Clicked");
-    }
+    const handleClick = () => setOpenModal(true);
+
+    const isCurrentUserParticipant = isParticipant(project, credentials.user);
 
     let content = (
         <Box id={"view-single-projects-page"}>
@@ -68,7 +70,7 @@ const ViewProjectPage = ({match, credentials}) => {
                 }
             </List>
             {
-                isParticipant(project, credentials.user)
+                isCurrentUserParticipant
                 &&
                     <Button
                         variant={"contained"}
@@ -78,6 +80,17 @@ const ViewProjectPage = ({match, credentials}) => {
                         >
                         Add Participant
                     </Button>
+            }
+            {
+                isCurrentUserParticipant
+                &&
+                    <AddParticipantModal
+                        credentials={credentials}
+                        open={openModal}
+                        setOpen={setOpenModal}
+                        project={project}
+                        setAlert={setAlert}
+                    />
             }
         </Box>
     );
