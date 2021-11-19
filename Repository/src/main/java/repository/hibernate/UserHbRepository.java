@@ -2,10 +2,12 @@ package repository.hibernate;
 
 import model.User;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import repository.UserRepository;
 import validator.Validator;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,6 +62,25 @@ public class UserHbRepository extends AbstractHbRepository<Long, User> implement
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public Iterable<String> getAllUsernames() {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            List<String> usernames = session
+                    .createQuery("select username from User", String.class)
+                            .list();
+            transaction.commit();
+            return usernames;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return Collections.emptyList();
         }
     }
 }

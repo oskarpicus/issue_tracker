@@ -232,4 +232,17 @@ class UserHbRepositoryTest {
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
     }
+
+    @Test
+    void testGetAllUsernames() {
+        List<String> expected = Arrays.stream(Constants.defaultUsers)
+                .map(User::getUsername)
+                .collect(Collectors.toList());
+        Iterable<String> computedIterable = repo.getAllUsernames();
+        List<String> computed = StreamSupport.stream(computedIterable.spliterator(), false)
+                .collect(Collectors.toList());
+        Assertions.assertEquals(expected.size(), computed.size());
+        Assertions.assertTrue(expected.containsAll(computed));
+        Assertions.assertTrue(computed.containsAll(expected));
+    }
 }
