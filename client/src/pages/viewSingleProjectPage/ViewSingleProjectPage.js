@@ -83,7 +83,7 @@ const ViewProjectPage = ({match, credentials}) => {
     );
 
     return (
-        <Menu content={content}/>
+        <Menu content={content} credentials={credentials}/>
     )
 };
 
