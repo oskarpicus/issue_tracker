@@ -4,6 +4,7 @@ import model.User;
 import repository.UserRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 public class EmptyUserRepository implements UserRepository {
@@ -58,5 +59,10 @@ public class EmptyUserRepository implements UserRepository {
             throw new IllegalArgumentException();
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Iterable<String> getAllUsernames() {
+        return Collections.emptyList();
     }
 }
