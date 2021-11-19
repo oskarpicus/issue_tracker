@@ -41,9 +41,10 @@ public class UserController {
 
     /**
      * Handler responsible for retrieving the information of a user, based on their username
+     *
      * @param username, the username of the desired user
-     * @return  - a response containing the user, if there is a user with the given username
-     *          - a 404 Not Found, otherwise
+     * @return - a response containing the user, if there is a user with the given username
+     * - a 404 Not Found, otherwise
      */
     @GetMapping
     public ResponseEntity<?> getUser(@RequestParam(value = "username") String username) {
@@ -53,5 +54,15 @@ public class UserController {
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
         }
+    }
+
+    /**
+     * Handler responsible for retrieving the usernames of all the memorised users
+     *
+     * @return a response containing all the usernames
+     */
+    @GetMapping(value = "/usernames")
+    public ResponseEntity<?> getAllUsernames() {
+        return new ResponseEntity<>(service.getAllUsernames(), HttpStatus.OK);
     }
 }

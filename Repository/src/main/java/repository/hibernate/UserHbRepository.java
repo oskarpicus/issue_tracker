@@ -72,7 +72,7 @@ public class UserHbRepository extends AbstractHbRepository<Long, User> implement
             transaction = session.beginTransaction();
             List<String> usernames = session
                     .createQuery("select username from User", String.class)
-                            .list();
+                    .list();
             transaction.commit();
             return usernames;
         } catch (Exception e) {
