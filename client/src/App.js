@@ -56,7 +56,7 @@ function App() {
                         <ViewSingleProjectPage credentials={credentials}/>
                     </Route>
                     <Route exact={true} path={addProjectPage}>
-                        <AddProjectPage credentials={credentials}/>
+                        <AddProjectPage credentials={credentials} setAlert={setAlert}/>
                     </Route>
                     {/* Will fallback to every other accessed URL */}
                     <Route>

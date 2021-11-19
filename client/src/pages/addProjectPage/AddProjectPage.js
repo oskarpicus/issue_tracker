@@ -14,6 +14,8 @@ const AddProject = (properties) => {
     const credentials = properties.credentials === undefined ?
         properties.location.state.credentials : properties.credentials;
 
+    const setAlert = properties.setAlert;
+
     const [formValues, setFormValues] = useState({
         title: "",
         description: "",
@@ -51,8 +53,21 @@ const AddProject = (properties) => {
     const handleClick = () => {
         addProject(formValues, credentials.jwt)
             .then(response => {
-                // todo display feedback
-                console.log(response);
+                if (response[responseTypes.key] === responseTypes.success) {
+                    setAlert({
+                        state: true,
+                        severity: "success",
+                        message: "Project created successfully",
+                        backgroundColor: "inherit"
+                    });
+                } else {
+                    setAlert({
+                        state: true,
+                        severity: "error",
+                        message: typeof(response.data) === "string" ? response.data : "Failed to create project",
+                        backgroundColor: "inherit"
+                    });
+                }
             })
     };
 
