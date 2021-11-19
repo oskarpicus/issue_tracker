@@ -11,7 +11,8 @@ import MyComboBox from "../../components/myComboBox/MyComboBox";
 import {addProject} from "../../services/projectService";
 
 const AddProject = (properties) => {
-    const credentials = properties.location.state.credentials;
+    const credentials = properties.credentials === undefined ?
+        properties.location.state.credentials : properties.credentials;
 
     const [formValues, setFormValues] = useState({
         title: "",
