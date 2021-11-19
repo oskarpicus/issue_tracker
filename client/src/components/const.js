@@ -66,6 +66,12 @@ const viewProjectsPage = "/:username/projects";
 const viewSingleProjectPage = "/projects/:id";
 
 /**
+ * The page address for visiting the form to add a project
+ * @type {string}
+ */
+const addProjectPage = "/add-project";
+
+/**
  * Defines how a call to the backend can result. This information will be added in the "key" field of the response.
  * @type {{success: string, error: string, key: string}}
  */
@@ -89,5 +95,6 @@ export {
     errorPage,
     viewProjectsPage,
     viewSingleProjectPage,
+    addProjectPage,
     responseTypes
 }

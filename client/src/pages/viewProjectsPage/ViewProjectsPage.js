@@ -1,5 +1,5 @@
 import {Redirect, useHistory} from "react-router-dom";
-import {errorPage, responseTypes} from "../../components/const";
+import {addProjectPage, errorPage, responseTypes} from "../../components/const";
 import {withRouter} from "react-router-dom/cjs/react-router-dom";
 import {useEffect, useState} from "react";
 import {viewProjects} from "../../services/projectService";
@@ -58,8 +58,12 @@ const ViewProjects = ({match, credentials}) => {
     }
 
     const handleClick = () => {
-        // todo redirect to add project page
-        history.push("/");
+        history.push({
+            pathname: addProjectPage,
+            state: {
+                credentials: credentials
+            }
+        });
     }
 
     const content = (
