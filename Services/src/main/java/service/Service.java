@@ -5,6 +5,7 @@ import model.Involvement;
 import model.Project;
 import model.User;
 
+import java.util.List;
 import java.util.Set;
 
 public interface Service {
@@ -64,4 +65,10 @@ public interface Service {
      * @throws UserAlreadyInProjectException if the user is already a participant in the project
      */
     Involvement addParticipant(Involvement involvement, User requester) throws UserNotInProjectException, UserNotFoundException, ProjectNotFoundException, UserAlreadyInProjectException;
+
+    /**
+     * Method for obtaining all the usernames of the saved users
+     * @return a list containing all the usernames
+     */
+    List<String> getAllUsernames();
 }

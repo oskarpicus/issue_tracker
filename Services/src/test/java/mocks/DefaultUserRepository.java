@@ -3,6 +3,7 @@ package mocks;
 import model.User;
 import repository.UserRepository;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -71,5 +72,12 @@ public class DefaultUserRepository implements UserRepository {
         return Stream.of(defaultUsers)
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst();
+    }
+
+    @Override
+    public Iterable<String> getAllUsernames() {
+        return Arrays.stream(defaultUsers)
+                .map(User::getUsername)
+                .collect(Collectors.toList());
     }
 }

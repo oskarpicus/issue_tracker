@@ -10,8 +10,11 @@ import repository.UserRepository;
 import utils.Constants;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class MasterService implements Service {
     private final UserRepository userRepository;
@@ -112,5 +115,11 @@ public class MasterService implements Service {
 
         Optional<Involvement> result = involvementRepository.save(involvement);
         return result.isEmpty() ? involvement : null;
+    }
+
+    @Override
+    public List<String> getAllUsernames() {
+        return StreamSupport.stream(userRepository.getAllUsernames().spliterator(), false)
+                .collect(Collectors.toList());
     }
 }

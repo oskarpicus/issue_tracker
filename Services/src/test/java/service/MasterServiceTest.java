@@ -13,8 +13,11 @@ import repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 class MasterServiceTest {
 
@@ -195,6 +198,30 @@ class MasterServiceTest {
                         null,
                         UserAlreadyInProjectException.class
                 ),
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> getAllUsernames() {
+        record TestCase(String name, Service service, List<String> expected) {
+            public void check() {
+                List<String> computed = TestCase.this.service.getAllUsernames();
+                Assertions.assertEquals(TestCase.this.expected.size(), computed.size());
+                Assertions.assertTrue(TestCase.this.expected.containsAll(computed));
+                Assertions.assertTrue(computed.containsAll(TestCase.this.expected));
+            }
+        }
+
+        UserRepository userRepository = new DefaultUserRepository();
+        List<String> usernames = StreamSupport.stream(userRepository.findAll().spliterator(), false)
+                .map(User::getUsername)
+                .collect(Collectors.toList());
+
+        var testCases = new TestCase[]{
+                new TestCase("Get all usernames empty result", new MasterService(new EmptyUserRepository(), null, null), Collections.emptyList()),
+                new TestCase("Get all username default users", new MasterService(userRepository, null, null), usernames)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);

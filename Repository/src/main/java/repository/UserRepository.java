@@ -21,4 +21,10 @@ public interface UserRepository extends Repository<Long, User> {
      * @throws IllegalArgumentException if email is null
      */
     Optional<User> findUserByEmail(String email);
+
+    /**
+     * Method for obtaining all the usernames of the saved users
+     * @return a collection with all the usernames
+     */
+    Iterable<String> getAllUsernames();
 }
