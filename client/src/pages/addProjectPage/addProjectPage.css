@@ -1,0 +1,19 @@
+#add-project-page {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+#add-project-page > * {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.combo-box-project-role {
+    margin-top: 30px;
+}
+
+.button-save-project {
+    width: 10vh;
+    margin-top: 30px !important;
+}
