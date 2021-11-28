@@ -24,7 +24,7 @@ import {
     LogoutOutlined,
     PestControlOutlined
 } from "@mui/icons-material";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -99,9 +99,16 @@ const logout = {
     destination: "/"
 };
 
+const handleLogout = (credentials) => {
+    credentials.user = undefined;
+    credentials.jwt = "";
+    window.localStorage.setItem("credentials", JSON.stringify(credentials));
+}
+
 const Menu = ({content, credentials}) => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const history = useHistory();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -110,6 +117,11 @@ const Menu = ({content, credentials}) => {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    const handleLogoutButtonClicked = () => {
+        handleLogout(credentials);
+        history.push(loginPage);
+    }
 
     const actions = [
         {
@@ -185,7 +197,7 @@ const Menu = ({content, credentials}) => {
                 <List style={{marginTop: "auto"}}>
                     {
                         <Link to={logout.destination} key={logout.description}>
-                            <ListItem button>
+                            <ListItem button onClick={handleLogoutButtonClicked}>
                                 <ListItemIcon>
                                     {logout.icon}
                                 </ListItemIcon>
