@@ -36,7 +36,7 @@ public class Issue implements Entity<Long>, Cloneable {
         this.reporter = reporter;
     }
 
-    public Issue(String title, String description, String expectedBehaviour, String actualBehaviour, String stackTrace, Severity severity, Status status, IssueType type, Project project, User reporter, User assignee) {
+    public Issue(String title, String description, String expectedBehaviour, String actualBehaviour, String stackTrace, Severity severity, Status status, IssueType type, Project project, User reporter) {
         this.title = title;
         this.description = description;
         this.expectedBehaviour = expectedBehaviour;
@@ -47,7 +47,6 @@ public class Issue implements Entity<Long>, Cloneable {
         this.type = type;
         this.project = project;
         this.reporter = reporter;
-        this.assignee = assignee;
     }
 
     public Issue(String title, String description, Severity severity, Status status, IssueType type, Project project, User reporter, User assignee) {

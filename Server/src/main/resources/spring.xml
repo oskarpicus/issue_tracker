@@ -6,6 +6,7 @@
     <bean id="userValidator" class="validator.UserValidator"/>
     <bean id="projectValidator" class="validator.ProjectValidator"/>
     <bean id="involvementValidator" class="validator.InvolvementValidator"/>
+    <bean id="issueValidator" class="validator.IssueValidator"/>
 
     <bean class="repository.hibernate.UserHbRepository" id="userHbRepository">
         <constructor-arg ref="userValidator"/>
@@ -19,10 +20,15 @@
         <constructor-arg ref="involvementValidator"/>
     </bean>
 
+    <bean class="repository.hibernate.IssueHbRepository" id="issueHbRepository">
+        <constructor-arg ref="issueValidator"/>
+    </bean>
+
     <bean class="service.MasterService" id="service">
         <constructor-arg ref="userHbRepository"/>
         <constructor-arg ref="projectHbRepository"/>
         <constructor-arg ref="involvementHbRepository"/>
+        <constructor-arg ref="issueHbRepository"/>
     </bean>
 
     <bean class="security.UserDetailsServiceImpl" id="userDetailsService">
