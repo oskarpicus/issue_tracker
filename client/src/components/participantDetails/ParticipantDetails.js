@@ -2,10 +2,7 @@ import './participantDetails.css';
 import {Box} from "@mui/material";
 import {Link} from "react-router-dom";
 import {viewProjectsPage} from "../const";
-
-const formatProjectRole = (role) => {
-    return role.replaceAll("_", " ");
-}
+import {formatEnum} from '../utils';
 
 const ParticipantDetails = ({involvement}) => {
     return (
@@ -13,7 +10,7 @@ const ParticipantDetails = ({involvement}) => {
             <Link to={viewProjectsPage.replace(":username", involvement.user.username)}>
                 <p>{`${involvement.user.firstName} ${involvement.user.lastName}`}</p>
             </Link>
-            <p>{formatProjectRole(involvement.role)}</p>
+            <p>{formatEnum(involvement.role)}</p>
         </Box>
     );
 };

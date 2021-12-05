@@ -8,6 +8,7 @@ import {errorPage, responseTypes} from "../../components/const";
 import {Box, Button, List, ListItem} from "@mui/material";
 import ParticipantDetails from "../../components/participantDetails/ParticipantDetails";
 import AddParticipantModal from "../../components/addParticipantModal/AddParticipantModal";
+import Issue from "../../components/issue/Issue";
 
 const isParticipant = (project, user) => {
     return project.involvements
@@ -18,7 +19,8 @@ const ViewProjectPage = ({match, credentials, setAlert}) => {
     const [project, setProject] = useState({
         title: "",
         description: "",
-        involvements: []
+        involvements: [],
+        issues: []
     });
 
     const [openModal, setOpenModal] = useState(false);
@@ -47,6 +49,9 @@ const ViewProjectPage = ({match, credentials, setAlert}) => {
     }
 
     const handleClick = () => setOpenModal(true);
+
+    // todo redirect user to AddIssue page
+    const handleAddIssueButtonClicked = () => console.log("clicked");
 
     const isCurrentUserParticipant = isParticipant(project, credentials.user);
 
@@ -91,6 +96,30 @@ const ViewProjectPage = ({match, credentials, setAlert}) => {
                         project={project}
                         setAlert={setAlert}
                     />
+            }
+            <p className={"label-sub-content"}>
+                {project.issues.length === 0 ? "This project has no issues" : "Issues"}
+            </p>
+            <List>
+                {
+                    project.issues.map(issue => (
+                        <ListItem key={`issue_${issue.id}`}>
+                            <Issue issue={issue}/>
+                        </ListItem>
+                    ))
+                }
+            </List>
+            {
+                isCurrentUserParticipant
+                &&
+                <Button
+                    variant={"contained"}
+                    className={"action-button"}
+                    id={"button-add-participant"}
+                    onClick={handleAddIssueButtonClicked}
+                >
+                    Add issue
+                </Button>
             }
         </Box>
     );
