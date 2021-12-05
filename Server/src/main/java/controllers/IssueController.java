@@ -32,9 +32,9 @@ public class IssueController {
 
             return new ResponseEntity<>(IssueDto.from(result), HttpStatus.CREATED);
         } catch (UserNotFoundException e) {
-            return new ResponseEntity<>("Reporter does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (UserNotInProjectException e) {
-            return new ResponseEntity<>("Reporter is not a participant to this project", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

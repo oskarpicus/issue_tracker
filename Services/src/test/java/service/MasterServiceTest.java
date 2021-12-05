@@ -254,10 +254,18 @@ class MasterServiceTest {
         Issue issueWrongReporter = new Issue("Title", "Desc", Severity.BLOCKER, Status.TO_DO, IssueType.DUPLICATE, new Project(Long.MAX_VALUE), new User(1L));
         Issue issue = new Issue("Title", "Desc", Severity.BLOCKER, Status.TO_DO, IssueType.DUPLICATE, Constants.OTHER_INVOLVEMENT.getProject(), Constants.OTHER_INVOLVEMENT.getUser());
 
+        Issue issueNonExistentAssignee = new Issue("Title", "Desc", Severity.BLOCKER, Status.TO_DO, IssueType.DUPLICATE, Constants.OTHER_INVOLVEMENT.getProject(), Constants.OTHER_INVOLVEMENT.getUser());
+        issueNonExistentAssignee.setAssignee(new User(Long.MAX_VALUE));
+
+        Issue issueWrongAssignee = new Issue("Title", "Desc", Severity.BLOCKER, Status.TO_DO, IssueType.DUPLICATE, Constants.OTHER_INVOLVEMENT.getProject(), Constants.OTHER_INVOLVEMENT.getUser());
+        issueWrongAssignee.setAssignee(Constants.USER);
+
         var testCases = new TestCase[]{
                 new TestCase("Save issue non existent reporter", service, issueNonExistentReporter, null, UserNotFoundException.class),
                 new TestCase("Save issue reporter not in project", service, issueWrongReporter, null, UserNotInProjectException.class),
-                new TestCase("Save issue successfully", service, issue, issue, null)
+                new TestCase("Save issue successfully", service, issue, issue, null),
+                new TestCase("Save issue non-existent assignee", service, issueNonExistentAssignee, null, UserNotFoundException.class),
+                new TestCase("Save issue assignee not in project", service, issueWrongAssignee, null, UserNotInProjectException.class)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
