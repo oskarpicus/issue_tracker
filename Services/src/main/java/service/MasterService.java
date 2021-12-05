@@ -2,9 +2,11 @@ package service;
 
 import exceptions.*;
 import model.Involvement;
+import model.Issue;
 import model.Project;
 import model.User;
 import repository.InvolvementRepository;
+import repository.IssueRepository;
 import repository.ProjectRepository;
 import repository.UserRepository;
 import utils.Constants;
@@ -20,11 +22,13 @@ public class MasterService implements Service {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final InvolvementRepository involvementRepository;
+    private final IssueRepository issueRepository;
 
-    public MasterService(UserRepository userRepository, ProjectRepository projectRepository, InvolvementRepository involvementRepository) {
+    public MasterService(UserRepository userRepository, ProjectRepository projectRepository, InvolvementRepository involvementRepository, IssueRepository issueRepository) {
         this.userRepository = userRepository;
         this.projectRepository = projectRepository;
         this.involvementRepository = involvementRepository;
+        this.issueRepository = issueRepository;
     }
 
     @Override
@@ -121,5 +125,25 @@ public class MasterService implements Service {
     public List<String> getAllUsernames() {
         return StreamSupport.stream(userRepository.getAllUsernames().spliterator(), false)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Issue addIssue(Issue issue) throws UserNotInProjectException, UserNotFoundException {
+        Optional<User> reporter = userRepository.find(issue.getReporter().getId());
+        if (reporter.isEmpty()) {
+            throw new UserNotFoundException(Constants.USER_DOES_NOT_EXIST_ERROR_MESSAGE);
+        }
+
+        // verify if the project is a participant in the project
+        boolean isParticipant = reporter.get()
+                .getInvolvements()
+                .stream()
+                .anyMatch(involvement -> involvement.getProject().getId().equals(issue.getProject().getId()));
+        if (!isParticipant) {
+            throw new UserNotInProjectException("The reporter is not a participant");
+        }
+
+        Optional<Issue> result = issueRepository.save(issue);
+        return result.isEmpty() ? issue : null;
     }
 }

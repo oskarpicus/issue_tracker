@@ -2,6 +2,7 @@ package service;
 
 import exceptions.*;
 import model.Involvement;
+import model.Issue;
 import model.Project;
 import model.User;
 
@@ -71,4 +72,14 @@ public interface Service {
      * @return a list containing all the usernames
      */
     List<String> getAllUsernames();
+
+    /**
+     * Method for adding an issue
+     * @param issue, the issue to be added. It is expected that its reporter and project have at least a valid identifier among their fields
+     * @return - the issue with an identifier assigned, if the operation is successful
+     *         - null, otherwise
+     * @throws UserNotInProjectException if the reporter of the issue is not a participant to the issue's project
+     * @throws UserNotFoundException if the reporter of the issue does not exist
+     */
+    Issue addIssue(Issue issue) throws UserNotInProjectException, UserNotFoundException;
 }

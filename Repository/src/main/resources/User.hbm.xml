@@ -16,5 +16,9 @@
             <key column="user_id"/>
             <one-to-many class="model.Involvement"/>
         </set>
+        <set name="assignedIssues" table="issues" cascade="all">
+            <key column="assignee_id"/>
+            <one-to-many class="model.Issue"/>
+        </set>
     </class>
 </hibernate-mapping>

@@ -18,6 +18,7 @@ public class Project implements Entity<Long>, Cloneable {
     private String description;
     private LocalDateTime createdAt;
     private Set<Involvement> involvements = new HashSet<>();
+    private Set<Issue> issues = new HashSet<>();
 
     public Project() {
     }
@@ -111,5 +112,13 @@ public class Project implements Entity<Long>, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    public Set<Issue> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(Set<Issue> issues) {
+        this.issues = issues;
     }
 }

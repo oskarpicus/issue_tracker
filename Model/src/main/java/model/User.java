@@ -19,6 +19,7 @@ public class User implements Entity<Long>, Cloneable {
     private String lastName;
     private String email;
     private Set<Involvement> involvements = new HashSet<>();
+    private Set<Issue> assignedIssues = new HashSet<>();
 
     public User() {
     }
@@ -138,5 +139,13 @@ public class User implements Entity<Long>, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    public Set<Issue> getAssignedIssues() {
+        return assignedIssues;
+    }
+
+    public void setAssignedIssues(Set<Issue> assignedIssues) {
+        this.assignedIssues = assignedIssues;
     }
 }

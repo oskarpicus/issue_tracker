@@ -54,4 +54,16 @@ public class ErrorMessages {
      * Error message for when the role of a {@code Involvement} is invalid
      */
     public static final String INVOLVEMENT_INVALID_ROLE = "Invalid role\n";
+
+    public static final String ISSUE_INVALID_TITLE = "Invalid title\n";
+
+    public static final String ISSUE_INVALID_SEVERITY = "Invalid severity\n";
+
+    public static final String ISSUE_INVALID_STATUS = "Invalid status\n";
+
+    public static final String ISSUE_INVALID_TYPE = "Invalid type\n";
+
+    public static final String ISSUE_INVALID_PROJECT = "Invalid project\n";
+
+    public static final String ISSUE_INVALID_REPORTER = "Invalid reporter\n";
 }
