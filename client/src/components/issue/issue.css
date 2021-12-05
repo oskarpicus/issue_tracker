@@ -1,0 +1,30 @@
+.issue-details {
+    background-color: white;
+    width: 100%;
+    border: 1px solid var(--color-grey);
+    border-radius: calc(var(--border-radius) * 2);
+    padding: 0 20px;
+}
+
+.issue-details p {
+    color: var(--color-dark-blue);
+}
+
+.issue-title-flex {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+
+.issue-title-flex p:last-of-type {
+    margin-left: auto;
+}
+
+.issue-description {
+    flex: 1 1 100%;
+    word-wrap: break-word;
+    word-break: break-all;
+    font-size: var(--font-size-smaller);
+    font-weight: normal;
+}
