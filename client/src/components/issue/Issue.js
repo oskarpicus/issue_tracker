@@ -8,6 +8,7 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import HelpIcon from '@mui/icons-material/Help';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeviceUnknownIcon from '@mui/icons-material/DeviceUnknown';
+import {formatEnum} from "../utils";
 
 const Issue = ({issue}) => {
     const bugColorBySeverity = {
@@ -34,7 +35,7 @@ const Issue = ({issue}) => {
             <Box className={"issue-title-flex"}>
                 {iconsByIssueType[issue.type]}
                 <p>{issue.title}</p>
-                <p>{issue.status}</p>
+                <p>{formatEnum(issue.status)}</p>
             </Box>
             <p className={"issue-description"}>{issue.description}</p>
         </Box>
