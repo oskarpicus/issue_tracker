@@ -13,10 +13,10 @@ import java.util.Collections;
 public class InvolvementDto {
     private final Long id;
     private final Role role;
-    private final User user;
-    private final Project project;
+    private final UserDto user;
+    private final ProjectDto project;
 
-    public InvolvementDto(Long id, Role role, User user, Project project) {
+    public InvolvementDto(Long id, Role role, UserDto user, ProjectDto project) {
         this.id = id;
         this.role = role;
         this.user = user;
@@ -31,19 +31,17 @@ public class InvolvementDto {
         return role;
     }
 
-    public User getUser() {
+    public UserDto getUser() {
         return user;
     }
 
-    public Project getProject() {
+    public ProjectDto getProject() {
         return project;
     }
 
     public static InvolvementDto from(Involvement involvement) {
-        User user = involvement.getUser().clone();
-        user.setInvolvements(Collections.emptySet());
-        Project project = involvement.getProject().clone();
-        project.setInvolvements(Collections.emptySet());
+        UserDto user = UserDto.from(involvement.getUser());
+        ProjectDto project = ProjectDto.from(involvement.getProject());
         return new InvolvementDto(involvement.getId(), involvement.getRole(), user, project);
     }
 }
