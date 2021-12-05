@@ -1,6 +1,7 @@
 package dtos;
 
 import model.Involvement;
+import model.Issue;
 import model.Project;
 
 import java.time.LocalDateTime;
@@ -12,13 +13,15 @@ public class ProjectDto {
     private final String description;
     private final LocalDateTime createdAt;
     private final Set<Involvement> involvements;
+    private final Set<Issue> issues;
 
-    public ProjectDto(Long id, String title, String description, LocalDateTime createdAt, Set<Involvement> involvements) {
+    public ProjectDto(Long id, String title, String description, LocalDateTime createdAt, Set<Involvement> involvements, Set<Issue> issues) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.createdAt = createdAt;
         this.involvements = involvements;
+        this.issues = issues;
     }
 
     public Long getId() {
@@ -48,6 +51,19 @@ public class ProjectDto {
                     involvement.setProject(null);
                     involvement.getUser().setInvolvements(null);
                 });
-        return new ProjectDto(project.getId(), project.getTitle(), project.getDescription(), project.getCreatedAt(), project.getInvolvements());
+
+        project.getIssues()
+                .forEach(issue -> {
+                    issue.setProject(null);
+                    issue.getReporter().setAssignedIssues(null);
+                    if (issue.getAssignee() != null) {
+                        issue.getAssignee().setAssignedIssues(null);
+                    }
+                });
+        return new ProjectDto(project.getId(), project.getTitle(), project.getDescription(), project.getCreatedAt(), project.getInvolvements(), project.getIssues());
+    }
+
+    public Set<Issue> getIssues() {
+        return issues;
     }
 }
