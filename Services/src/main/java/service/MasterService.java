@@ -140,6 +140,21 @@ public class MasterService implements Service {
             throw new UserNotInProjectException("The reporter is not a participant");
         }
 
+        if (issue.getAssignee() != null) {
+            Optional<User> assignee = userRepository.find(issue.getAssignee().getId());
+            if (assignee.isEmpty()) {
+                throw new UserNotFoundException(Constants.USER_DOES_NOT_EXIST_ERROR_MESSAGE);
+            }
+
+            isParticipant = assignee.get()
+                    .getInvolvements()
+                    .stream()
+                    .anyMatch(involvement -> involvement.getProject().getId().equals(issue.getProject().getId()));
+            if (!isParticipant) {
+                throw new UserNotInProjectException("The assignee is not a participant");
+            }
+        }
+
         issue.setStatus(Status.TO_DO);
         Optional<Issue> result = issueRepository.save(issue);
         return result.isEmpty() ? issue : null;

@@ -12,6 +12,7 @@ public class AddIssueRequest {
     private IssueType type;
     private Long projectId;
     private Long reporterId;
+    private Long assigneeId;
 
     public AddIssueRequest() {
     }
@@ -88,7 +89,20 @@ public class AddIssueRequest {
         this.reporterId = reporterId;
     }
 
+    public Long getAssigneeId() {
+        return assigneeId;
+    }
+
+    public void setAssigneeId(Long assigneeId) {
+        this.assigneeId = assigneeId;
+    }
+
     public Issue toIssue() {
-        return new Issue(title, description, expectedBehaviour, actualBehaviour, stackTrace, severity, null, type, new Project(projectId), new User(reporterId));
+        Issue result = new Issue(title, description, expectedBehaviour, actualBehaviour, stackTrace, severity, null, type, new Project(projectId), new User(reporterId));
+        if (assigneeId != null) {
+            result.setAssignee(new User(assigneeId));
+        }
+
+        return result;
     }
 }
