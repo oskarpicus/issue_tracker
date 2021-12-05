@@ -26,6 +26,16 @@ public class Issue implements Entity<Long> {
     public Issue() {
     }
 
+    public Issue(String title, String description, Severity severity, Status status, IssueType type, Project project, User reporter) {
+        this.title = title;
+        this.description = description;
+        this.severity = severity;
+        this.status = status;
+        this.type = type;
+        this.project = project;
+        this.reporter = reporter;
+    }
+
     @Override
     public Long getId() {
         return id;
