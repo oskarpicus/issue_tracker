@@ -9,7 +9,6 @@ public class AddIssueRequest {
     private String actualBehaviour;
     private String stackTrace;
     private Severity severity;
-    private Status status;
     private IssueType type;
     private Long projectId;
     private Long reporterId;
@@ -65,14 +64,6 @@ public class AddIssueRequest {
         this.severity = severity;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     public IssueType getType() {
         return type;
     }
@@ -98,6 +89,6 @@ public class AddIssueRequest {
     }
 
     public Issue toIssue() {
-        return new Issue(title, description, expectedBehaviour, actualBehaviour, stackTrace, severity, status, type, new Project(projectId), new User(reporterId));
+        return new Issue(title, description, expectedBehaviour, actualBehaviour, stackTrace, severity, null, type, new Project(projectId), new User(reporterId));
     }
 }

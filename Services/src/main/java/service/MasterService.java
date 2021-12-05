@@ -1,10 +1,7 @@
 package service;
 
 import exceptions.*;
-import model.Involvement;
-import model.Issue;
-import model.Project;
-import model.User;
+import model.*;
 import repository.InvolvementRepository;
 import repository.IssueRepository;
 import repository.ProjectRepository;
@@ -143,6 +140,7 @@ public class MasterService implements Service {
             throw new UserNotInProjectException("The reporter is not a participant");
         }
 
+        issue.setStatus(Status.TO_DO);
         Optional<Issue> result = issueRepository.save(issue);
         return result.isEmpty() ? issue : null;
     }
