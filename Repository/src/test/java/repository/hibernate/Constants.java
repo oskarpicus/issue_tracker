@@ -1,9 +1,6 @@
 package repository.hibernate;
 
-import model.Involvement;
-import model.Project;
-import model.Role;
-import model.User;
+import model.*;
 
 import java.time.LocalDateTime;
 
@@ -24,5 +21,10 @@ public class Constants {
             new Involvement(1L, Role.TESTER, defaultUsers[0], defaultProjects[0]),
             new Involvement(2L, Role.PRODUCT_OWNER, defaultUsers[1], defaultProjects[2]),
             new Involvement(3L, Role.QA_LEAD, defaultUsers[0], defaultProjects[2])
+    };
+
+    public static final Issue[] defaultIssues = new Issue[]{
+            new Issue("Title1", "Desc1", Severity.MINOR, Status.IN_PROGRESS, IssueType.QUESTION, defaultProjects[0], defaultUsers[0]),
+            new Issue("Title2", "Desc2", Severity.BLOCKER, Status.TO_DO, IssueType.WONT_FIX, defaultProjects[1], defaultUsers[0], defaultUsers[0])
     };
 }

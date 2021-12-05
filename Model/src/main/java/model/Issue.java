@@ -9,7 +9,7 @@ import java.util.Objects;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id"
 )
-public class Issue implements Entity<Long> {
+public class Issue implements Entity<Long>, Cloneable {
     private Long id;
     private String title;
     private String description;
@@ -34,6 +34,31 @@ public class Issue implements Entity<Long> {
         this.type = type;
         this.project = project;
         this.reporter = reporter;
+    }
+
+    public Issue(String title, String description, String expectedBehaviour, String actualBehaviour, String stackTrace, Severity severity, Status status, IssueType type, Project project, User reporter, User assignee) {
+        this.title = title;
+        this.description = description;
+        this.expectedBehaviour = expectedBehaviour;
+        this.actualBehaviour = actualBehaviour;
+        this.stackTrace = stackTrace;
+        this.severity = severity;
+        this.status = status;
+        this.type = type;
+        this.project = project;
+        this.reporter = reporter;
+        this.assignee = assignee;
+    }
+
+    public Issue(String title, String description, Severity severity, Status status, IssueType type, Project project, User reporter, User assignee) {
+        this.title = title;
+        this.description = description;
+        this.severity = severity;
+        this.status = status;
+        this.type = type;
+        this.project = project;
+        this.reporter = reporter;
+        this.assignee = assignee;
     }
 
     @Override
@@ -157,5 +182,14 @@ public class Issue implements Entity<Long> {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public Issue clone() {
+        try {
+            return (Issue) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
