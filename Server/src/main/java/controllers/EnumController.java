@@ -2,6 +2,8 @@ package controllers;
 
 import model.IssueType;
 import model.Role;
+import model.Severity;
+import model.Status;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,7 +19,17 @@ public class EnumController {
     }
 
     @GetMapping(value = "/roles")
-    public ResponseEntity<Role[]> getAllRoles() {
+    public ResponseEntity<Role[]> getRoles() {
         return new ResponseEntity<>(Role.values(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/severities")
+    public ResponseEntity<Severity[]> getSeverities() {
+        return new ResponseEntity<>(Severity.values(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/statuses")
+    public ResponseEntity<Status[]> getStatuses() {
+        return new ResponseEntity<>(Status.values(), HttpStatus.OK);
     }
 }
