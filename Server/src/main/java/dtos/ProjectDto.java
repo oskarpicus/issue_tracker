@@ -50,6 +50,7 @@ public class ProjectDto {
                 .forEach(involvement -> {
                     involvement.setProject(null);
                     involvement.getUser().setInvolvements(null);
+                    involvement.getUser().setAssignedIssues(null);
                 });
 
         project.getIssues()
