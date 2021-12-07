@@ -1,0 +1,11 @@
+.combo-box-filled-label label {
+    color: var(--color-dark-blue);
+}
+
+.combo-box-add-issue-enum {
+    margin-top: 30px;
+}
+
+.combo-box-add-issue-enum:last-of-type {
+    margin-bottom: 30px;
+}
