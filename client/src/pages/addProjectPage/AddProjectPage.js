@@ -4,7 +4,7 @@ import {withRouter} from "react-router-dom/cjs/react-router-dom";
 import {Box, Button} from "@mui/material";
 import LabeledField from "../../components/labeledField/LabeledField";
 import Menu from "../../components/menu/Menu";
-import {getAllProjectRoles} from "../../services/roleService";
+import {getAllProjectRoles} from "../../services/enumService";
 import {errorPage, responseTypes} from "../../components/const";
 import {useHistory} from "react-router-dom";
 import MyComboBox from "../../components/myComboBox/MyComboBox";

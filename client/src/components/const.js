@@ -60,6 +60,24 @@ const getAllUsernamesHttp = {method: "GET", URI: "http://localhost:8080/users/us
 const addParticipantHttp = {method: "POST", URI: "http://localhost:8080/involvements"};
 
 /**
+ * Object that encapsulates the details of the request made to the server for retrieving the possible issue types
+ * @type {{method: string, URI: string}}
+ */
+const getIssueTypesHttp = {method: "GET", URI: "http://localhost:8080/issue-types"};
+
+/**
+ * Object that encapsulates the details of the request made to the server for retrieving the possible issue statuses
+ * @type {{method: string, URI: string}}
+ */
+const getStatusesHttp = {method: "GET", URI: "http://localhost:8080/statuses"};
+
+/**
+ * Object that encapsulates the details of the request made to the server for retrieving the possible issue severities
+ * @type {{method: string, URI: string}}
+ */
+const getSeveritiesHttp = {method: "GET", URI: "http://localhost:8080/severities"};
+
+/**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
  */
@@ -115,6 +133,9 @@ export {
     getUserByUsernameHttp,
     getProjectByIdHttp,
     addParticipantHttp,
+    getIssueTypesHttp,
+    getStatusesHttp,
+    getSeveritiesHttp,
     loginPage,
     createAccountPage,
     errorPage,
