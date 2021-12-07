@@ -1,9 +1,10 @@
 import {Autocomplete, TextField} from "@mui/material";
 import './myComboBox.css';
 
-const MyComboBox = ({options, label, onChange, getOptionLabel, className}) => {
+const MyComboBox = ({options, label, onChange, getOptionLabel, className, defaultValue}) => {
     return (
         <Autocomplete
+            defaultValue={defaultValue || undefined}
             className={`my-combo-box ${className}`}
             getOptionLabel={getOptionLabel}
             renderInput={(params) => <TextField
