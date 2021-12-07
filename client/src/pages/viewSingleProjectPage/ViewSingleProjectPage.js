@@ -4,7 +4,7 @@ import Menu from "../../components/menu/Menu";
 import {useEffect, useState} from "react";
 import {viewSingleProject} from "../../services/projectService";
 import {Redirect, useHistory} from "react-router-dom";
-import {errorPage, responseTypes} from "../../components/const";
+import {addIssuePage, errorPage, responseTypes} from "../../components/const";
 import {Box, Button, List, ListItem} from "@mui/material";
 import ParticipantDetails from "../../components/participantDetails/ParticipantDetails";
 import AddParticipantModal from "../../components/addParticipantModal/AddParticipantModal";
@@ -50,8 +50,15 @@ const ViewProjectPage = ({match, credentials, setAlert}) => {
 
     const handleClick = () => setOpenModal(true);
 
-    // todo redirect user to AddIssue page
-    const handleAddIssueButtonClicked = () => console.log("clicked");
+    const handleAddIssueButtonClicked = () => {
+        history.push({
+            pathname: addIssuePage,
+            state: {
+                credentials: credentials,
+                project: project
+            }
+        })
+    };
 
     const isCurrentUserParticipant = isParticipant(project, credentials.user);
 
@@ -77,25 +84,25 @@ const ViewProjectPage = ({match, credentials, setAlert}) => {
             {
                 isCurrentUserParticipant
                 &&
-                    <Button
-                        variant={"contained"}
-                        className={"action-button"}
-                        id={"button-add-participant"}
-                        onClick={handleClick}
-                        >
-                        Add Participant
-                    </Button>
+                <Button
+                    variant={"contained"}
+                    className={"action-button"}
+                    id={"button-add-participant"}
+                    onClick={handleClick}
+                >
+                    Add Participant
+                </Button>
             }
             {
                 isCurrentUserParticipant
                 &&
-                    <AddParticipantModal
-                        credentials={credentials}
-                        open={openModal}
-                        setOpen={setOpenModal}
-                        project={project}
-                        setAlert={setAlert}
-                    />
+                <AddParticipantModal
+                    credentials={credentials}
+                    open={openModal}
+                    setOpen={setOpenModal}
+                    project={project}
+                    setAlert={setAlert}
+                />
             }
             <p className={"label-sub-content"}>
                 {project.issues.length === 0 ? "This project has no issues" : "Issues"}
