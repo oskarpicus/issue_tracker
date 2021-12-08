@@ -8,6 +8,7 @@ import MyComboBox from "../../components/myComboBox/MyComboBox";
 import LabeledField from "../../components/labeledField/LabeledField";
 import {getAllIssueTypes, getAllSeverities} from "../../services/enumService";
 import {formatEnum} from "../../components/utils";
+import {addIssue} from "../../services/issueService";
 
 const getProjectParticipants = (project) => {
     if (project === null || project === undefined) {
@@ -25,13 +26,16 @@ const AddIssue = (properties) => {
         project: properties.location.state ? properties.location.state.project : undefined,
         title: "",
         description: "",
-        severity: "",
-        type: "",
+        severity: null,
+        type: null,
         expectedBehaviour: "",
         actualBehaviour: "",
         stackTrace: "",
-        assignee: undefined
+        assignee: undefined,
+        reporterId: credentials.user.id
     });
+
+    const setAlert = properties.setAlert;
 
     console.log(formValues);
 
@@ -67,8 +71,38 @@ const AddIssue = (properties) => {
     }
 
     const handleClick = () => {
-        // todo send request to save issue
-        // prepare to use ids
+        try {
+            // prepare the data
+            let data = {...formValues};
+            data.projectId = data.project.id;
+            if (data.assignee !== null && data.assignee !== undefined) {
+                data.assigneeId = data.assignee.id;
+            }
+
+            delete data.project;
+            delete data.assignee;
+
+            console.log(data);
+
+            addIssue(credentials.jwt, data)
+                .then(response => {
+                    console.log(response);
+                    setAlert({
+                        state: true,
+                        severity: response[responseTypes.key],
+                        message: response[responseTypes.key] === responseTypes.success ?
+                            "Issue created successfully" : response.data,
+                        backgroundColor: "inherit"
+                    })
+                });
+        } catch (error) {
+            setAlert({
+                state: true,
+                severity: "error",
+                message: "All fields must be supplied",
+                backgroundColor: "inherit"
+            });
+        }
     };
 
     const content = (
