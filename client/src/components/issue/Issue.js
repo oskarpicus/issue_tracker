@@ -1,4 +1,4 @@
-import {Box} from "@mui/material";
+import {Box, Tooltip} from "@mui/material";
 import './issue.css';
 import BugReportIcon from "@mui/icons-material/BugReportOutlined";
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
@@ -33,7 +33,9 @@ const Issue = ({issue}) => {
     return (
         <Box className={"issue-details"}>
             <Box className={"issue-title-flex"}>
-                {iconsByIssueType[issue.type]}
+                <Tooltip title={issue.type}>
+                    {iconsByIssueType[issue.type]}
+                </Tooltip>
                 <p>{issue.title}</p>
                 <p>{formatEnum(issue.status)}</p>
             </Box>
