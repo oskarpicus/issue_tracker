@@ -116,18 +116,14 @@ const ViewProjectPage = ({match, credentials, setAlert}) => {
                     ))
                 }
             </List>
-            {
-                isCurrentUserParticipant
-                &&
-                <Button
-                    variant={"contained"}
-                    className={"action-button"}
-                    id={"button-add-participant"}
-                    onClick={handleAddIssueButtonClicked}
-                >
-                    Add issue
-                </Button>
-            }
+            <Button
+                variant={"contained"}
+                className={"action-button"}
+                id={"button-add-participant"}
+                onClick={handleAddIssueButtonClicked}
+            >
+                Add issue
+            </Button>
         </Box>
     );
 
