@@ -1,0 +1,10 @@
+.labeled-text-area p {
+    color: var(--color-dark-blue);
+    font-size: var(--font-size-small);
+}
+
+.labeled-text-area textarea {
+    width: 100%;
+    height: 25vh;
+    border-radius: var(--border-radius);
+}

@@ -9,6 +9,7 @@ import LabeledField from "../../components/labeledField/LabeledField";
 import {getAllIssueTypes, getAllSeverities} from "../../services/enumService";
 import {formatEnum} from "../../components/utils";
 import {addIssue} from "../../services/issueService";
+import LabeledTextArea from "../../components/labeledTextArea/LabeledTextArea";
 
 const getProjectParticipants = (project) => {
     if (project === null || project === undefined) {
@@ -173,12 +174,11 @@ const AddIssue = (properties) => {
             {
                 formValues.type === "BUG"
                 &&
-                <LabeledField
+                <LabeledTextArea
                     text={"Stack Trace"}
                     name={"stackTrace"}
-                    type={"input"}
                     onChange={(name, value) => setFormValues((prev) => ({...prev, [name]: value}))}
-                />
+                    />
             }
             <MyComboBox
                 getOptionLabel={option => option.username}
