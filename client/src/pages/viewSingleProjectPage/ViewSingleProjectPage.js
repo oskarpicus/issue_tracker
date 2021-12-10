@@ -104,9 +104,19 @@ const ViewProjectPage = ({match, credentials, setAlert}) => {
                     setAlert={setAlert}
                 />
             }
-            <p className={"label-sub-content"}>
-                {project.issues.length === 0 ? "This project has no issues" : "Issues"}
-            </p>
+            <Box id={"issues-list-header"}>
+                <p className={"label-sub-content"}>
+                    {project.issues.length === 0 ? "This project has no issues" : "Issues"}
+                </p>
+                <Button
+                    variant={"contained"}
+                    className={"action-button"}
+                    id={"button-add-participant"}
+                    onClick={handleAddIssueButtonClicked}
+                >
+                    Add issue
+                </Button>
+            </Box>
             <List>
                 {
                     project.issues.map(issue => (
@@ -116,14 +126,6 @@ const ViewProjectPage = ({match, credentials, setAlert}) => {
                     ))
                 }
             </List>
-            <Button
-                variant={"contained"}
-                className={"action-button"}
-                id={"button-add-participant"}
-                onClick={handleAddIssueButtonClicked}
-            >
-                Add issue
-            </Button>
         </Box>
     );
 

@@ -24,3 +24,11 @@
     margin-left: 15px;
     width: 27vh;
 }
+
+#issues-list-header {
+    margin-left: 15px;
+    margin-right: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
