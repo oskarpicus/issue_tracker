@@ -10,6 +10,7 @@ import {getAllIssueTypes, getAllSeverities} from "../../services/enumService";
 import {formatEnum} from "../../components/utils";
 import {addIssue} from "../../services/issueService";
 import LabeledTextArea from "../../components/labeledTextArea/LabeledTextArea";
+import {viewSingleProject} from "../../services/projectService";
 
 const getProjectParticipants = (project) => {
     if (project === null || project === undefined) {
@@ -19,12 +20,9 @@ const getProjectParticipants = (project) => {
     return project.involvements.map(involvement => involvement.user)
 }
 
-const AddIssue = (properties) => {
-    const credentials = properties.credentials === undefined ?
-        properties.location.state.credentials : properties.credentials;
-
+const AddIssue = ({match, credentials, setAlert}) => {
     const [formValues, setFormValues] = useState({
-        project: properties.location.state ? properties.location.state.project : undefined,
+        project: undefined,
         title: "",
         description: "",
         severity: null,
@@ -35,10 +33,6 @@ const AddIssue = (properties) => {
         assignee: undefined,
         reporterId: credentials.user.id
     });
-
-    const setAlert = properties.setAlert;
-
-    console.log(formValues);
 
     const [severities, setSeverities] = useState([]);
 
@@ -63,9 +57,17 @@ const AddIssue = (properties) => {
                     } else {
                         history.push(errorPage);
                     }
-                })
+                });
+            viewSingleProject(match.params.id, credentials.jwt)
+                .then(response => {
+                    if (response[responseTypes.key] === responseTypes.success) {
+                        setFormValues((prev) => ({...prev, project: response.data}));
+                    } else {
+                        history.push(errorPage);
+                    }
+                });
         }
-    }, [credentials, history]);
+    }, [credentials, history, match.params.id]);
 
     if (credentials.jwt === "") {
         return <Redirect to={errorPage}/>;
@@ -83,11 +85,8 @@ const AddIssue = (properties) => {
             delete data.project;
             delete data.assignee;
 
-            console.log(data);
-
             addIssue(credentials.jwt, data)
                 .then(response => {
-                    console.log(response);
                     setAlert({
                         state: true,
                         severity: response[responseTypes.key],
@@ -109,13 +108,9 @@ const AddIssue = (properties) => {
     const content = (
         <Box>
             <p className={"action-title"}>Add a new issue</p>
-            <MyComboBox
-                className={"combo-box-filled-label"}
-                getOptionLabel={option => option.title}
-                label={"Project"}
-                defaultValue={properties.location.state ? properties.location.state.project : undefined}
-                options={[properties.location.state.project]}  // todo fill the options with the user's projects
-                onChange={(event, value) => setFormValues((prev) => ({...prev, project: value}))}
+            <input  // todo change to something to match the style
+                readOnly={true}
+                value={formValues.project === undefined ? "" : formValues.project.title}
             />
             <LabeledField
                 text={"Title"}

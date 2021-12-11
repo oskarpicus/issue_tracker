@@ -123,7 +123,7 @@ const addProjectPage = "/add-project";
  * The page address for visiting the form to add an issue
  * @type {string}
  */
-const addIssuePage = "/add-issue";
+const addIssuePage = "/projects/:id/add-issue";
 
 /**
  * Defines how a call to the backend can result. This information will be added in the "key" field of the response.

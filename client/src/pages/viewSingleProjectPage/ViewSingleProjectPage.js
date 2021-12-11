@@ -51,13 +51,7 @@ const ViewProjectPage = ({match, credentials, setAlert}) => {
     const handleClick = () => setOpenModal(true);
 
     const handleAddIssueButtonClicked = () => {
-        history.push({
-            pathname: addIssuePage,
-            state: {
-                credentials: credentials,
-                project: project
-            }
-        })
+        history.push(addIssuePage.replaceAll(":id", project.id));
     };
 
     const isCurrentUserParticipant = isParticipant(project, credentials.user);
