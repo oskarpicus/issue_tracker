@@ -11,6 +11,7 @@ import {formatEnum} from "../../components/utils";
 import {addIssue} from "../../services/issueService";
 import LabeledTextArea from "../../components/labeledTextArea/LabeledTextArea";
 import {viewSingleProject} from "../../services/projectService";
+import DefaultLabeledField from "../../components/labeledField/DefaultLabeledField";
 
 const getProjectParticipants = (project) => {
     if (project === null || project === undefined) {
@@ -108,10 +109,13 @@ const AddIssue = ({match, credentials, setAlert}) => {
     const content = (
         <Box>
             <p className={"action-title"}>Add a new issue</p>
-            <input  // todo change to something to match the style
+            <DefaultLabeledField
+                text={"Project"}
+                name={"project"}
+                type={"text"}
                 readOnly={true}
                 value={formValues.project === undefined ? "" : formValues.project.title}
-            />
+                />
             <LabeledField
                 text={"Title"}
                 name={"title"}
