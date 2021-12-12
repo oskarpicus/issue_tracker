@@ -144,6 +144,12 @@ const addIssuePage = "/projects/:id/add-issue";
 const viewAssignedIssuesPage = "/:username/assigned-issues";
 
 /**
+ * The page address for visiting the page dedicated to a certain issue
+ * @type {string}
+ */
+const viewIssuePage = "/issues/:id";
+
+/**
  * Defines how a call to the backend can result. This information will be added in the "key" field of the response.
  * @type {{success: string, error: string, key: string}}
  */
@@ -180,5 +186,6 @@ export {
     getAllUsernamesHttp,
     addIssuePage,
     viewAssignedIssuesPage,
+    viewIssuePage,
     responseTypes
 }
