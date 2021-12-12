@@ -5,6 +5,8 @@ import model.IssueType;
 import model.Severity;
 import model.Status;
 
+import java.util.Collections;
+
 public class IssueDto {
     private final Long id;
     private final String title;
@@ -37,6 +39,9 @@ public class IssueDto {
     public static IssueDto from(Issue issue) {
         UserDto reporter = UserDto.from(issue.getReporter());
         UserDto assignee = issue.getAssignee() == null ? null : UserDto.from(issue.getAssignee());
+
+        issue.getProject().setIssues(Collections.emptySet());
+        issue.getProject().setInvolvements(Collections.emptySet());
         ProjectDto project = ProjectDto.from(issue.getProject());
 
         return new IssueDto(issue.getId(),

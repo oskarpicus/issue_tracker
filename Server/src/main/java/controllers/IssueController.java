@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import service.Service;
 import utils.requests.AddIssueRequest;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/issues")
@@ -35,6 +38,19 @@ public class IssueController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (UserNotInProjectException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAssignedIssues(@RequestParam(value = "assignee") String assigneeUsername) {
+        try {
+            List<Issue> issues = service.getAssignedIssues(assigneeUsername);
+            List<IssueDto> result = issues.stream().map(IssueDto::from).collect(Collectors.toList());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
