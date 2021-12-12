@@ -3,6 +3,7 @@ package mocks;
 import model.*;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 public class Constants {
@@ -26,7 +27,10 @@ public class Constants {
         OTHER_USER.getInvolvements().add(OTHER_INVOLVEMENT);
         PROJECT.getInvolvements().add(OTHER_INVOLVEMENT);
 
+        AtomicLong atomicLong = new AtomicLong(1L);
         Stream.of(ISSUES).forEach(issue -> {
+            issue.setId(atomicLong.getAndIncrement());
+
             if (issue.getAssignee() != null) {
                 issue.getAssignee().getAssignedIssues().add(issue);
             }
