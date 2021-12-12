@@ -84,6 +84,12 @@ const getSeveritiesHttp = {method: "GET", URI: "http://localhost:8080/severities
 const addIssueHttp = {method: "POST", URI: "http://localhost:8080/issues"}
 
 /**
+ * Object that encapsulates the details of the request made to the server for retrieving the assigned issues of a user
+ * @type {{method: string, URI: string}}
+ */
+const getAssignedIssuesHttp = {method: "GET", URI: "http://localhost:8080/issues?assignee=:username"}
+
+/**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
  */
@@ -149,6 +155,7 @@ export {
     getStatusesHttp,
     getSeveritiesHttp,
     addIssueHttp,
+    getAssignedIssuesHttp,
     loginPage,
     createAccountPage,
     errorPage,
