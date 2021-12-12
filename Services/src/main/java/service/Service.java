@@ -99,4 +99,13 @@ public interface Service {
      * @throws UserNotFoundException if there is no user with the username set to {@param username}
      */
     List<Issue> getAssignedIssues(String username) throws UserNotFoundException;
+
+    /**
+     * Method for retrieving the information of an issue, identified by its ID
+     *
+     * @param id, the identifier of the desired issue
+     * @return - the issue, if an issue with the ID {@param id} exists
+     * - null, otherwise
+     */
+    Issue getIssueById(long id);
 }

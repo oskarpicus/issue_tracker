@@ -164,4 +164,9 @@ public class MasterService implements Service {
                 .sorted(Comparator.comparing(Issue::getStatus))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Issue getIssueById(long id) {
+        return issueRepository.find(id).orElse(null);
+    }
 }

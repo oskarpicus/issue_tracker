@@ -55,4 +55,14 @@ public class IssueController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<?> getIssueById(@PathVariable Long id) {
+        Issue issue = service.getIssueById(id);
+        if (issue == null) {
+            return new ResponseEntity<>("Issue does not exist", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(IssueDto.from(issue), HttpStatus.OK);
+    }
 }

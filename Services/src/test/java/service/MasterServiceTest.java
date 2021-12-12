@@ -308,4 +308,21 @@ class MasterServiceTest {
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
     }
+
+    @TestFactory
+    Stream<DynamicTest> getIssueById() {
+        record TestCase(String name, Service service, long id, Issue expected) {
+            public void check() {
+                Issue computed = TestCase.this.service.getIssueById(TestCase.this.id);
+                Assertions.assertEquals(TestCase.this.expected, computed);
+            }
+        }
+
+        var testCases = new TestCase[]{
+                new TestCase("Get Issue By Id non existent", new MasterService(null, null, null, new EmptyIssueRepository()), Long.MAX_VALUE, null),
+                new TestCase("Get Issue By Id successfully", new MasterService(null, null, null, new DefaultIssueRepository()), Constants.ISSUES[0].getId(), Constants.ISSUES[0])
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
+    }
 }
