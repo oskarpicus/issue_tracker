@@ -4,6 +4,7 @@ import {createRef, useEffect, useState} from "react";
 import MySnackbar from "./components/mySnackbar/MySnackbar";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {
+    addIssuePage,
     addProjectPage,
     createAccountPage,
     loginPage,
@@ -15,6 +16,7 @@ import ErrorPage from "./pages/errorPage/ErrorPage";
 import ViewProjectsPage from "./pages/viewProjectsPage/ViewProjectsPage";
 import ViewSingleProjectPage from "./pages/viewSingleProjectPage/ViewSingleProjectPage";
 import AddProjectPage from "./pages/addProjectPage/AddProjectPage";
+import AddIssuePage from "./pages/addIssuePage/AddIssuePage";
 
 function App() {
     const [alert, setAlert] = useState({
@@ -57,6 +59,9 @@ function App() {
                     </Route>
                     <Route exact={true} path={addProjectPage}>
                         <AddProjectPage credentials={credentials} setAlert={setAlert}/>
+                    </Route>
+                    <Route exact={true} path={addIssuePage}>
+                        <AddIssuePage credentials={credentials} setAlert={setAlert}/>
                     </Route>
                     {/* Will fallback to every other accessed URL */}
                     <Route>

@@ -57,8 +57,10 @@ public class ProjectDto {
                 .forEach(issue -> {
                     issue.setProject(null);
                     issue.getReporter().setAssignedIssues(null);
+                    issue.getReporter().setInvolvements(null);
                     if (issue.getAssignee() != null) {
                         issue.getAssignee().setAssignedIssues(null);
+                        issue.getAssignee().setInvolvements(null);
                     }
                 });
         return new ProjectDto(project.getId(), project.getTitle(), project.getDescription(), project.getCreatedAt(), project.getInvolvements(), project.getIssues());

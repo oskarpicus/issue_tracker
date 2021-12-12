@@ -131,22 +131,13 @@ public class MasterService implements Service {
             throw new UserNotFoundException(Constants.USER_DOES_NOT_EXIST_ERROR_MESSAGE);
         }
 
-        // verify if the project is a participant in the project
-        boolean isParticipant = reporter.get()
-                .getInvolvements()
-                .stream()
-                .anyMatch(involvement -> involvement.getProject().getId().equals(issue.getProject().getId()));
-        if (!isParticipant) {
-            throw new UserNotInProjectException("The reporter is not a participant");
-        }
-
         if (issue.getAssignee() != null) {
             Optional<User> assignee = userRepository.find(issue.getAssignee().getId());
             if (assignee.isEmpty()) {
                 throw new UserNotFoundException(Constants.USER_DOES_NOT_EXIST_ERROR_MESSAGE);
             }
 
-            isParticipant = assignee.get()
+            boolean isParticipant = assignee.get()
                     .getInvolvements()
                     .stream()
                     .anyMatch(involvement -> involvement.getProject().getId().equals(issue.getProject().getId()));

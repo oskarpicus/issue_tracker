@@ -3,7 +3,7 @@ import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import MyComboBox from "../myComboBox/MyComboBox";
 import {useEffect, useState} from "react";
 import {getAllUsernames} from "../../services/userService";
-import {getAllProjectRoles} from "../../services/roleService";
+import {getAllProjectRoles} from "../../services/enumService";
 import {addInvolvement} from "../../services/involvementService";
 import {responseTypes} from "../const";
 
