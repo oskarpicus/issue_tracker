@@ -155,6 +155,7 @@ const viewIssuePage = "/issues/:id";
  */
 const responseTypes = {
     key: "type",
+    keyFallback: "responseKey",
     error: "error",
     success: "success"
 }
