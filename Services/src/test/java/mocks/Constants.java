@@ -1,11 +1,9 @@
 package mocks;
 
-import model.Involvement;
-import model.Project;
-import model.Role;
-import model.User;
+import model.*;
 
 import java.time.LocalDateTime;
+import java.util.stream.Stream;
 
 public class Constants {
     public static final String USERNAME = "anne";
@@ -19,8 +17,21 @@ public class Constants {
     public static final Involvement INVOLVEMENT = new Involvement(Role.UX_DESIGNER, USER, PROJECT);
     public static final Involvement OTHER_INVOLVEMENT = new Involvement(Role.UX_DESIGNER, OTHER_USER, PROJECT);
 
+    public static final Issue[] ISSUES = new Issue[]{
+      new Issue("title1", "description1", Severity.BLOCKER, Status.TO_DO, IssueType.WONT_FIX, PROJECT, USER, OTHER_USER),
+      new Issue("title2", "description2", Severity.TRIVIAL, Status.IN_PROGRESS, IssueType.DUPLICATE, PROJECT, USER, OTHER_USER),
+    };
+
     static {
         OTHER_USER.getInvolvements().add(OTHER_INVOLVEMENT);
         PROJECT.getInvolvements().add(OTHER_INVOLVEMENT);
+
+        Stream.of(ISSUES).forEach(issue -> {
+            if (issue.getAssignee() != null) {
+                issue.getAssignee().getAssignedIssues().add(issue);
+            }
+
+            issue.getProject().getIssues().add(issue);
+        });
     }
 }

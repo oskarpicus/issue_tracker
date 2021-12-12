@@ -12,6 +12,7 @@ import repository.ProjectRepository;
 import repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -264,6 +265,45 @@ class MasterServiceTest {
                 new TestCase("Save issue successfully", service, issue, issue, null),
                 new TestCase("Save issue non-existent assignee", service, issueNonExistentAssignee, null, UserNotFoundException.class),
                 new TestCase("Save issue assignee not in project", service, issueWrongAssignee, null, UserNotInProjectException.class)
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> getAssignedIssues() {
+        record TestCase(String name, Service service, String username, List<Issue> expected,
+                        Class<? extends Exception> exception) {
+            public void check() {
+                try {
+                    List<Issue> computed = TestCase.this.service.getAssignedIssues(TestCase.this.username);
+                    Assertions.assertNull(TestCase.this.exception);
+
+                    Assertions.assertEquals(TestCase.this.expected, computed);
+                } catch (Exception e) {
+                    Assertions.assertNotNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                }
+            }
+        }
+
+        List<Issue> assignedIssues = Arrays.stream(Constants.ISSUES)
+                .filter(issue -> issue.getAssignee() != null && issue.getAssignee().equals(Constants.USER))
+                .collect(Collectors.toList());
+
+        var testCases = new TestCase[]{
+                new TestCase(
+                        "Service Get Assigned Issues non existent user",
+                        new MasterService(new EmptyUserRepository(), null, null, new EmptyIssueRepository()),
+                        Constants.USER.getUsername(),
+                        null,
+                        UserNotFoundException.class),
+                new TestCase("Service Get Assigned Issues not empty",
+                        new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new DefaultInvolvementRepository(), new DefaultIssueRepository()),
+                        Constants.USER.getUsername(),
+                        assignedIssues,
+                        null
+                )
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);

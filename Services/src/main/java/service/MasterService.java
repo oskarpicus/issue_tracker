@@ -9,6 +9,7 @@ import repository.UserRepository;
 import utils.Constants;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -149,5 +150,18 @@ public class MasterService implements Service {
         issue.setStatus(Status.TO_DO);
         Optional<Issue> result = issueRepository.save(issue);
         return result.isEmpty() ? issue : null;
+    }
+
+    @Override
+    public List<Issue> getAssignedIssues(String username) throws UserNotFoundException {
+        Optional<User> user = userRepository.findUserByUsername(username);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(Constants.USER_DOES_NOT_EXIST_ERROR_MESSAGE);
+        }
+
+        return user.get().getAssignedIssues()
+                .stream()
+                .sorted(Comparator.comparing(Issue::getStatus))
+                .collect(Collectors.toList());
     }
 }

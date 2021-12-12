@@ -4,10 +4,25 @@ import model.Issue;
 import model.User;
 import repository.IssueRepository;
 
-import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class EmptyIssueRepository implements IssueRepository {
+public class DefaultIssueRepository implements IssueRepository {
+    // make a copy of the default issues
+    private final Issue[] defaultIssues = Stream.of(Constants.ISSUES).toArray(Issue[]::new);
+
+    @Override
+    public Iterable<Issue> getAssignedIssues(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException();
+        }
+
+        return Stream.of(defaultIssues)
+                .filter(issue -> issue.getAssignee() != null && issue.getAssignee().equals(user))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public Optional<Issue> save(Issue entity) {
         if (entity == null) {
@@ -37,16 +52,13 @@ public class EmptyIssueRepository implements IssueRepository {
         if (aLong == null) {
             throw new IllegalArgumentException();
         }
-        return Optional.empty();
+        return Stream.of(defaultIssues)
+                .filter(issue -> issue.getId().equals(aLong))
+                .findFirst();
     }
 
     @Override
     public Iterable<Issue> findAll() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public Iterable<Issue> getAssignedIssues(User user) {
-        return Collections.emptyList();
+        return Stream.of(defaultIssues).collect(Collectors.toList());
     }
 }
