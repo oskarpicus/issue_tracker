@@ -84,6 +84,12 @@ const getSeveritiesHttp = {method: "GET", URI: "http://localhost:8080/severities
 const addIssueHttp = {method: "POST", URI: "http://localhost:8080/issues"}
 
 /**
+ * Object that encapsulates the details of the request made to the server for retrieving the assigned issues of a user
+ * @type {{method: string, URI: string}}
+ */
+const getAssignedIssuesHttp = {method: "GET", URI: "http://localhost:8080/issues?assignee=:username"}
+
+/**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
  */
@@ -126,6 +132,12 @@ const addProjectPage = "/add-project";
 const addIssuePage = "/projects/:id/add-issue";
 
 /**
+ * The page address for visiting the assigned issues of a user
+ * @type {string}
+ */
+const viewAssignedIssuesPage = "/:username/assigned-issues";
+
+/**
  * Defines how a call to the backend can result. This information will be added in the "key" field of the response.
  * @type {{success: string, error: string, key: string}}
  */
@@ -149,6 +161,7 @@ export {
     getStatusesHttp,
     getSeveritiesHttp,
     addIssueHttp,
+    getAssignedIssuesHttp,
     loginPage,
     createAccountPage,
     errorPage,
@@ -159,5 +172,6 @@ export {
     addProjectHttp,
     getAllUsernamesHttp,
     addIssuePage,
+    viewAssignedIssuesPage,
     responseTypes
 }

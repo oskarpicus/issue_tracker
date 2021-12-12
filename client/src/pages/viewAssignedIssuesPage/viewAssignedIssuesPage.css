@@ -1,0 +1,7 @@
+#view-assigned-issues-page > p {
+    margin-left: 15px;
+}
+
+#p-no-issues-to-display {
+    color: var(--color-dark-blue);
+}

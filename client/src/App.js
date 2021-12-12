@@ -7,7 +7,7 @@ import {
     addIssuePage,
     addProjectPage,
     createAccountPage,
-    loginPage,
+    loginPage, viewAssignedIssuesPage,
     viewProjectsPage,
     viewSingleProjectPage
 } from "./components/const";
@@ -17,6 +17,7 @@ import ViewProjectsPage from "./pages/viewProjectsPage/ViewProjectsPage";
 import ViewSingleProjectPage from "./pages/viewSingleProjectPage/ViewSingleProjectPage";
 import AddProjectPage from "./pages/addProjectPage/AddProjectPage";
 import AddIssuePage from "./pages/addIssuePage/AddIssuePage";
+import ViewAssignedIssuesPage from "./pages/viewAssignedIssuesPage/ViewAssignedIssuesPage";
 
 function App() {
     const [alert, setAlert] = useState({
@@ -62,6 +63,9 @@ function App() {
                     </Route>
                     <Route exact={true} path={addIssuePage}>
                         <AddIssuePage credentials={credentials} setAlert={setAlert}/>
+                    </Route>
+                    <Route exact={true} path={viewAssignedIssuesPage}>
+                        <ViewAssignedIssuesPage credentials={credentials}/>
                     </Route>
                     {/* Will fallback to every other accessed URL */}
                     <Route>

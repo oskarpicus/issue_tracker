@@ -16,7 +16,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import './menu.css';
 import BugReportOutlinedIcon from "@mui/icons-material/BugReportOutlined";
-import {loginPage, viewProjectsPage, websiteTitle} from "../const";
+import {loginPage, viewAssignedIssuesPage, viewProjectsPage, websiteTitle} from "../const";
 import {
     AccountCircleOutlined,
     BarChartOutlined,
@@ -137,7 +137,7 @@ const Menu = ({content, credentials}) => {
         {
             icon: <PestControlOutlined htmlColor={"white"} fontSize={"large"}/>,
             description: "Issues",
-            destination: "/"
+            destination: viewAssignedIssuesPage.replaceAll(":username", credentials.user.username)
         },
         {
             icon: <BarChartOutlined htmlColor={"white"} fontSize={"large"}/>,
