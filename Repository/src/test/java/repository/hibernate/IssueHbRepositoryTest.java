@@ -195,4 +195,33 @@ class IssueHbRepositoryTest {
         Assertions.assertEquals(Constants.defaultIssues.length, issues.size());
         Stream.of(Constants.defaultIssues).map(issues::contains).forEach(Assertions::assertTrue);
     }
+
+    @TestFactory
+    Stream<DynamicTest> getAssignedIssues() {
+        record TestCase(String name, User user, Iterable<Issue> expected, Class<? extends Exception> exception) {
+            public void check() {
+                try {
+                    Iterable<Issue> computed = issueRepo.getAssignedIssues(TestCase.this.user);
+                    Assertions.assertNull(TestCase.this.exception);
+
+                    Assertions.assertEquals(TestCase.this.expected, computed);
+                } catch (Exception e) {
+                    Assertions.assertNotNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                }
+            }
+        }
+
+        Iterable<Issue> assignedIssuesUser = Stream.of(Constants.defaultIssues)
+                .filter(issue -> issue.getAssignee() != null && issue.getAssignee().equals(Constants.defaultUsers[0]))
+                .sorted((issue1, issue2) -> issue2.getStatus().compareTo(issue1.getStatus()))
+                .collect(Collectors.toList());
+
+        var testCases = new TestCase[]{
+                new TestCase("Get Assigned Issues null user", null, null, IllegalArgumentException.class),
+                new TestCase("Get Assigned Issues valid user", Constants.defaultUsers[0], assignedIssuesUser, null)
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
+    }
 }

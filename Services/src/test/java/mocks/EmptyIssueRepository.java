@@ -1,6 +1,7 @@
 package mocks;
 
 import model.Issue;
+import model.User;
 import repository.IssueRepository;
 
 import java.util.Collections;
@@ -41,6 +42,11 @@ public class EmptyIssueRepository implements IssueRepository {
 
     @Override
     public Iterable<Issue> findAll() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Iterable<Issue> getAssignedIssues(User user) {
         return Collections.emptyList();
     }
 }
