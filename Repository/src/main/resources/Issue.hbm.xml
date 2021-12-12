@@ -11,7 +11,9 @@
         <property name="description" type="java.lang.String" column="description"/>
         <property name="expectedBehaviour" type="java.lang.String" column="expected_behaviour"/>
         <property name="actualBehaviour" type="java.lang.String" column="actual_behaviour"/>
-        <property name="stackTrace" type="java.lang.String" column="stack_trace"/>
+        <property name="stackTrace" type="java.lang.String">
+            <column name="stack_trace" length="1000"/>
+        </property>
         <property name="severity" column="severity">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">model.Severity</param>
