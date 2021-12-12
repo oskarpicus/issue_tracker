@@ -9,6 +9,7 @@ import repository.UserRepository;
 import utils.Constants;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -160,7 +161,7 @@ public class MasterService implements Service {
 
         return user.get().getAssignedIssues()
                 .stream()
-                .sorted((issue1, issue2) -> issue2.getStatus().compareTo(issue1.getStatus()))
+                .sorted(Comparator.comparing(Issue::getStatus))
                 .collect(Collectors.toList());
     }
 }
