@@ -112,18 +112,24 @@ const ViewIssue = ({match, credentials, setAlert}) => {
             })
     }
 
+    const isParticipant = possibleAssignees.find(user => user.id === credentials.user.id) !== undefined;
+
     const content = (
         <Box className={"view-issue-page"}>
             <Box className={"view-issue-page-header"}>
                 {getIssueIcon(issue)}
                 <p className={"action-title"}>{issue.title}</p>
-                <Button
-                    className={"action-button delete-issue-button"}
-                    variant={"contained"}
-                    onClick={handleDeleteButtonClicked}
-                >
-                    Delete
-                </Button>
+                {
+                    isParticipant
+                    &&
+                    <Button
+                        className={"action-button delete-issue-button"}
+                        variant={"contained"}
+                        onClick={handleDeleteButtonClicked}
+                    >
+                        Delete
+                    </Button>
+                }
             </Box>
             <DefaultLabeledField
                 text={"Project"}
@@ -251,12 +257,16 @@ const ViewIssue = ({match, credentials, setAlert}) => {
                     onChange={(event, value) => setIssue((prev) => ({...prev, assignee: value}))}
                 />
             }
-            <Button
-                variant={"contained"}
-                className={"action-button"}
-            >
-                Update
-            </Button>
+            {
+                isParticipant
+                &&
+                <Button
+                    variant={"contained"}
+                    className={"action-button"}
+                >
+                    Update
+                </Button>
+            }
         </Box>
     );
 
