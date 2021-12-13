@@ -36,7 +36,10 @@ public class DefaultIssueRepository implements IssueRepository {
         if (aLong == null) {
             throw new IllegalArgumentException();
         }
-        return Optional.empty();
+
+        return Stream.of(defaultIssues)
+                .filter(issue -> issue.getId().equals(aLong))
+                .findFirst();
     }
 
     @Override
