@@ -2,8 +2,8 @@ import './viewIssuePage.css';
 import {useHistory, withRouter} from "react-router-dom";
 import Menu from "../../components/menu/Menu";
 import {useEffect, useState} from "react";
-import {getIssueById} from "../../services/issueService";
-import {errorPage, responseTypes} from "../../components/const";
+import {deleteIssue, getIssueById} from "../../services/issueService";
+import {errorPage, responseTypes, viewAssignedIssuesPage} from "../../components/const";
 import {Box, Button} from "@mui/material";
 import {formatEnum, getIssueIcon} from "../../components/utils";
 import DefaultLabeledField from "../../components/labeledField/DefaultLabeledField";
@@ -14,6 +14,7 @@ import {viewSingleProject} from "../../services/projectService";
 
 const ViewIssue = ({match, credentials, setAlert}) => {
     const [issue, setIssue] = useState({
+        id: 0,
         project: {
             id: 0,
             title: ""
@@ -95,6 +96,22 @@ const ViewIssue = ({match, credentials, setAlert}) => {
         }
     }, [credentials, issue.project.id, history]);
 
+    const handleDeleteButtonClicked = () => {
+        deleteIssue(credentials.jwt, issue.id)
+            .then(response => {
+                if (response[responseTypes.keyFallback] === responseTypes.success) {
+                    history.push(viewAssignedIssuesPage.replaceAll(":username", credentials.user.username));
+                }
+
+                setAlert({
+                    state: true,
+                    severity: response[responseTypes.keyFallback],
+                    message: response[responseTypes.keyFallback] === responseTypes.success ? "Deleted issue successfully" : response.data,
+                    backgroundColor: "inherit"
+                });
+            })
+    }
+
     const content = (
         <Box className={"view-issue-page"}>
             <Box className={"view-issue-page-header"}>
@@ -103,6 +120,7 @@ const ViewIssue = ({match, credentials, setAlert}) => {
                 <Button
                     className={"action-button delete-issue-button"}
                     variant={"contained"}
+                    onClick={handleDeleteButtonClicked}
                 >
                     Delete
                 </Button>
@@ -210,16 +228,16 @@ const ViewIssue = ({match, credentials, setAlert}) => {
             }
             {
                 (issue.assignee !== null && possibleAssignees.length !== 0)
-                    &&
-                    <MyComboBox
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        defaultValue={issue.assignee}
-                        getOptionLabel={option => option.username}
-                        label={"Assignee"}
-                        className={"combo-box-filled-label combo-box-add-issue-enum"}
-                        options={possibleAssignees}
-                        onChange={(event, value) => setIssue((prev) => ({...prev, assignee: value}))}
-                    />
+                &&
+                <MyComboBox
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    defaultValue={issue.assignee}
+                    getOptionLabel={option => option.username}
+                    label={"Assignee"}
+                    className={"combo-box-filled-label combo-box-add-issue-enum"}
+                    options={possibleAssignees}
+                    onChange={(event, value) => setIssue((prev) => ({...prev, assignee: value}))}
+                />
             }
             {
                 (issue.assignee === null && possibleAssignees.length !== 0)
