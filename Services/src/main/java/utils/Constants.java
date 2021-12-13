@@ -21,4 +21,9 @@ public class Constants {
      * Error message displayed when trying to access information of a user that does not exist
      */
     public static final String USER_DOES_NOT_EXIST_ERROR_MESSAGE = "User does not exist";
+
+    /**
+     * Error message displayed when trying to access an issue that does not exist
+     */
+    public static final String ISSUE_DOES_NOT_EXIST_ERROR_MESSAGE = "Issue does not exist";
 }

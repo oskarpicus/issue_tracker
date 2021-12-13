@@ -108,4 +108,15 @@ public interface Service {
      * - null, otherwise
      */
     Issue getIssueById(long id);
+
+    /**
+     * Method for deleting an issue, based on its identifier
+     *
+     * @param id,        the identifier of the issue wished to be deleted
+     * @param requesterUsername, the username of the {@code User} that requests the deletion of the issue
+     * @return the issue, if an issue with tie ID {@param id} exists
+     * @throws IssueNotFoundException,    if there is no issue with the ID {@param id}
+     * @throws UserNotInProjectException, if the {@param requesterUsername} is not part of the issue's project (hence, does not have the right to delete the issue)
+     */
+    Issue deleteIssue(long id, String requesterUsername) throws IssueNotFoundException, UserNotInProjectException;
 }

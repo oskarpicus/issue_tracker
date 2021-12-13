@@ -325,4 +325,50 @@ class MasterServiceTest {
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
     }
+
+    @TestFactory
+    Stream<DynamicTest> deleteIssue() {
+        record TestCase(String name, Service service, long id, String requester, Issue expected,
+                        Class<? extends Exception> exception) {
+            public void check() {
+                try {
+                    Issue computed = TestCase.this.service.deleteIssue(TestCase.this.id, TestCase.this.requester);
+                    Assertions.assertNull(TestCase.this.exception);
+                    Assertions.assertEquals(expected, computed);
+                } catch (Exception e) {
+                    Assertions.assertNotNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                }
+            }
+        }
+
+        var testCases = new TestCase[]{
+                new TestCase(
+                        "Delete issue does not exist",
+                        new MasterService(null, null, null, new EmptyIssueRepository()),
+                        1,
+                        Constants.USER.getUsername(),
+                        null,
+                        IssueNotFoundException.class
+                ),
+                new TestCase(
+                        "Delete issue requester not a participant",
+                        new MasterService(null, null, null, new DefaultIssueRepository()),
+                        Constants.ISSUES[0].getId(),
+                        "",
+                        null,
+                        UserNotInProjectException.class
+                        ),
+                new TestCase(
+                        "Delete issue successfully",
+                        new MasterService(null, null, null, new DefaultIssueRepository()),
+                        Constants.ISSUES[0].getId(),
+                        Constants.ISSUES[0].getAssignee().getUsername(),
+                        Constants.ISSUES[0],
+                        null
+                )
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
+    }
 }
