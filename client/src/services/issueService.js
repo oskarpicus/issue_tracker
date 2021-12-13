@@ -71,10 +71,10 @@ export const deleteIssue = async (token, id) => {
         };
 
         const response = await axios.delete(deleteIssueByIdHttp.URI.replaceAll(":id", id), config);
-        response.data[responseTypes.key] = responseTypes.success;
+        response.data[responseTypes.keyFallback] = responseTypes.success;
         return response.data;
     } catch (error) {
-        error.response[responseTypes.key] = responseTypes.error;
+        error.response[responseTypes.keyFallback] = responseTypes.error;
         return error.response;
     }
 }
