@@ -96,6 +96,12 @@ const getAssignedIssuesHttp = {method: "GET", URI: "http://localhost:8080/issues
 const getIssueByIdHttp = {method: "GET", URI: "http://localhost:8080/issues/:id"}
 
 /**
+ * Object that encapsulates the details of the request made to the server for deleting an issue by its identifier
+ * @type {{method: string, URI: string}}
+ */
+const deleteIssueByIdHttp = {method: "DELETE", URI: "http://localhost:8080/issues/:id"}
+
+/**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
  */
@@ -176,6 +182,7 @@ export {
     addIssueHttp,
     getAssignedIssuesHttp,
     getIssueByIdHttp,
+    deleteIssueByIdHttp,
     loginPage,
     createAccountPage,
     errorPage,
