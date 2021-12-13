@@ -7,5 +7,5 @@ public class SecurityConstants {
 
     public static final String AUTHENTICATION_FAILED_MESSAGE = "Incorrect username or password";
 
-    public static final long JWT_EXPIRATION_MS = 3600000;  // one hour
+    public static final long JWT_EXPIRATION_MS = 8*3600000;  // 8 hours
 }

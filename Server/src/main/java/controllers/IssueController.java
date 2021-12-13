@@ -1,6 +1,7 @@
 package controllers;
 
 import dtos.IssueDto;
+import exceptions.IssueNotFoundException;
 import exceptions.UserNotFoundException;
 import exceptions.UserNotInProjectException;
 import model.Issue;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.Service;
+import utils.Utils;
 import utils.requests.AddIssueRequest;
 
 import java.util.List;
@@ -64,5 +66,18 @@ public class IssueController {
         }
 
         return new ResponseEntity<>(IssueDto.from(issue), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteIssue(@PathVariable Long id, @RequestHeader(value = "Authorization") String token) {
+        String username = Utils.extractUsername(token);
+        try {
+            Issue issue = service.deleteIssue(id, username);
+            return new ResponseEntity<>(IssueDto.from(issue), HttpStatus.OK);
+        } catch (IssueNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (UserNotInProjectException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
     }
 }
