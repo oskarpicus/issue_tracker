@@ -47,7 +47,7 @@ export const getIssueById = async (token, id) => {
         };
 
         const response = await axios.get(getIssueByIdHttp.URI.replaceAll(":id", id), config);
-        response.data[responseTypes.key] = responseTypes.success;
+        response.data[responseTypes.keyFallback] = responseTypes.success;
         return response.data;
     } catch (error) {
         error.response[responseTypes.key] = responseTypes.error;
