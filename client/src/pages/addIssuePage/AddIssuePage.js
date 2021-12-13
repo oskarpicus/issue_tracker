@@ -144,9 +144,9 @@ const AddIssue = ({match, credentials, setAlert}) => {
                     setFormValues((prev) => ({
                         ...prev,
                         type: value,
-                        expectedBehaviour: value !== "BUG" && "",
-                        actualBehaviour: value !== "BUG" && "",
-                        stackTrace: value !== "BUG" && ""
+                        expectedBehaviour: value !== "BUG" ? "" : prev.expectedBehaviour,
+                        actualBehaviour: value !== "BUG" ? "" : prev.actualBehaviour,
+                        stackTrace: value !== "BUG" ? "" : prev.stackTrace
                     }))
                 }
             />
