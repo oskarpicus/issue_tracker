@@ -2,7 +2,7 @@ import './viewIssuePage.css';
 import {useHistory, withRouter} from "react-router-dom";
 import Menu from "../../components/menu/Menu";
 import {useEffect, useState} from "react";
-import {deleteIssue, getIssueById} from "../../services/issueService";
+import {deleteIssue, getIssueById, updateIssue} from "../../services/issueService";
 import {errorPage, responseTypes, viewAssignedIssuesPage} from "../../components/const";
 import {Box, Button} from "@mui/material";
 import {formatEnum, getIssueIcon} from "../../components/utils";
@@ -107,6 +107,31 @@ const ViewIssue = ({match, credentials, setAlert}) => {
                     state: true,
                     severity: response[responseTypes.keyFallback],
                     message: response[responseTypes.keyFallback] === responseTypes.success ? "Deleted issue successfully" : response.data,
+                    backgroundColor: "inherit"
+                });
+            })
+    }
+
+    const handleUpdateButtonClicked = () => {
+        // prepare the data
+        let data = {...issue};
+        data.projectId = data.project.id;
+        data.reporterId = data.reporter.id;
+        if (data.assignee !== null && data.assignee !== undefined) {
+            data.assigneeId = data.assignee.id;
+        }
+
+        delete data.project;
+        delete data.assignee;
+
+        updateIssue(credentials.jwt, data)
+            .then(response => {
+                // todo remove the re-rendering of the page - fix check boxes with state
+                history.go(0);
+                setAlert({
+                    state: true,
+                    severity: response[responseTypes.keyFallback],
+                    message: response[responseTypes.keyFallback] === responseTypes.success ? "Updated issue successfully" : response.data,
                     backgroundColor: "inherit"
                 });
             })
@@ -263,6 +288,7 @@ const ViewIssue = ({match, credentials, setAlert}) => {
                 <Button
                     variant={"contained"}
                     className={"action-button"}
+                    onClick={handleUpdateButtonClicked}
                 >
                     Update
                 </Button>

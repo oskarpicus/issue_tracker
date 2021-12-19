@@ -4,7 +4,7 @@ import {
     deleteIssueByIdHttp,
     getAssignedIssuesHttp,
     getIssueByIdHttp,
-    responseTypes
+    responseTypes, updateIssueHttp
 } from "../components/const";
 
 export const addIssue = async (token, issue) => {
@@ -71,6 +71,24 @@ export const deleteIssue = async (token, id) => {
         };
 
         const response = await axios.delete(deleteIssueByIdHttp.URI.replaceAll(":id", id), config);
+        response.data[responseTypes.keyFallback] = responseTypes.success;
+        return response.data;
+    } catch (error) {
+        error.response[responseTypes.keyFallback] = responseTypes.error;
+        return error.response;
+    }
+}
+
+export const updateIssue = async (token, issue) => {
+    try {
+        let config = {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        };
+
+        const response = await axios.put(updateIssueHttp.URI.replaceAll(":id", issue.id), issue, config);
         response.data[responseTypes.keyFallback] = responseTypes.success;
         return response.data;
     } catch (error) {
