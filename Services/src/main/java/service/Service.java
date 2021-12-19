@@ -112,11 +112,23 @@ public interface Service {
     /**
      * Method for deleting an issue, based on its identifier
      *
-     * @param id,        the identifier of the issue wished to be deleted
+     * @param id,                the identifier of the issue wished to be deleted
      * @param requesterUsername, the username of the {@code User} that requests the deletion of the issue
      * @return the issue, if an issue with the ID {@param id} exists and {@param requesterUsername} has the necessary rights
      * @throws IssueNotFoundException,    if there is no issue with the ID {@param id}
      * @throws UserNotInProjectException, if the {@param requesterUsername} is not part of the issue's project (hence, does not have the right to delete the issue)
      */
     Issue deleteIssue(long id, String requesterUsername) throws IssueNotFoundException, UserNotInProjectException;
+
+    /**
+     * Method for updating an issue
+     *
+     * @param issue,             the issue to update its fields. Should have a valid identifier assigned
+     * @param requesterUsername, the username of the {@code User} that requests the change. The user should be part of the {@param issue}'s project
+     * @return the issue, if {@param issue} is updated successfully, null, otherwise
+     * @throws IllegalArgumentException,  if {@param issue} or {@param requesterUsername} is null
+     * @throws UserNotInProjectException, if {@param requesterUsername} is not part of {@param issue}'s project
+     * @throws IssueNotFoundException,    if {@param issue}'s identifier is not valid
+     */
+    Issue updateIssue(Issue issue, String requesterUsername) throws IllegalArgumentException, UserNotInProjectException, IssueNotFoundException;
 }
