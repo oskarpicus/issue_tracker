@@ -358,7 +358,7 @@ class MasterServiceTest {
                         "",
                         null,
                         UserNotInProjectException.class
-                        ),
+                ),
                 new TestCase(
                         "Delete issue successfully",
                         new MasterService(null, null, null, new DefaultIssueRepository()),
@@ -367,6 +367,36 @@ class MasterServiceTest {
                         Constants.ISSUES[0],
                         null
                 )
+        };
+
+        return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> updateIssue() {
+        record TestCase(String name, Service service, Issue issue, String requesterUsername, Issue expected,
+                        Class<? extends Exception> exception) {
+            public void check() {
+                try {
+                    Issue computed = TestCase.this.service.updateIssue(TestCase.this.issue, TestCase.this.requesterUsername);
+                    Assertions.assertNull(TestCase.this.exception);
+                    Assertions.assertEquals(expected, computed);
+                } catch (Exception e) {
+                    Assertions.assertNotNull(TestCase.this.exception);
+                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                }
+            }
+        }
+
+        Service serviceNoIssues = new MasterService(null, null, null, new EmptyIssueRepository());
+        Service serviceDefaultIssues = new MasterService(null, null, null, new DefaultIssueRepository());
+
+        var testCases = new TestCase[]{
+                new TestCase("Update Issue null issue and user", serviceNoIssues, null, null, null, IllegalArgumentException.class),
+                new TestCase("Update Issue null user", serviceNoIssues, Constants.ISSUES[0], null, null, IllegalArgumentException.class),
+                new TestCase("Update Issue issue not found", serviceNoIssues, Constants.ISSUES[0], "", null, IssueNotFoundException.class),
+                new TestCase("Update Issue user not in project", serviceDefaultIssues, Constants.ISSUES[0], "", null, UserNotInProjectException.class),
+                new TestCase("Update Issue successful", serviceDefaultIssues, Constants.ISSUES[0], Constants.ISSUES[0].getAssignee().getUsername(), Constants.ISSUES[0], null)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);

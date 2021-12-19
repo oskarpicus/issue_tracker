@@ -4,6 +4,7 @@ import model.Issue;
 import model.User;
 import repository.IssueRepository;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,7 +48,11 @@ public class DefaultIssueRepository implements IssueRepository {
         if (entity == null) {
             throw new IllegalArgumentException();
         }
-        return Optional.empty();
+
+        boolean isPresent = Arrays.stream(defaultIssues)
+                .anyMatch(issue -> issue.getId().equals(entity.getId()));
+
+        return isPresent ? Optional.empty() : Optional.of(entity);
     }
 
     @Override

@@ -177,15 +177,36 @@ public class MasterService implements Service {
             throw new IssueNotFoundException(Constants.ISSUE_DOES_NOT_EXIST_ERROR_MESSAGE);
         }
 
-        boolean isParticipant = issue.get().getProject()
-                .getInvolvements()
-                .stream()
-                .anyMatch(involvement -> involvement.getUser().getUsername().equals(requesterUsername));
-
-        if (!isParticipant) {
+        if (!isParticipantInProject(issue.get(), requesterUsername)) {
             throw new UserNotInProjectException("The requester is not part of the project");
         }
 
         return issueRepository.delete(id).orElse(null);
+    }
+
+    @Override
+    public Issue updateIssue(Issue issue, String requesterUsername) throws IllegalArgumentException, UserNotInProjectException, IssueNotFoundException {
+        if (issue == null || requesterUsername == null) {
+            throw new IllegalArgumentException();
+        }
+
+        Optional<Issue> foundIssue = issueRepository.find(issue.getId());
+        if (foundIssue.isEmpty()) {
+            throw new IssueNotFoundException(Constants.ISSUE_DOES_NOT_EXIST_ERROR_MESSAGE);
+        }
+
+        if (!isParticipantInProject(foundIssue.get(), requesterUsername)) {
+            throw new UserNotInProjectException("The requester is not part of the project");
+        }
+
+        Optional<Issue> result = issueRepository.update(issue);
+        return result.isEmpty() ? issue : null;
+    }
+
+    private boolean isParticipantInProject(Issue issue, String username) {
+        return issue.getProject()
+                .getInvolvements()
+                .stream()
+                .anyMatch(involvement -> involvement.getUser().getUsername().equals(username));
     }
 }
