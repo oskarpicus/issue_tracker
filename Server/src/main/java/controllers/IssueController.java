@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import service.Service;
 import utils.Utils;
 import utils.requests.AddIssueRequest;
+import utils.requests.UpdateIssueRequest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,6 +79,27 @@ public class IssueController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (UserNotInProjectException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updateIssue(@PathVariable Long id, @RequestBody UpdateIssueRequest request, @RequestHeader(value = "Authorization") String token) {
+        String username = Utils.extractUsername(token);
+        try {
+            Issue issue = request.toIssue();
+            issue.setId(id);
+            Issue result = service.updateIssue(issue, username);
+            if (result == null) {
+                return new ResponseEntity<>("Failed to update issue", HttpStatus.BAD_REQUEST);
+            }
+
+            return new ResponseEntity<>(IssueDto.from(result), HttpStatus.OK);
+        } catch (IssueNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (UserNotInProjectException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }
