@@ -8,7 +8,7 @@ service = Service(SeverityClassifier("resources/aiModels/severityModel.joblib"))
 
 
 @app.route("/suggested-severity")
-def suggested_severity():
+def get_suggested_severity():
     title = request.args.get("title")
     result = service.compute_suggested_severity(title)
     return result.name
