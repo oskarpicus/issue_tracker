@@ -1,10 +1,7 @@
 package service;
 
 import exceptions.*;
-import model.Involvement;
-import model.Issue;
-import model.Project;
-import model.User;
+import model.*;
 
 import java.util.List;
 import java.util.Set;
@@ -131,4 +128,13 @@ public interface Service {
      * @throws IssueNotFoundException,    if {@param issue}'s identifier is not valid
      */
     Issue updateIssue(Issue issue, String requesterUsername) throws IllegalArgumentException, UserNotInProjectException, IssueNotFoundException;
+
+    /**
+     * Method for predicting the severity level of an issue, based on its title
+     *
+     * @param title, the title of the issue to predict the severity level to
+     * @return the predicted severity level
+     * @throws AiServiceException if any errors occur during the prediction process
+     */
+    SeverityLevel predictSeverityLevel(String title) throws AiServiceException;
 }

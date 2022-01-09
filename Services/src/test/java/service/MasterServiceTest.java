@@ -37,9 +37,9 @@ class MasterServiceTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Create account successful", new MasterService(new EmptyUserRepository(), null, null, null), new User("a", "b", "AB", "BA", "a@g.com"), null),
-                new TestCase("Create account duplicate username", new MasterService(new DefaultUserRepository(), null, null, null), new User(Constants.USERNAME, "b", "AB", "BA", "a@g.c"), UsernameTakenException.class),
-                new TestCase("Create account duplicate email", new MasterService(new DefaultUserRepository(), null, null, null), new User("a", "b", "AB", "BA", Constants.EMAIL), EmailTakenException.class),
+                new TestCase("Create account successful", new MasterService(new EmptyUserRepository(), null, null, null, null), new User("a", "b", "AB", "BA", "a@g.com"), null),
+                new TestCase("Create account duplicate username", new MasterService(new DefaultUserRepository(), null, null, null, null), new User(Constants.USERNAME, "b", "AB", "BA", "a@g.c"), UsernameTakenException.class),
+                new TestCase("Create account duplicate email", new MasterService(new DefaultUserRepository(), null, null, null, null), new User("a", "b", "AB", "BA", Constants.EMAIL), EmailTakenException.class),
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -62,9 +62,9 @@ class MasterServiceTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Login invalid data", new MasterService(new EmptyUserRepository(), null, null, null), null, null, IllegalArgumentException.class),
-                new TestCase("Login successful", new MasterService(new DefaultUserRepository(), null, null, null), Constants.USERNAME, Constants.USER, null),
-                new TestCase("Login unsuccessful", new MasterService(new EmptyUserRepository(), null, null, null), Constants.USERNAME, null, UserNotFoundException.class)
+                new TestCase("Login invalid data", new MasterService(new EmptyUserRepository(), null, null, null, null), null, null, IllegalArgumentException.class),
+                new TestCase("Login successful", new MasterService(new DefaultUserRepository(), null, null, null, null), Constants.USERNAME, Constants.USER, null),
+                new TestCase("Login unsuccessful", new MasterService(new EmptyUserRepository(), null, null, null, null), Constants.USERNAME, null, UserNotFoundException.class)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -88,7 +88,7 @@ class MasterServiceTest {
 
         Project project = new Project("title", "Description", LocalDateTime.now());
         var testCases = new TestCase[]{
-                new TestCase("Create project successfully", new MasterService(new EmptyUserRepository(), new EmptyProjectRepository(), null, null), project, project, null)
+                new TestCase("Create project successfully", new MasterService(new EmptyUserRepository(), new EmptyProjectRepository(), null, null, null), project, project, null)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -110,8 +110,8 @@ class MasterServiceTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Get project non-existent id", new MasterService(null, new EmptyProjectRepository(), null, null), 0L, null, null),
-                new TestCase("Get project successfully", new MasterService(null, new DefaultProjectRepository(), null, null), Constants.PROJECT.getId(), Constants.PROJECT, null)
+                new TestCase("Get project non-existent id", new MasterService(null, new EmptyProjectRepository(), null, null, null), 0L, null, null),
+                new TestCase("Get project successfully", new MasterService(null, new DefaultProjectRepository(), null, null, null), Constants.PROJECT.getId(), Constants.PROJECT, null)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -134,8 +134,8 @@ class MasterServiceTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Get Involvements by User username non-existent", new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new EmptyInvolvementRepository(), null), "", null, UserNotFoundException.class),
-                new TestCase("Get Involvements by User zero size", new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new EmptyInvolvementRepository(), null), Constants.USER.getUsername(), Collections.emptySet(), null),
+                new TestCase("Get Involvements by User username non-existent", new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new EmptyInvolvementRepository(), null, null), "", null, UserNotFoundException.class),
+                new TestCase("Get Involvements by User zero size", new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new EmptyInvolvementRepository(), null, null), Constants.USER.getUsername(), Collections.emptySet(), null),
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -165,35 +165,35 @@ class MasterServiceTest {
 
         var testCases = new TestCase[]{
                 new TestCase("Add Participant non existent requester",
-                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new EmptyInvolvementRepository(), null),
+                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new EmptyInvolvementRepository(), null, null),
                         new Involvement(Role.UX_DESIGNER, Constants.USER, Constants.PROJECT),
                         userNonExistent,
                         null,
                         UserNotFoundException.class
                 ),
                 new TestCase("Add Participant requester not a participant",
-                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new EmptyInvolvementRepository(), null),
+                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new EmptyInvolvementRepository(), null, null),
                         new Involvement(Role.BACK_END_DEVELOPER, userNonExistent, Constants.PROJECT),
                         Constants.USER,
                         null,
                         UserNotInProjectException.class
                 ),
                 new TestCase("Add participant non existent user",
-                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new DefaultInvolvementRepository(), null),
+                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new DefaultInvolvementRepository(), null, null),
                         new Involvement(Role.TESTER, userNonExistent, Constants.PROJECT),
                         Constants.OTHER_USER,
                         null,
                         UserNotFoundException.class
                 ),
                 new TestCase("Add participant non existent project",
-                        new MasterService(defaultUserRepository, new EmptyProjectRepository(), new EmptyInvolvementRepository(), null),
+                        new MasterService(defaultUserRepository, new EmptyProjectRepository(), new EmptyInvolvementRepository(), null, null),
                         new Involvement(Role.QA_LEAD, Constants.OTHER_USER, projectNonExistent),
                         Constants.OTHER_USER,
                         null,
                         ProjectNotFoundException.class
                 ),
                 new TestCase("Add participant already added",
-                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new DefaultInvolvementRepository(), null),
+                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new DefaultInvolvementRepository(), null, null),
                         new Involvement(Role.FULL_STACK_DEVELOPER, Constants.OTHER_USER, Constants.PROJECT),
                         Constants.OTHER_USER,
                         null,
@@ -221,8 +221,8 @@ class MasterServiceTest {
                 .collect(Collectors.toList());
 
         var testCases = new TestCase[]{
-                new TestCase("Get all usernames empty result", new MasterService(new EmptyUserRepository(), null, null, null), Collections.emptyList()),
-                new TestCase("Get all username default users", new MasterService(userRepository, null, null, null), usernames)
+                new TestCase("Get all usernames empty result", new MasterService(new EmptyUserRepository(), null, null, null, null), Collections.emptyList()),
+                new TestCase("Get all username default users", new MasterService(userRepository, null, null, null, null), usernames)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -249,7 +249,7 @@ class MasterServiceTest {
         ProjectRepository defaultProjectRepo = new DefaultProjectRepository();
         InvolvementRepository defaultInvolvementRepo = new DefaultInvolvementRepository();
 
-        Service service = new MasterService(defaultUserRepo, defaultProjectRepo, defaultInvolvementRepo, emptyIssueRepo);
+        Service service = new MasterService(defaultUserRepo, defaultProjectRepo, defaultInvolvementRepo, emptyIssueRepo, null);
 
         Issue issueNonExistentReporter = new Issue("Title", "Desc", Severity.BLOCKER, Status.TO_DO, IssueType.WONT_FIX, new Project(), new User(Long.MAX_VALUE));
         Issue issue = new Issue("Title", "Desc", Severity.BLOCKER, Status.TO_DO, IssueType.DUPLICATE, Constants.OTHER_INVOLVEMENT.getProject(), Constants.OTHER_INVOLVEMENT.getUser());
@@ -294,12 +294,12 @@ class MasterServiceTest {
         var testCases = new TestCase[]{
                 new TestCase(
                         "Service Get Assigned Issues non existent user",
-                        new MasterService(new EmptyUserRepository(), null, null, new EmptyIssueRepository()),
+                        new MasterService(new EmptyUserRepository(), null, null, new EmptyIssueRepository(), null),
                         Constants.USER.getUsername(),
                         null,
                         UserNotFoundException.class),
                 new TestCase("Service Get Assigned Issues not empty",
-                        new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new DefaultInvolvementRepository(), new DefaultIssueRepository()),
+                        new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new DefaultInvolvementRepository(), new DefaultIssueRepository(), null),
                         Constants.USER.getUsername(),
                         assignedIssues,
                         null
@@ -319,8 +319,8 @@ class MasterServiceTest {
         }
 
         var testCases = new TestCase[]{
-                new TestCase("Get Issue By Id non existent", new MasterService(null, null, null, new EmptyIssueRepository()), Long.MAX_VALUE, null),
-                new TestCase("Get Issue By Id successfully", new MasterService(null, null, null, new DefaultIssueRepository()), Constants.ISSUES[0].getId(), Constants.ISSUES[0])
+                new TestCase("Get Issue By Id non existent", new MasterService(null, null, null, new EmptyIssueRepository(), null), Long.MAX_VALUE, null),
+                new TestCase("Get Issue By Id successfully", new MasterService(null, null, null, new DefaultIssueRepository(), null), Constants.ISSUES[0].getId(), Constants.ISSUES[0])
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -345,7 +345,7 @@ class MasterServiceTest {
         var testCases = new TestCase[]{
                 new TestCase(
                         "Delete issue does not exist",
-                        new MasterService(null, null, null, new EmptyIssueRepository()),
+                        new MasterService(null, null, null, new EmptyIssueRepository(), null),
                         1,
                         Constants.USER.getUsername(),
                         null,
@@ -353,7 +353,7 @@ class MasterServiceTest {
                 ),
                 new TestCase(
                         "Delete issue requester not a participant",
-                        new MasterService(null, null, null, new DefaultIssueRepository()),
+                        new MasterService(null, null, null, new DefaultIssueRepository(), null),
                         Constants.ISSUES[0].getId(),
                         "",
                         null,
@@ -361,7 +361,7 @@ class MasterServiceTest {
                 ),
                 new TestCase(
                         "Delete issue successfully",
-                        new MasterService(null, null, null, new DefaultIssueRepository()),
+                        new MasterService(null, null, null, new DefaultIssueRepository(), null),
                         Constants.ISSUES[0].getId(),
                         Constants.ISSUES[0].getAssignee().getUsername(),
                         Constants.ISSUES[0],
@@ -388,8 +388,8 @@ class MasterServiceTest {
             }
         }
 
-        Service serviceNoIssues = new MasterService(null, null, null, new EmptyIssueRepository());
-        Service serviceDefaultIssues = new MasterService(null, null, null, new DefaultIssueRepository());
+        Service serviceNoIssues = new MasterService(null, null, null, new EmptyIssueRepository(), null);
+        Service serviceDefaultIssues = new MasterService(null, null, null, new DefaultIssueRepository(), null);
 
         var testCases = new TestCase[]{
                 new TestCase("Update Issue null issue and user", serviceNoIssues, null, null, null, IllegalArgumentException.class),
