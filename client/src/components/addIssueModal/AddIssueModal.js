@@ -70,6 +70,16 @@ export const AddIssueModal = ({open, setOpen, credentials, issue, setAlert}) => 
             });
     }, [credentials, issue]);
 
+    useEffect(() => {
+        if (data[suggestedSeverity].suggested.find((severity) => severity.toUpperCase() === issue.severity) !== undefined) {
+            // no need for modal, severities match, perform the save
+            if (open) {
+                saveIssue(issue, credentials, setAlert);
+            }
+            setOpen(false);
+        }
+    }, [issue, credentials, setAlert, setOpen, suggestedSeverity, open]);
+
     const handleNo = () => setOpen(false);
 
     const handleYes = () => {
@@ -79,11 +89,6 @@ export const AddIssueModal = ({open, setOpen, credentials, issue, setAlert}) => 
     };
 
     if (data[suggestedSeverity].suggested.find((severity) => severity.toUpperCase() === issue.severity) !== undefined) {
-        // no need for modal, severities match, perform the save
-        if (open) {
-            saveIssue(issue, credentials, setAlert);
-        }
-        setOpen(false);
         return <span/>;
     }
 
