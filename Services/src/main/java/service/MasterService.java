@@ -1,5 +1,6 @@
 package service;
 
+import ai.Predictor;
 import exceptions.*;
 import model.*;
 import repository.InvolvementRepository;
@@ -21,12 +22,14 @@ public class MasterService implements Service {
     private final ProjectRepository projectRepository;
     private final InvolvementRepository involvementRepository;
     private final IssueRepository issueRepository;
+    private final Predictor predictor;
 
-    public MasterService(UserRepository userRepository, ProjectRepository projectRepository, InvolvementRepository involvementRepository, IssueRepository issueRepository) {
+    public MasterService(UserRepository userRepository, ProjectRepository projectRepository, InvolvementRepository involvementRepository, IssueRepository issueRepository, Predictor predictor) {
         this.userRepository = userRepository;
         this.projectRepository = projectRepository;
         this.involvementRepository = involvementRepository;
         this.issueRepository = issueRepository;
+        this.predictor = predictor;
     }
 
     @Override
@@ -201,6 +204,11 @@ public class MasterService implements Service {
 
         Optional<Issue> result = issueRepository.update(issue);
         return result.isEmpty() ? issue : null;
+    }
+
+    @Override
+    public SeverityLevel predictSeverityLevel(String title) throws AiServiceException {
+        return predictor.predictSeverityLevel(title);
     }
 
     private boolean isParticipantInProject(Issue issue, String username) {

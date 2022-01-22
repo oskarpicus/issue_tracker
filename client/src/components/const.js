@@ -107,6 +107,8 @@ const deleteIssueByIdHttp = {method: "DELETE", URI: "http://localhost:8080/issue
  */
 const updateIssueHttp = {method: "PUT", URI: "http://localhost:8080/issues/:id"}
 
+const getSuggestedSeverityHttp = {method: "GET", URI: "http://localhost:8080/suggested-severity?title=:title"}
+
 /**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
@@ -190,6 +192,7 @@ export {
     getIssueByIdHttp,
     deleteIssueByIdHttp,
     updateIssueHttp,
+    getSuggestedSeverityHttp,
     loginPage,
     createAccountPage,
     errorPage,

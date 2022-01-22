@@ -24,11 +24,18 @@
         <constructor-arg ref="issueValidator"/>
     </bean>
 
+    <util:properties id="aiServiceProperties" location="classpath:aiService.properties"/>
+
+    <bean class="ai.HttpPredictor" id="predictor">
+        <constructor-arg ref="aiServiceProperties"/>
+    </bean>
+
     <bean class="service.MasterService" id="service">
         <constructor-arg ref="userHbRepository"/>
         <constructor-arg ref="projectHbRepository"/>
         <constructor-arg ref="involvementHbRepository"/>
         <constructor-arg ref="issueHbRepository"/>
+        <constructor-arg ref="predictor"/>
     </bean>
 
     <bean class="security.UserDetailsServiceImpl" id="userDetailsService">

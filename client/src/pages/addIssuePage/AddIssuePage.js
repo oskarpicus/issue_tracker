@@ -8,10 +8,10 @@ import MyComboBox from "../../components/myComboBox/MyComboBox";
 import LabeledField from "../../components/labeledField/LabeledField";
 import {getAllIssueTypes, getAllSeverities} from "../../services/enumService";
 import {formatEnum} from "../../components/utils";
-import {addIssue} from "../../services/issueService";
 import LabeledTextArea from "../../components/labeledTextArea/LabeledTextArea";
 import {viewSingleProject} from "../../services/projectService";
 import DefaultLabeledField from "../../components/labeledField/DefaultLabeledField";
+import {AddIssueModal} from "../../components/addIssueModal/AddIssueModal";
 
 const getProjectParticipants = (project) => {
     if (project === null || project === undefined) {
@@ -38,6 +38,8 @@ const AddIssue = ({match, credentials, setAlert}) => {
     const [severities, setSeverities] = useState([]);
 
     const [issueTypes, setIssueTypes] = useState([]);
+
+    const [openModal, setOpenModal] = useState(false);
 
     let history = useHistory();
 
@@ -74,37 +76,7 @@ const AddIssue = ({match, credentials, setAlert}) => {
         return <Redirect to={errorPage}/>;
     }
 
-    const handleClick = () => {
-        try {
-            // prepare the data
-            let data = {...formValues};
-            data.projectId = data.project.id;
-            if (data.assignee !== null && data.assignee !== undefined) {
-                data.assigneeId = data.assignee.id;
-            }
-
-            delete data.project;
-            delete data.assignee;
-
-            addIssue(credentials.jwt, data)
-                .then(response => {
-                    setAlert({
-                        state: true,
-                        severity: response[responseTypes.key],
-                        message: response[responseTypes.key] === responseTypes.success ?
-                            "Issue created successfully" : response.data,
-                        backgroundColor: "inherit"
-                    })
-                });
-        } catch (error) {
-            setAlert({
-                state: true,
-                severity: "error",
-                message: "All fields must be supplied",
-                backgroundColor: "inherit"
-            });
-        }
-    };
+    const handleClick = () => setOpenModal(true);
 
     const content = (
         <Box>
@@ -115,7 +87,7 @@ const AddIssue = ({match, credentials, setAlert}) => {
                 type={"text"}
                 readOnly={true}
                 value={formValues.project === undefined ? "" : formValues.project.title}
-                />
+            />
             <LabeledField
                 text={"Title"}
                 name={"title"}
@@ -177,7 +149,7 @@ const AddIssue = ({match, credentials, setAlert}) => {
                     text={"Stack Trace"}
                     name={"stackTrace"}
                     onChange={(name, value) => setFormValues((prev) => ({...prev, [name]: value}))}
-                    />
+                />
             }
             <MyComboBox
                 getOptionLabel={option => option.username}
@@ -193,6 +165,13 @@ const AddIssue = ({match, credentials, setAlert}) => {
             >
                 Add issue
             </Button>
+            <AddIssueModal
+                open={openModal}
+                setOpen={setOpenModal}
+                credentials={credentials}
+                issue={formValues}
+                setAlert={setAlert}
+            />
         </Box>
     );
 
