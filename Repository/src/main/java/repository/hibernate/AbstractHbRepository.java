@@ -24,6 +24,13 @@ abstract class AbstractHbRepository<ID extends Serializable, E extends Entity<ID
     private static boolean initialised = false;
     protected final Validator<ID, E> validator;
 
+    /**
+     * Initialising the connection to the database
+     * @param propertiesFile, the path to a {@code Properties} file containing
+     *                        <i>hibernate.connection.username</i>,
+     *                        <i>hibernate.connection.password</i>
+     *                        and <i>hibernate.connection.url</i>
+     */
     private static void initialise(String propertiesFile) {
         // connecting to the database and migrations
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
