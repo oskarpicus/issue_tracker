@@ -7,8 +7,8 @@ import repository.ProjectRepository;
 import validator.Validator;
 
 public class ProjectHbRepository extends AbstractHbRepository<Long, Project> implements ProjectRepository {
-    protected ProjectHbRepository(Validator<Long, Project> validator) {
-        super(validator);
+    protected ProjectHbRepository(Validator<Long, Project> validator, String propertiesFile) {
+        super(validator, propertiesFile);
     }
 
     @Override

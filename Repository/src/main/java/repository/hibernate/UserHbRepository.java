@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class UserHbRepository extends AbstractHbRepository<Long, User> implements UserRepository {
-    protected UserHbRepository(Validator<Long, User> validator) {
-        super(validator);
+    protected UserHbRepository(Validator<Long, User> validator, String propertiesFile) {
+        super(validator, propertiesFile);
     }
 
     @Override

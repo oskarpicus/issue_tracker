@@ -15,9 +15,9 @@ import java.util.stream.StreamSupport;
 
 class IssueHbRepositoryTest {
 
-    private static final UserHbRepository userRepo = new UserHbRepository(new UserValidator());
-    private static final ProjectHbRepository projectRepo = new ProjectHbRepository(new ProjectValidator());
-    private static final IssueHbRepository issueRepo = new IssueHbRepository(new IssueValidator());
+    private static final UserHbRepository userRepo = new UserHbRepository(new UserValidator(), Constants.DEFAULT_PROPERTIES_FILE);
+    private static final ProjectHbRepository projectRepo = new ProjectHbRepository(new ProjectValidator(), Constants.DEFAULT_PROPERTIES_FILE);
+    private static final IssueHbRepository issueRepo = new IssueHbRepository(new IssueValidator(), Constants.DEFAULT_PROPERTIES_FILE);
 
     /**
      * Method for inserting the default issues in the database.

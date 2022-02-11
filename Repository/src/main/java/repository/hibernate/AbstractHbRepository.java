@@ -21,11 +21,20 @@ abstract class AbstractHbRepository<ID extends Serializable, E extends Entity<ID
 
     protected static SessionFactory sessionFactory;
     protected static final Logger logger = LogManager.getLogger();
+    private static boolean initialised = false;
     protected final Validator<ID, E> validator;
 
-    static {
+    /**
+     * Initialising the connection to the database
+     * @param propertiesFile, the path to a {@code Properties} file containing
+     *                        <i>hibernate.connection.username</i>,
+     *                        <i>hibernate.connection.password</i>
+     *                        and <i>hibernate.connection.url</i>
+     */
+    private static void initialise(String propertiesFile) {
         // connecting to the database and migrations
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+                .loadProperties(propertiesFile)
                 .configure()
                 .build();
         try {
@@ -36,8 +45,12 @@ abstract class AbstractHbRepository<ID extends Serializable, E extends Entity<ID
         }
     }
 
-    protected AbstractHbRepository(Validator<ID, E> validator) {
+    protected AbstractHbRepository(Validator<ID, E> validator, String propertiesFile) {
         this.validator = validator;
+        if (!initialised) {
+            initialise(propertiesFile);
+            initialised = true;
+        }
     }
 
     @Override
