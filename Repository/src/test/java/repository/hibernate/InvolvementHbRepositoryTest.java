@@ -19,9 +19,9 @@ import java.util.stream.StreamSupport;
 
 class InvolvementHbRepositoryTest {
 
-    private static final InvolvementHbRepository involvementRepo = new InvolvementHbRepository(new InvolvementValidator());
-    private static final UserHbRepository userRepo = new UserHbRepository(new UserValidator());
-    private static final ProjectHbRepository projectRepo = new ProjectHbRepository(new ProjectValidator());
+    private static final InvolvementHbRepository involvementRepo = new InvolvementHbRepository(new InvolvementValidator(), Constants.DEFAULT_PROPERTIES_FILE);
+    private static final UserHbRepository userRepo = new UserHbRepository(new UserValidator(), Constants.DEFAULT_PROPERTIES_FILE);
+    private static final ProjectHbRepository projectRepo = new ProjectHbRepository(new ProjectValidator(), Constants.DEFAULT_PROPERTIES_FILE);
 
     /**
      * Method for inserting the default involvements in the database.

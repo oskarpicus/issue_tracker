@@ -6,9 +6,6 @@
     <session-factory>
         <property name="dialect">org.hibernate.dialect.PostgreSQL10Dialect</property>
         <property name="connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.username">postgres</property>
-        <property name="hibernate.connection.password">postgres</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/issue_tracker</property>
 
         <property name="hibernate.hbm2ddl.auto">update</property>
 

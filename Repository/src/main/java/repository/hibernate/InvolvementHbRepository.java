@@ -10,8 +10,8 @@ import validator.Validator;
 import java.util.Collections;
 
 public class InvolvementHbRepository extends AbstractHbRepository<Long, Involvement> implements InvolvementRepository {
-    protected InvolvementHbRepository(Validator<Long, Involvement> validator) {
-        super(validator);
+    protected InvolvementHbRepository(Validator<Long, Involvement> validator, String propertiesFile) {
+        super(validator, propertiesFile);
     }
 
     @Override

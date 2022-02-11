@@ -15,7 +15,7 @@ import java.util.stream.StreamSupport;
 
 class ProjectHbRepositoryTest {
 
-    private static final ProjectHbRepository repo = new ProjectHbRepository(new ProjectValidator());
+    private static final ProjectHbRepository repo = new ProjectHbRepository(new ProjectValidator(), Constants.DEFAULT_PROPERTIES_FILE);
 
     /**
      * Method for inserting the default projects in the database.

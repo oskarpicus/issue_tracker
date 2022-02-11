@@ -16,7 +16,7 @@ import java.util.stream.StreamSupport;
 class UserHbRepositoryTest {
 
     // connecting to the test database
-    private static final UserHbRepository repo = new UserHbRepository(new UserValidator());
+    private static final UserHbRepository repo = new UserHbRepository(new UserValidator(), Constants.DEFAULT_PROPERTIES_FILE);
 
     /**
      * Method for inserting predetermined users.

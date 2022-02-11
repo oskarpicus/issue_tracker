@@ -27,4 +27,6 @@ public class Constants {
             new Issue("Title1", "Desc1", Severity.MINOR, Status.IN_PROGRESS, IssueType.QUESTION, defaultProjects[0], defaultUsers[0]),
             new Issue("Title2", "Desc2", Severity.BLOCKER, Status.TO_DO, IssueType.WONT_FIX, defaultProjects[1], defaultUsers[0], defaultUsers[0])
     };
+
+    public static final String DEFAULT_PROPERTIES_FILE = "application.properties";
 }
