@@ -7,12 +7,14 @@
         <bean id="propertiesFile" class="java.lang.String">
             <constructor-arg value="application-dev.properties"/>
         </bean>
+        <util:properties id="applicationProperties" location="classpath:application-dev.properties"/>
     </beans>
 
     <beans profile="prod">
         <bean id="propertiesFile" class="java.lang.String">
             <constructor-arg value="application-prod.properties"/>
         </bean>
+        <util:properties id="applicationProperties" location="classpath:application-prod.properties"/>
     </beans>
 
     <beans profile="dev, prod">
@@ -41,10 +43,8 @@
             <constructor-arg ref="propertiesFile"/>
         </bean>
 
-        <util:properties id="aiServiceProperties" location="classpath:aiService.properties"/>
-
         <bean class="ai.HttpPredictor" id="predictor">
-            <constructor-arg ref="aiServiceProperties"/>
+            <constructor-arg ref="applicationProperties"/>
         </bean>
 
         <bean class="service.MasterService" id="service">
