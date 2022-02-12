@@ -4,7 +4,7 @@ export const serverErrorMessage = "Server is not responding. Try again later";
 
 export const createdAccountMessage = "Account created successfully";
 
-const apiUrl = "http://localhost:8080";
+const apiUrl = process.env.REACT_APP_API_URL;
 
 /**
  * Object that encapsulated the details of the request made to the server to create a new account
