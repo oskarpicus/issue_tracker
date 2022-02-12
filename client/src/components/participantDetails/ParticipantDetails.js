@@ -1,7 +1,7 @@
 import './participantDetails.css';
 import {Box} from "@mui/material";
 import {Link} from "react-router-dom";
-import {viewProjectsPage} from "../const";
+import {viewProjectsPage} from "../../const";
 import {formatEnum} from '../utils';
 
 const ParticipantDetails = ({involvement}) => {

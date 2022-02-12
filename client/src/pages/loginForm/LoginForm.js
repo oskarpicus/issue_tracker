@@ -1,4 +1,4 @@
-import {createAccountPage, responseTypes, viewProjectsPage, websiteTitle} from "../../components/const";
+import {createAccountPage, responseTypes, viewProjectsPage, websiteTitle} from "../../const";
 import LabeledField from "../../components/labeledField/LabeledField";
 import SubmitButton from "../../components/submitButton/SubmitButton";
 import './loginForm.css';

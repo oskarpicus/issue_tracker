@@ -3,7 +3,7 @@ import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import {formatEnum} from "../utils";
 import {useEffect, useState} from "react";
 import {getSuggestedSeverity} from "../../services/aiService";
-import {responseTypes} from "../const";
+import {responseTypes} from "../../const";
 import {addIssue} from "../../services/issueService";
 
 const data = {

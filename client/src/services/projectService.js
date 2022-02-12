@@ -1,5 +1,5 @@
 import axios from "axios";
-import {addProjectHttp, getInvolvementsHttp, getProjectByIdHttp, responseTypes} from "../components/const";
+import {addProjectHttp, getInvolvementsHttp, getProjectByIdHttp, responseTypes} from "../const";
 
 export const viewProjects = async (username, token) => {
     try {

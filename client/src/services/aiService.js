@@ -1,5 +1,5 @@
 import axios from "axios";
-import {getSuggestedSeverityHttp, responseTypes} from "../components/const";
+import {getSuggestedSeverityHttp, responseTypes} from "../const";
 
 export const getSuggestedSeverity = async (token, title) => {
     try {

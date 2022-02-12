@@ -4,7 +4,7 @@ import Menu from "../../components/menu/Menu";
 import {useEffect, useState} from "react";
 import {viewSingleProject} from "../../services/projectService";
 import {Redirect, useHistory} from "react-router-dom";
-import {addIssuePage, errorPage, responseTypes} from "../../components/const";
+import {addIssuePage, errorPage, responseTypes} from "../../const";
 import {Box, Button, List, ListItem} from "@mui/material";
 import ParticipantDetails from "../../components/participantDetails/ParticipantDetails";
 import AddParticipantModal from "../../components/addParticipantModal/AddParticipantModal";

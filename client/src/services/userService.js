@@ -4,7 +4,7 @@ import {
     getUserByUsernameHttp,
     loginHttp,
     responseTypes
-} from "../components/const";
+} from "../const";
 import axios from "axios";
 
 const sendAxiosPost = async (uri, formValues) => {

@@ -1,5 +1,5 @@
 import {Redirect, useHistory} from "react-router-dom";
-import {addProjectPage, errorPage, responseTypes} from "../../components/const";
+import {addProjectPage, errorPage, responseTypes} from "../../const";
 import {withRouter} from "react-router-dom/cjs/react-router-dom";
 import {useEffect, useState} from "react";
 import {viewProjects} from "../../services/projectService";

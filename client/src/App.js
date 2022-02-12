@@ -10,7 +10,7 @@ import {
     loginPage, viewAssignedIssuesPage, viewIssuePage,
     viewProjectsPage,
     viewSingleProjectPage
-} from "./components/const";
+} from "./const";
 import LoginForm from "./pages/loginForm/LoginForm";
 import ErrorPage from "./pages/errorPage/ErrorPage";
 import ViewProjectsPage from "./pages/viewProjectsPage/ViewProjectsPage";

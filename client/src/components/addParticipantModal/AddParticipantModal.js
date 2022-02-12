@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 import {getAllUsernames} from "../../services/userService";
 import {getAllProjectRoles} from "../../services/enumService";
 import {addInvolvement} from "../../services/involvementService";
-import {responseTypes} from "../const";
+import {responseTypes} from "../../const";
 
 // will remove the usernames that are already part of the project
 const filterUsernames = (project, usernames) => {
