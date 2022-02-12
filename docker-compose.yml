@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: client
+    image: bugsby_fe
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+  backend:
+    container_name: backend
+    build:
+      context: '.'
+    image: bugsby_be
+    depends_on:
+      - database
+      - ai
+    ports:
+      - "8080:8080"
+
+  ai:
+    container_name: ai
+    build:
+      context: artificial_intelligence
+    image: bugsby_ai
+    ports:
+      - "5000:5000"
+
+  database:
+    container_name: database
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: issue_tracker
+    ports:
+      - "5432:5432"
