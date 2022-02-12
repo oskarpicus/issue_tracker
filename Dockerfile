@@ -2,7 +2,7 @@ FROM gradle:7.4-jdk17 AS build
 
 WORKDIR /buildApp
 COPY . .
-RUN gradle test
+RUN gradle test --no-daemon
 RUN cd Server
 RUN gradle build --no-daemon
 
