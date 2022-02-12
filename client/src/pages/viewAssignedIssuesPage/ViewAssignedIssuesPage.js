@@ -1,6 +1,6 @@
 import {Redirect, useHistory, withRouter} from "react-router-dom";
 import './viewAssignedIssuesPage.css';
-import {errorPage, responseTypes} from "../../components/const";
+import {errorPage, responseTypes} from "../../const";
 import {useEffect, useState} from "react";
 import {getAssignedIssues} from "../../services/issueService";
 import {Box, List, ListItem} from "@mui/material";

@@ -1,6 +1,6 @@
 import {Redirect, useHistory, withRouter} from "react-router-dom";
 import './AddIssuePage.css';
-import {errorPage, responseTypes} from "../../components/const";
+import {errorPage, responseTypes} from "../../const";
 import {useEffect, useState} from "react";
 import {Box, Button} from "@mui/material";
 import Menu from "../../components/menu/Menu";

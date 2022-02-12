@@ -2,7 +2,7 @@ import {Box, Tooltip} from "@mui/material";
 import './issue.css';
 import {formatEnum, getIssueIcon} from "../utils";
 import {Link} from "react-router-dom";
-import {viewIssuePage} from "../const";
+import {viewIssuePage} from "../../const";
 
 const Issue = ({issue}) => {
     return (

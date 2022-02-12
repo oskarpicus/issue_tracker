@@ -16,7 +16,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import './menu.css';
 import BugReportOutlinedIcon from "@mui/icons-material/BugReportOutlined";
-import {loginPage, viewAssignedIssuesPage, viewProjectsPage, websiteTitle} from "../const";
+import {loginPage, viewAssignedIssuesPage, viewProjectsPage, websiteTitle} from "../../const";
 import {
     AccountCircleOutlined,
     BarChartOutlined,

@@ -3,7 +3,7 @@ import {useHistory, withRouter} from "react-router-dom";
 import Menu from "../../components/menu/Menu";
 import {useEffect, useState} from "react";
 import {deleteIssue, getIssueById, updateIssue} from "../../services/issueService";
-import {errorPage, responseTypes, viewAssignedIssuesPage} from "../../components/const";
+import {errorPage, responseTypes, viewAssignedIssuesPage} from "../../const";
 import {Box, Button} from "@mui/material";
 import {formatEnum, getIssueIcon} from "../../components/utils";
 import DefaultLabeledField from "../../components/labeledField/DefaultLabeledField";

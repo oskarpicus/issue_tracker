@@ -1,5 +1,5 @@
 import BugReportOutlinedIcon from "@mui/icons-material/BugReportOutlined";
-import {createAccountPage, loginPage, websiteTitle} from "../../components/const";
+import {createAccountPage, loginPage, websiteTitle} from "../../const";
 import ErrorIcon from '@mui/icons-material/Error';
 import "./errorPage.css"
 import {PestControlOutlined} from "@mui/icons-material";

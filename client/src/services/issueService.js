@@ -5,7 +5,7 @@ import {
     getAssignedIssuesHttp,
     getIssueByIdHttp,
     responseTypes, updateIssueHttp
-} from "../components/const";
+} from "../const";
 
 export const addIssue = async (token, issue) => {
     try {

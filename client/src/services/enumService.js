@@ -1,5 +1,5 @@
 import axios from "axios";
-import {getIssueTypesHttp, getRolesHttp, getSeveritiesHttp, getStatusesHttp, responseTypes} from "../components/const";
+import {getIssueTypesHttp, getRolesHttp, getSeveritiesHttp, getStatusesHttp, responseTypes} from "../const";
 
 const makeRequest = async (token, url) => {
     try {

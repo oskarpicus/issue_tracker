@@ -1,5 +1,5 @@
 import axios from "axios";
-import {addParticipantHttp, responseTypes} from "../components/const";
+import {addParticipantHttp, responseTypes} from "../const";
 
 export const addInvolvement = async (data, token) => {
     try {

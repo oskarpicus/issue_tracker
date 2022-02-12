@@ -1,7 +1,7 @@
 import {Box} from "@mui/material";
 import {Link} from "react-router-dom";
 import './project.css';
-import {viewSingleProjectPage} from "../const";
+import {viewSingleProjectPage} from "../../const";
 import {formatEnum} from "../utils";
 
 const Project = ({involvement}) => {
