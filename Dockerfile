@@ -6,7 +6,7 @@ RUN gradle test --no-daemon
 RUN cd Server
 RUN gradle build --no-daemon
 
-FROM registry.access.redhat.com/ubi8/openjdk-17-runtime:1.10-6
+FROM openjdk:17.0-slim
 
 EXPOSE 8080
 
