@@ -3,7 +3,7 @@
 resultFile="severityDataset.csv"
 
 # extract the summary and the severity level
-python filterColumns.py ../..//issues/activeMq.csv activeMq.csv
+python filterColumns.py ../../issues/activeMq.csv activeMq.csv
 python filterColumns.py ../../issues/log4j.csv log4j.csv
 python filterColumns.py ../../issues/springJpa.csv springJpa.csv
 python filterColumns.py ../../issues/springRest.csv springRest.csv
