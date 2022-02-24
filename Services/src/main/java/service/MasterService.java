@@ -211,6 +211,11 @@ public class MasterService implements Service {
         return predictor.predictSeverityLevel(title);
     }
 
+    @Override
+    public IssueType predictIssueType(String title) throws AiServiceException {
+        return predictor.predictIssueType(title);
+    }
+
     private boolean isParticipantInProject(Issue issue, String username) {
         return issue.getProject()
                 .getInvolvements()

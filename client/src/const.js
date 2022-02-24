@@ -115,6 +115,12 @@ export const updateIssueHttp = {method: "PUT", URI: apiUrl + "/issues/:id"};
 export const getSuggestedSeverityHttp = {method: "GET", URI: apiUrl + "/suggested-severity?title=:title"};
 
 /**
+ * Object that encapsulates the details of the request made to the server for retrieving the suggested type for an issue
+ * @type {{method: string, URI: string}}
+ */
+export const getSuggestedIssueTypeHttp = {method: "GET", URI: apiUrl + "/suggested-type?title=:title"};
+
+/**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
  */

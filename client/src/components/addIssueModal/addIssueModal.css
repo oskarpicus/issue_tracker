@@ -2,3 +2,8 @@
     font-family: 'Noto Sans', sans-serif !important;
     color: var(--color-dark-blue) !important;
 }
+
+.container-icon-text {
+    display: inline-flex;
+    align-items: center;
+}

@@ -1,6 +1,7 @@
 package ai;
 
 import exceptions.AiServiceException;
+import model.IssueType;
 import model.SeverityLevel;
 
 import java.io.BufferedReader;
@@ -14,7 +15,9 @@ import java.util.Properties;
 
 public class HttpPredictor implements Predictor {
     private final Properties properties;
-    private static final String SUGGESTED_SEVERITY = "suggested_severity";
+    private static final String URL = "ai.url";
+    private static final String SUGGESTED_SEVERITY = "/suggested-severity?title=:title";
+    private static final String SUGGESTED_TYPE = "/suggested-type?title=:title";
 
     public HttpPredictor(Properties properties) {
         this.properties = properties;
@@ -23,7 +26,22 @@ public class HttpPredictor implements Predictor {
     @Override
     public SeverityLevel predictSeverityLevel(String title) throws AiServiceException {
         String titleEncoded = URLEncoder.encode(title, StandardCharsets.UTF_8);
-        String urlString = properties.getProperty(SUGGESTED_SEVERITY).replaceAll(":title", titleEncoded);
+        String urlString = properties.getProperty(URL) + SUGGESTED_SEVERITY;
+        urlString = urlString.replaceAll(":title", titleEncoded);
+        String response = doHttpCall(urlString);
+        return SeverityLevel.valueOf(response.toUpperCase());
+    }
+
+    @Override
+    public IssueType predictIssueType(String title) throws AiServiceException {
+        String titleEncoded = URLEncoder.encode(title, StandardCharsets.UTF_8);
+        String urlString = properties.getProperty(URL) + SUGGESTED_TYPE;
+        urlString = urlString.replaceAll(":title", titleEncoded);
+        String response = doHttpCall(urlString);
+        return IssueType.valueOf(response);
+    }
+
+    private String doHttpCall(String urlString) throws AiServiceException {
         try {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -35,7 +53,7 @@ public class HttpPredictor implements Predictor {
 
             connection.disconnect();
 
-            return SeverityLevel.valueOf(response.toUpperCase());
+            return response;
         } catch (IOException e) {
             throw new AiServiceException(e.getMessage());
         }
