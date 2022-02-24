@@ -1,8 +1,8 @@
 import './addIssueModal.css';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
-import {formatEnum} from "../utils";
+import {formatEnum, getIssueIcon} from "../utils";
 import {useEffect, useState} from "react";
-import {getSuggestedSeverity} from "../../services/aiService";
+import {getSuggestedSeverity, getSuggestedType} from "../../services/aiService";
 import {responseTypes} from "../../const";
 import {addIssue} from "../../services/issueService";
 
@@ -21,6 +21,19 @@ const getSuggestedSeverityMessage = (suggestedSeverity) => {
             {suggested} might be best suited.
         </span>
     );
+};
+
+const getSuggestedTypeMessage = (suggestedType) => {
+  return (
+    <span style={{display: "flex", marginBottom: "1vh", alignItems: "center"}}>
+        We think that this issue is a&nbsp;
+        <span className={"container-icon-text"}>
+            {getIssueIcon({"type": suggestedType})}
+            &nbsp;
+            {suggestedType}.
+        </span>
+    </span>
+  );
 };
 
 const saveIssue = (issue, credentials, setAlert) => {
@@ -57,8 +70,31 @@ const saveIssue = (issue, credentials, setAlert) => {
 
 const isSeverityChosen = (issue) => issue.severity !== null && issue.severity !== undefined;
 
+const isIssueTypeChosen = (issue) => issue.type !== null && issue.type !== undefined;
+
+const isDataCompleted = (issue) => isSeverityChosen(issue) && isIssueTypeChosen(issue);
+
+const severityLevelMatches = (issue, suggestedSeverity) => {
+    debugger;
+    const x = data[suggestedSeverity].suggested.find((severity) => severity.toUpperCase() === issue.severity) !== undefined;
+    return x;
+};
+
+const issueTypeMatches = (issue, suggestedType) => {
+    debugger;
+    const x = issue.type === suggestedType;
+    return x;
+}
+
+const predictionsMatch = (issue, suggestedSeverity, suggestedType) => {
+    debugger;
+    return severityLevelMatches(issue, suggestedSeverity) && issueTypeMatches(issue, suggestedType);
+};
+
+
 export const AddIssueModal = ({open, setOpen, credentials, issue, setAlert}) => {
     const [suggestedSeverity, setSuggestedSeverity] = useState("NON_SEVERE");
+    const [suggestedIssueType, setSuggestedIssueType] = useState("BUG");
 
     useEffect(() => {
         getSuggestedSeverity(credentials.jwt, issue.title)
@@ -71,14 +107,23 @@ export const AddIssueModal = ({open, setOpen, credentials, issue, setAlert}) => 
     }, [credentials, issue]);
 
     useEffect(() => {
-        if (data[suggestedSeverity].suggested.find((severity) => severity.toUpperCase() === issue.severity) !== undefined) {
+        getSuggestedType(credentials.jwt, issue.title)
+            .then(response => {
+                if (response[responseTypes.key] === responseTypes.success) {
+                    setSuggestedIssueType(response.data);
+                }
+            });
+    }, [credentials, issue]);
+
+    useEffect(() => {
+        if (predictionsMatch(issue, suggestedSeverity, suggestedIssueType)) {
             // no need for modal, severities match, perform the save
             if (open) {
                 saveIssue(issue, credentials, setAlert);
             }
             setOpen(false);
         }
-    }, [issue, credentials, setAlert, setOpen, suggestedSeverity, open]);
+    }, [issue, credentials, setAlert, setOpen, suggestedSeverity, suggestedIssueType, open]);
 
     const handleNo = () => setOpen(false);
 
@@ -88,7 +133,7 @@ export const AddIssueModal = ({open, setOpen, credentials, issue, setAlert}) => 
         setOpen(false);
     };
 
-    if (data[suggestedSeverity].suggested.find((severity) => severity.toUpperCase() === issue.severity) !== undefined) {
+    if (predictionsMatch(issue, suggestedSeverity, suggestedIssueType)) {
         return <span/>;
     }
 
@@ -97,13 +142,14 @@ export const AddIssueModal = ({open, setOpen, credentials, issue, setAlert}) => 
             <DialogTitle className={"dialog-title-add-issue"}>Add issue</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {getSuggestedSeverityMessage(suggestedSeverity)}
+                    {!severityLevelMatches(issue, suggestedSeverity) && getSuggestedSeverityMessage(suggestedSeverity)}
+                    {!issueTypeMatches(issue, suggestedIssueType) && getSuggestedTypeMessage(suggestedIssueType)}
                     {
-                        isSeverityChosen(issue)
+                        isDataCompleted(issue)
                             ?
-                            `Are you sure that this issue should be classified as ${issue.severity} ?`
+                            `Are you sure that you want to save this issue as it is ?`
                             :
-                            "But you need to select a severity level first !"
+                            "But you need to complete the form first !"
                     }
                 </DialogContentText>
             </DialogContent>
@@ -114,7 +160,7 @@ export const AddIssueModal = ({open, setOpen, credentials, issue, setAlert}) => 
                     onClick={handleNo}
                 >
                     {
-                        isSeverityChosen(issue)
+                        isDataCompleted(issue)
                             ?
                             "No"
                             :
@@ -122,7 +168,7 @@ export const AddIssueModal = ({open, setOpen, credentials, issue, setAlert}) => 
                     }
                 </Button>
                 {
-                    isSeverityChosen(issue)
+                    isDataCompleted(issue)
                     &&
                     <Button
                         variant={"contained"}
