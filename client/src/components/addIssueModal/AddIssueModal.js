@@ -75,19 +75,14 @@ const isIssueTypeChosen = (issue) => issue.type !== null && issue.type !== undef
 const isDataCompleted = (issue) => isSeverityChosen(issue) && isIssueTypeChosen(issue);
 
 const severityLevelMatches = (issue, suggestedSeverity) => {
-    debugger;
-    const x = data[suggestedSeverity].suggested.find((severity) => severity.toUpperCase() === issue.severity) !== undefined;
-    return x;
+    return data[suggestedSeverity].suggested.find((severity) => severity.toUpperCase() === issue.severity) !== undefined;
 };
 
 const issueTypeMatches = (issue, suggestedType) => {
-    debugger;
-    const x = issue.type === suggestedType;
-    return x;
+    return issue.type === suggestedType;
 }
 
 const predictionsMatch = (issue, suggestedSeverity, suggestedType) => {
-    debugger;
     return severityLevelMatches(issue, suggestedSeverity) && issueTypeMatches(issue, suggestedType);
 };
 
