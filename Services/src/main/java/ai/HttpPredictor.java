@@ -29,7 +29,7 @@ public class HttpPredictor implements Predictor {
         String urlString = properties.getProperty(URL) + SUGGESTED_SEVERITY;
         urlString = urlString.replaceAll(":title", titleEncoded);
         String response = doHttpCall(urlString);
-        return SeverityLevel.valueOf(response);
+        return SeverityLevel.valueOf(response.toUpperCase());
     }
 
     @Override

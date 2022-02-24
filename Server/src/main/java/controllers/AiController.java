@@ -27,4 +27,13 @@ public class AiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping(value = "/suggested-type")
+    public ResponseEntity<?> getSuggestedType(@RequestParam(value = "title") String title) {
+        try {
+            return new ResponseEntity<>(service.predictIssueType(title), HttpStatus.OK);
+        } catch (AiServiceException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

@@ -137,4 +137,12 @@ public interface Service {
      * @throws AiServiceException if any errors occur during the prediction process
      */
     SeverityLevel predictSeverityLevel(String title) throws AiServiceException;
+
+    /**
+     * Method for predicting the label (type) of an issue, based on its title
+     * @param title, the title of the issue to predict the type to
+     * @return the predicted issue type
+     * @throws AiServiceException if any errors occur during the prediction process
+     */
+    IssueType predictIssueType(String title) throws AiServiceException;
 }
