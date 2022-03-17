@@ -35,7 +35,7 @@ class OffensiveLanguageClassifier(AbstractNLPClassifier):
 
         joblib.dump({"model": self._classifier, "vectorizer": self._vectorizer}, path)
 
-    def predict(self, text: str):
+    def predict(self, text: str) -> float:
         """
         Method for identifying identifying offensive language within a text
         :param text: the text to identify offensive language from
