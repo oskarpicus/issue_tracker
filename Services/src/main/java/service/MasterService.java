@@ -14,7 +14,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class MasterService implements Service {
@@ -125,11 +124,12 @@ public class MasterService implements Service {
     @Override
     public List<String> getAllUsernames() {
         return StreamSupport.stream(userRepository.getAllUsernames().spliterator(), false)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
-    public Issue addIssue(Issue issue) throws UserNotInProjectException, UserNotFoundException {
+    public Issue addIssue(Issue issue) throws UserNotInProjectException, UserNotFoundException, AiServiceException {
+        checkOffensiveLanguage(issue);
         Optional<User> reporter = userRepository.find(issue.getReporter().getId());
         if (reporter.isEmpty()) {
             throw new UserNotFoundException(Constants.USER_DOES_NOT_EXIST_ERROR_MESSAGE);
@@ -165,7 +165,7 @@ public class MasterService implements Service {
         return user.get().getAssignedIssues()
                 .stream()
                 .sorted(Comparator.comparing(Issue::getStatus))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -221,5 +221,15 @@ public class MasterService implements Service {
                 .getInvolvements()
                 .stream()
                 .anyMatch(involvement -> involvement.getUser().getUsername().equals(username));
+    }
+
+    private void checkOffensiveLanguage(Issue issue) throws IllegalArgumentException, AiServiceException {
+        if (predictor.predictProfanityLevel(issue.getTitle()).equals(ProfanityLevel.OFFENSIVE)) {
+            throw new IllegalArgumentException("Title contains offensive language");
+        }
+
+        if (predictor.predictProfanityLevel(issue.getDescription()).equals(ProfanityLevel.OFFENSIVE)) {
+            throw new IllegalArgumentException("Description contains offensive language");
+        }
     }
 }
