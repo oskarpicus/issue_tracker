@@ -1,6 +1,7 @@
 package controllers;
 
 import dtos.IssueDto;
+import exceptions.AiServiceException;
 import exceptions.IssueNotFoundException;
 import exceptions.UserNotFoundException;
 import exceptions.UserNotInProjectException;
@@ -41,6 +42,10 @@ public class IssueController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (UserNotInProjectException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (AiServiceException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

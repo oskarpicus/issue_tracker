@@ -2,6 +2,7 @@ package ai;
 
 import exceptions.AiServiceException;
 import model.IssueType;
+import model.ProfanityLevel;
 import model.SeverityLevel;
 
 import java.io.BufferedReader;
@@ -18,6 +19,8 @@ public class HttpPredictor implements Predictor {
     private static final String URL = "ai.url";
     private static final String SUGGESTED_SEVERITY = "/suggested-severity?title=:title";
     private static final String SUGGESTED_TYPE = "/suggested-type?title=:title";
+    private static final String IS_OFFENSIVE = "/is-offensive?text=:text";
+    private static final double OFFENSIVE_THRESHOLD = 0.8;
 
     public HttpPredictor(Properties properties) {
         this.properties = properties;
@@ -39,6 +42,18 @@ public class HttpPredictor implements Predictor {
         urlString = urlString.replaceAll(":title", titleEncoded);
         String response = doHttpCall(urlString);
         return IssueType.valueOf(response);
+    }
+
+    @Override
+    public ProfanityLevel predictProfanityLevel(String text) throws AiServiceException {
+        String textEncoded = URLEncoder.encode(text, StandardCharsets.UTF_8);
+        String urlString = properties.getProperty(URL) + IS_OFFENSIVE;
+        urlString = urlString.replaceAll(":text", textEncoded);
+        double probability = Double.parseDouble(doHttpCall(urlString));
+        if (probability < OFFENSIVE_THRESHOLD) {
+            return ProfanityLevel.NOT_OFFENSIVE;
+        }
+        return ProfanityLevel.OFFENSIVE;
     }
 
     private String doHttpCall(String urlString) throws AiServiceException {

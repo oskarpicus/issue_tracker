@@ -85,8 +85,9 @@ public interface Service {
      * - null, otherwise
      * @throws UserNotInProjectException if the reporter or assignee of the issue is not a participant to the issue's project
      * @throws UserNotFoundException     if the reporter or assignee of the issue does not exist
+     * @throws AiServiceException        if there are errors while checking for the profanity of the language of the issue
      */
-    Issue addIssue(Issue issue) throws UserNotInProjectException, UserNotFoundException;
+    Issue addIssue(Issue issue) throws UserNotInProjectException, UserNotFoundException, AiServiceException;
 
     /**
      * Method for retrieving the assigned issues of a particular user, identified by their username, ordered by status in descending order
