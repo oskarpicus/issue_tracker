@@ -7,3 +7,6 @@ class IssueType(Enum):
     ENHANCEMENT = 2
     INVALID = 3
     WONT_FIX = 4
+    DUPLICATE = 5
+    HELP_WANTED = 6
+    QUESTION = 7
