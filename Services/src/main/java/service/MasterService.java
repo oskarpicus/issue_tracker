@@ -1,8 +1,22 @@
 package service;
 
 import ai.Predictor;
-import exceptions.*;
-import model.*;
+import exceptions.AiServiceException;
+import exceptions.EmailTakenException;
+import exceptions.IssueNotFoundException;
+import exceptions.ProjectNotFoundException;
+import exceptions.UserAlreadyInProjectException;
+import exceptions.UserNotFoundException;
+import exceptions.UserNotInProjectException;
+import exceptions.UsernameTakenException;
+import model.Involvement;
+import model.Issue;
+import model.IssueType;
+import model.ProfanityLevel;
+import model.Project;
+import model.SeverityLevel;
+import model.Status;
+import model.User;
 import repository.InvolvementRepository;
 import repository.IssueRepository;
 import repository.ProjectRepository;
@@ -214,6 +228,16 @@ public class MasterService implements Service {
     @Override
     public IssueType predictIssueType(String title) throws AiServiceException {
         return predictor.predictIssueType(title);
+    }
+
+    @Override
+    public List<Issue> retrieveDuplicateIssues(Issue issue) throws ProjectNotFoundException, AiServiceException {
+        List<Issue> projectIssues = projectRepository.find(issue.getProject().getId())
+                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + issue.getProject().getId() + " does not exist"))
+                        .getIssues()
+                        .stream()
+                        .toList();
+        return predictor.detectDuplicateIssues(projectIssues, issue);
     }
 
     private boolean isParticipantInProject(Issue issue, String username) {

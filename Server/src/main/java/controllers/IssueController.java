@@ -3,9 +3,11 @@ package controllers;
 import dtos.IssueDto;
 import exceptions.AiServiceException;
 import exceptions.IssueNotFoundException;
+import exceptions.ProjectNotFoundException;
 import exceptions.UserNotFoundException;
 import exceptions.UserNotInProjectException;
 import model.Issue;
+import model.Status;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -105,6 +107,24 @@ public class IssueController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value = "/duplicates")
+    public ResponseEntity<?> retrieveDuplicateIssues(@RequestBody AddIssueRequest addIssueRequest) {
+        try {
+            Issue issue = addIssueRequest.toIssue();
+            issue.setStatus(Status.TO_DO);
+
+            List<IssueDto> result = service.retrieveDuplicateIssues(issue)
+                    .stream()
+                    .map(IssueDto::from)
+                    .toList();
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (ProjectNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (AiServiceException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 }
