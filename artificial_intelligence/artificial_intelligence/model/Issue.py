@@ -11,7 +11,7 @@ class Issue:
         self._description = description
         self._severity = severity
         self._status = status
-        self._issue_type = issue_type
+        self._type = issue_type
 
     @property
     def id(self):
@@ -38,8 +38,8 @@ class Issue:
         return self._status
 
     @property
-    def issue_type(self):
-        return self._issue_type
+    def type(self):
+        return self._type
 
     def lower(self):
         return self._title.lower()
@@ -54,7 +54,7 @@ class Issue:
             "description": self._description,
             "status": self._status.name,
             "severity": self._severity.name,
-            "issueType": self._issue_type.name
+            "type": self._type.name
         }
 
     @staticmethod
@@ -64,4 +64,4 @@ class Issue:
                      description=json_dict["description"],
                      status=Status[json_dict["status"]],
                      severity=Severity[json_dict["severity"]],
-                     issue_type=IssueType[json_dict["issueType"]])
+                     issue_type=IssueType[json_dict["type"]])
