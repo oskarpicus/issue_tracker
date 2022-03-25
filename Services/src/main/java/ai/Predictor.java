@@ -1,9 +1,12 @@
 package ai;
 
 import exceptions.AiServiceException;
+import model.Issue;
 import model.IssueType;
 import model.ProfanityLevel;
 import model.SeverityLevel;
+
+import java.util.List;
 
 public interface Predictor {
     /**
@@ -26,7 +29,16 @@ public interface Predictor {
      * Method for identifying the profanity level of a piece of text
      * @param text, the text to analyse
      * @return the predicted profanity level
-     * @throws AiServiceException if any errors occurs during the prediction process
+     * @throws AiServiceException if any errors occur during the prediction process
      */
     ProfanityLevel predictProfanityLevel(String text) throws AiServiceException;
+
+    /**
+     * Method for retrieving the duplicate issues in a project, given a not-yet-added issue
+     * @param projectIssues, all the issues of the respective project
+     * @param issue, the issue that is wished to be compared against {@code projectIssues}
+     * @return a {@code List} containing the possible duplicates of {@code issue}, members of {@code projectIssues}
+     * @throws AiServiceException if any errors occur during the process
+     */
+    List<Issue> detectDuplicateIssues(List<Issue> projectIssues, Issue issue) throws AiServiceException;
 }
