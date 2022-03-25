@@ -1,28 +1,11 @@
-import string
-
 from nltk import WordNetLemmatizer, pos_tag
+from nltk.corpus import wordnet
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from artificial_intelligence.model.Issue import Issue
-from nltk.corpus import stopwords, wordnet
-
 
 __limit = 5
-
-
-def _pre_process_text(text: str) -> str:
-    """
-    Method for pre processing a piece of text. Involves operations such as removing punctuations, lowering the
-    characters and removing the stop words
-    :param text: the piece of text to transform
-    :return: the transformed piece of text
-    """
-    removed_punctuations = "".join([i for i in text if i not in string.punctuation])
-    lowered = removed_punctuations.lower()
-    removed_stopwords = " ".join([word for word in lowered.split(" ") if word not in stopwords.words('english')])
-    result = " ".join([WordNetLemmatizer().lemmatize(word) for word in removed_stopwords.split(" ")])
-    return result
 
 
 def _get_wordnet_pos(treebank_tag):
