@@ -1,27 +1,8 @@
 import string
 from abc import abstractmethod
 
-import nltk
 from joblib import load
 from nltk import WordNetLemmatizer
-
-
-def __install_packages():
-    """
-    Method for installing the necessary packaged from the nltk library
-    :return:
-    """
-    try:
-        nltk.data.find('stopwords')
-        nltk.data.find('wordnet')
-        nltk.data.find('omw-1.4')
-    except LookupError:
-        nltk.download('stopwords')
-        nltk.download('wordnet')
-        nltk.download('omw-1.4')
-
-
-__install_packages()
 
 
 class AbstractNLPClassifier:

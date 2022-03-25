@@ -1,6 +1,8 @@
 from artificial_intelligence.ai_models.LabelClassifier import LabelClassifier
 from artificial_intelligence.ai_models.OffensiveLanguageClassifier import OffensiveLanguageClassifier
 from artificial_intelligence.ai_models.SeverityClassifier import SeverityClassifier
+from artificial_intelligence.ai_models.duplicates_detector import detect
+from artificial_intelligence.model.Issue import Issue
 from artificial_intelligence.model.IssueType import IssueType
 from artificial_intelligence.model.SeverityLevel import SeverityLevel
 
@@ -36,3 +38,12 @@ class Service:
         :return: the probability of the given text to be offensive
         """
         return self.__offensive_language_classifier.predict(text)
+
+    def retrieve_duplicate_issues(self, project_issues: list, issue: Issue) -> list:
+        """
+        Method for retrieving the duplicate issues in a project, given a not-yet-added issue
+        :param project_issues: all of the issues of the respective project
+        :param issue: the issue that is wished to be compared against project_issues
+        :return: a list containing duplicates of issue, members of project_issues
+        """
+        return detect(corpus=project_issues, document=issue) if project_issues != [] else []
