@@ -234,9 +234,9 @@ public class MasterService implements Service {
     public List<Issue> retrieveDuplicateIssues(Issue issue) throws ProjectNotFoundException, AiServiceException {
         List<Issue> projectIssues = projectRepository.find(issue.getProject().getId())
                 .orElseThrow(() -> new ProjectNotFoundException("Project with id " + issue.getProject().getId() + " does not exist"))
-                        .getIssues()
-                        .stream()
-                        .toList();
+                .getIssues()
+                .stream()
+                .toList();
         return predictor.detectDuplicateIssues(projectIssues, issue);
     }
 

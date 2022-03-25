@@ -141,6 +141,7 @@ public interface Service {
 
     /**
      * Method for predicting the label (type) of an issue, based on its title
+     *
      * @param title, the title of the issue to predict the type to
      * @return the predicted issue type
      * @throws AiServiceException if any errors occur during the prediction process
@@ -149,10 +150,11 @@ public interface Service {
 
     /**
      * Method for retrieving the possible duplicate issues, in regard to another issue
+     *
      * @param issue, the issue to retrieve the possible duplicates of
      * @return a {@code List} containing the possible duplicate issues of {@code issue}
      * @throws ProjectNotFoundException if the {@code issue}'s project id does not match a real project
-     * @throws AiServiceException if any errors occur during the process
+     * @throws AiServiceException       if any errors occur during the process
      */
     List<Issue> retrieveDuplicateIssues(Issue issue) throws ProjectNotFoundException, AiServiceException;
 }

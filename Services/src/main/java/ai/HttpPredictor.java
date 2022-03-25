@@ -124,7 +124,8 @@ public class HttpPredictor implements Predictor {
     private static record DuplicateIssuesRequest(List<IssueDto> projectIssues, IssueDto issue) {
     }
 
-    private static record IssueDto(Long id, String title, String description, Severity severity, Status status, IssueType type) {
+    private static record IssueDto(Long id, String title, String description, Severity severity, Status status,
+                                   IssueType type) {
         public static IssueDto from(Issue issue) {
             return new IssueDto(issue.getId(), issue.getTitle(), issue.getDescription(), issue.getSeverity(), issue.getStatus(), issue.getType());
         }
