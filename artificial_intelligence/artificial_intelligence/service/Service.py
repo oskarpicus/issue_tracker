@@ -46,4 +46,4 @@ class Service:
         :param issue: the issue that is wished to be compared against project_issues
         :return: a list containing duplicates of issue, members of project_issues
         """
-        return detect(corpus=project_issues, document=issue)
+        return detect(corpus=project_issues, document=issue) if project_issues != [] else []

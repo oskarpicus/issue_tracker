@@ -1,11 +1,12 @@
 import os
 
 import nltk
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 from artificial_intelligence.ai_models.LabelClassifier import LabelClassifier
 from artificial_intelligence.ai_models.OffensiveLanguageClassifier import OffensiveLanguageClassifier
 from artificial_intelligence.ai_models.SeverityClassifier import SeverityClassifier
+from artificial_intelligence.model.Issue import Issue
 from artificial_intelligence.service.Service import Service
 
 
@@ -51,6 +52,15 @@ def get_suggested_type():
 def get_probability_is_offensive():
     text = request.args.get("text")
     return str(service.compute_probability_is_offensive(text))
+
+
+@app.route("/duplicate-issues", methods=['POST'])
+def retrieve_duplicate_issues():
+    data = request.json
+    project_issues = [Issue.from_json(issue_json) for issue_json in data["projectIssues"]]
+    issue = Issue.from_json(data["issue"])
+    result = service.retrieve_duplicate_issues(project_issues, issue)
+    return jsonify([issue.to_json() for issue in result])
 
 
 if __name__ == "__main__":
