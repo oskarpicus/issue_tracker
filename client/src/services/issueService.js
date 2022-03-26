@@ -4,8 +4,28 @@ import {
     deleteIssueByIdHttp,
     getAssignedIssuesHttp,
     getIssueByIdHttp,
-    responseTypes, updateIssueHttp
+    responseTypes,
+    retrieveDuplicateIssuesHttp,
+    updateIssueHttp
 } from "../const";
+
+export const retrieveDuplicateIssues = async (token, issue) => {
+    try {
+        let configuration = {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        };
+
+        const response = await axios.post(retrieveDuplicateIssuesHttp.URI, JSON.stringify(issue), configuration);
+        response[responseTypes.key] = responseTypes.success;
+        return response;
+    } catch (e) {
+        e.response[responseTypes.key] = responseTypes.error;
+        return e.response;
+    }
+}
 
 export const addIssue = async (token, issue) => {
     try {
