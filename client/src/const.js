@@ -121,6 +121,12 @@ export const getSuggestedSeverityHttp = {method: "GET", URI: apiUrl + "/suggeste
 export const getSuggestedIssueTypeHttp = {method: "GET", URI: apiUrl + "/suggested-type?title=:title"};
 
 /**
+ * Object that encapsulates the details of the request made to the server for retrieving the possible duplicates of an issue
+ * @type {{method: string, URI: string}}
+ */
+export const retrieveDuplicateIssuesHttp = {method: "POST", URI: apiUrl + "/issues/duplicates"};
+
+/**
  * The page address for visiting the page dedicated for creating an account
  * @type {string}
  */
@@ -173,6 +179,13 @@ export const viewAssignedIssuesPage = "/:username/assigned-issues";
  * @type {string}
  */
 export const viewIssuePage = "/issues/:id";
+
+/**
+ * The page address for visiting the page dedicated to viewing possible duplicate issues.
+ * The user is redirected to this page when trying to add a new issue
+ * @type {string}
+ */
+export const viewDuplicateIssues = "/duplicate-issues";
 
 /**
  * Defines how a call to the backend can result. This information will be added in the "key" field of the response.
