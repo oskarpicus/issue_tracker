@@ -5,6 +5,7 @@ import {responseTypes} from "../../const";
 import Menu from "../../components/menu/Menu";
 import {Box, Button, List, ListItem} from "@mui/material";
 import Issue from "../../components/issue/Issue";
+import './viewDuplicateIssuesPage.css';
 
 const prepareData = (issue) => {
     let data = {...issue};
@@ -68,7 +69,7 @@ const ViewDuplicateIssues = ({credentials, location, setAlert}) => {
     }, [credentials, issue, setAlert, history]);
 
     const content = (
-        <Box>
+        <Box id={"box-view-duplicate-issues-page"}>
             <p className={"action-title"}>Possible duplicate issues</p>
             <p className={"sub-title"}>We think that these issues might be duplicates of what you're trying to add</p>
             <List>
@@ -83,6 +84,7 @@ const ViewDuplicateIssues = ({credentials, location, setAlert}) => {
             <Button
                 variant={"contained"}
                 className={"action-button"}
+                id={"action-button-view-duplicate-issues-page"}
                 onClick={() => saveIssue(issue, credentials, setAlert, history)}
             >
                 Continue to add issue

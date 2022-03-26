@@ -1,0 +1,7 @@
+#box-view-duplicate-issues-page > p, #action-button-view-duplicate-issues-page {
+    margin-left: 15px;
+}
+
+#box-view-duplicate-issues-page > .sub-title {
+    color: var(--color-dark-blue);
+}
