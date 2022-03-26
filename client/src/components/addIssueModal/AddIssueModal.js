@@ -3,8 +3,8 @@ import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import {formatEnum, getIssueIcon} from "../utils";
 import {useEffect, useState} from "react";
 import {getSuggestedSeverity, getSuggestedType} from "../../services/aiService";
-import {responseTypes} from "../../const";
-import {addIssue} from "../../services/issueService";
+import {responseTypes, viewDuplicateIssues} from "../../const";
+import {useHistory} from "react-router-dom";
 
 const data = {
     "SEVERE": {color: "#D32F2F", suggested: ["Critical", "Blocker"]},
@@ -36,36 +36,13 @@ const getSuggestedTypeMessage = (suggestedType) => {
   );
 };
 
-const saveIssue = (issue, credentials, setAlert) => {
-    try {
-        // prepare the data
-        let data = {...issue};
-        data.projectId = data.project.id;
-        if (data.assignee !== null && data.assignee !== undefined) {
-            data.assigneeId = data.assignee.id;
+const redirectToViewDuplicates = (issue, history) => {
+    history.push({
+        pathname: viewDuplicateIssues,
+        state: {
+            issue: issue
         }
-
-        delete data.project;
-        delete data.assignee;
-
-        addIssue(credentials.jwt, data)
-            .then(response => {
-                setAlert({
-                    state: true,
-                    severity: response[responseTypes.key],
-                    message: response[responseTypes.key] === responseTypes.success ?
-                        "Issue created successfully" : response.data,
-                    backgroundColor: "inherit"
-                });
-            });
-    } catch (error) {
-        setAlert({
-            state: true,
-            severity: "error",
-            message: "All fields must be supplied",
-            backgroundColor: "inherit"
-        });
-    }
+    });
 };
 
 const isSeverityChosen = (issue) => issue.severity !== null && issue.severity !== undefined;
@@ -90,6 +67,7 @@ const predictionsMatch = (issue, suggestedSeverity, suggestedType) => {
 export const AddIssueModal = ({open, setOpen, credentials, issue, setAlert}) => {
     const [suggestedSeverity, setSuggestedSeverity] = useState("NON_SEVERE");
     const [suggestedIssueType, setSuggestedIssueType] = useState("BUG");
+    const history = useHistory();
 
     useEffect(() => {
         getSuggestedSeverity(credentials.jwt, issue.title)
@@ -114,17 +92,17 @@ export const AddIssueModal = ({open, setOpen, credentials, issue, setAlert}) => 
         if (predictionsMatch(issue, suggestedSeverity, suggestedIssueType)) {
             // no need for modal, severities match, perform the save
             if (open) {
-                saveIssue(issue, credentials, setAlert);
+                redirectToViewDuplicates(issue, history);
             }
             setOpen(false);
         }
-    }, [issue, credentials, setAlert, setOpen, suggestedSeverity, suggestedIssueType, open]);
+    }, [issue, setOpen, suggestedSeverity, suggestedIssueType, open, history]);
 
     const handleNo = () => setOpen(false);
 
     const handleYes = () => {
         // perform the save
-        saveIssue(issue, credentials, setAlert);
+        redirectToViewDuplicates(issue, history);
         setOpen(false);
     };
 
