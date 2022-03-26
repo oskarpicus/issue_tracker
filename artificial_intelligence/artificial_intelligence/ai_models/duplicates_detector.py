@@ -6,6 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from artificial_intelligence.model.Issue import Issue
 
 __limit = 5
+__threshold = 0.4
 
 
 def _get_wordnet_pos(treebank_tag):
@@ -59,6 +60,7 @@ def detect(corpus: list, document: Issue) -> list:
 
     similarities = [(cosine_similarity([X.toarray()[i]], y.toarray())[0][0], doc)
                     for i, doc in enumerate(corpus)]
+    similarities = list(filter(lambda x: x[0] > __threshold, similarities))
     similarities.sort(key=lambda x: x[0], reverse=True)
 
     similar_issues = list(map(lambda x: x[1], similarities))
