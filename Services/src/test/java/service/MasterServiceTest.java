@@ -1,32 +1,27 @@
 package service;
 
 import ai.Predictor;
+import exceptions.AiServiceException;
 import exceptions.EmailTakenException;
 import exceptions.IssueNotFoundException;
-import exceptions.ProjectNotFoundException;
 import exceptions.UserAlreadyInProjectException;
 import exceptions.UserNotFoundException;
 import exceptions.UserNotInProjectException;
 import exceptions.UsernameTakenException;
 import mocks.Constants;
-import mocks.DefaultInvolvementRepository;
 import mocks.DefaultIssueRepository;
-import mocks.DefaultProjectRepository;
-import mocks.DefaultUserRepository;
-import mocks.EmptyInvolvementRepository;
 import mocks.EmptyIssueRepository;
-import mocks.EmptyProjectRepository;
-import mocks.EmptyUserRepository;
 import model.Involvement;
 import model.Issue;
 import model.IssueType;
+import model.ProfanityLevel;
 import model.Project;
 import model.Role;
 import model.Severity;
 import model.Status;
 import model.User;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,14 +34,12 @@ import repository.ProjectRepository;
 import repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -73,6 +66,18 @@ class MasterServiceTest {
     private IssueRepository issueRepository;
 
     private static final User USER = new User("a", "b", "AB", "BA", "a@g.com");
+    private static final Project PROJECT = new Project(1L, "title", "description", LocalDateTime.now());
+    private static final Project PROJECT_2 = new Project(2L, "title", "description", LocalDateTime.now());
+    private static final Involvement INVOLVEMENT = new Involvement(Role.UX_DESIGNER, USER, PROJECT);
+    private static final Issue ISSUE = new Issue("Title", "Desc", Severity.BLOCKER, Status.TO_DO, IssueType.DUPLICATE, INVOLVEMENT.getProject(), INVOLVEMENT.getUser());
+
+    @BeforeEach
+    void setUp() {
+        USER.setId(Math.abs(new Random().nextLong()));
+        USER.setInvolvements(Set.of(INVOLVEMENT));
+        PROJECT.setInvolvements(Set.of(INVOLVEMENT));
+        ISSUE.setId(Math.abs(new Random().nextLong()));
+    }
 
     @TestFactory
     Stream<DynamicTest> createAccount() {
@@ -145,9 +150,10 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> createProject() {
-        record TestCase(String name, Service service, Project project, Project expected,
+        record TestCase(String name, Runnable initialiseMocks, Service service, Project project, Project expected,
                         Class<? extends Exception> exception) {
             public void check() {
+                TestCase.this.initialiseMocks.run();
                 try {
                     Project computed = TestCase.this.service.createProject(TestCase.this.project);
                     Assertions.assertNull(TestCase.this.exception);
@@ -159,9 +165,11 @@ class MasterServiceTest {
             }
         }
 
-        Project project = new Project("title", "Description", LocalDateTime.now());
+        Runnable initMocksCreateProjectSuccessfully = () -> when(projectRepository.save(PROJECT))
+                .thenReturn(Optional.empty());
+
         var testCases = new TestCase[]{
-                new TestCase("Create project successfully", new MasterService(new EmptyUserRepository(), new EmptyProjectRepository(), null, null, null), project, project, null)
+                new TestCase("Create project successfully", initMocksCreateProjectSuccessfully, service, PROJECT, PROJECT, null)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -169,8 +177,10 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> getProjectById() {
-        record TestCase(String name, Service service, long id, Project expected, Class<? extends Exception> exception) {
+        record TestCase(String name, Runnable initialiseMocks, Service service, long id, Project expected,
+                        Class<? extends Exception> exception) {
             public void check() {
+                TestCase.this.initialiseMocks.run();
                 try {
                     Project computed = TestCase.this.service.getProjectById(TestCase.this.id);
                     Assertions.assertNull(TestCase.this.exception);
@@ -182,9 +192,14 @@ class MasterServiceTest {
             }
         }
 
+        Runnable initMocksGetProjectNonExistentId = () -> when(projectRepository.find(any(Long.class)))
+                .thenReturn(Optional.empty());
+        Runnable initMocksGetProjectSuccessfully = () -> when(projectRepository.find(PROJECT.getId()))
+                .thenReturn(Optional.of(PROJECT));
+
         var testCases = new TestCase[]{
-                new TestCase("Get project non-existent id", new MasterService(null, new EmptyProjectRepository(), null, null, null), 0L, null, null),
-                new TestCase("Get project successfully", new MasterService(null, new DefaultProjectRepository(), null, null, null), Constants.PROJECT.getId(), Constants.PROJECT, null)
+                new TestCase("Get project non-existent id", initMocksGetProjectNonExistentId, service, 0L, null, null),
+                new TestCase("Get project successfully", initMocksGetProjectSuccessfully, service, PROJECT.getId(), PROJECT, null)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -192,9 +207,11 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> getInvolvementsByUserId() {
-        record TestCase(String name, Service service, String username, Set<Involvement> expected,
+        record TestCase(String name, Runnable initialiseMocks, Service service, String username,
+                        Set<Involvement> expected,
                         Class<? extends Exception> exception) {
             public void check() {
+                TestCase.this.initialiseMocks.run();
                 try {
                     Set<Involvement> computed = TestCase.this.service.getInvolvementsByUsername(username);
                     Assertions.assertNull(TestCase.this.exception);
@@ -206,9 +223,23 @@ class MasterServiceTest {
             }
         }
 
+        Runnable initMocksGetInvolvementsWrongUser = () -> when(userRepository.findUserByUsername(any(String.class)))
+                .thenReturn(Optional.empty());
+        Runnable initMocksGetInvolvementsEmpty = () -> {
+            USER.setInvolvements(Collections.emptySet());
+            when(userRepository.findUserByUsername(any(String.class)))
+                    .thenReturn(Optional.of(USER));
+        };
+        Runnable initMocksGetInvolvements = () -> {
+            USER.setInvolvements(Set.of(INVOLVEMENT));
+            when(userRepository.findUserByUsername(any(String.class)))
+                    .thenReturn(Optional.of(USER));
+        };
+
         var testCases = new TestCase[]{
-                new TestCase("Get Involvements by User username non-existent", new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new EmptyInvolvementRepository(), null, null), "", null, UserNotFoundException.class),
-                new TestCase("Get Involvements by User zero size", new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new EmptyInvolvementRepository(), null, null), Constants.USER.getUsername(), Collections.emptySet(), null),
+                new TestCase("Get Involvements by User username non-existent", initMocksGetInvolvementsWrongUser, service, "", null, UserNotFoundException.class),
+                new TestCase("Get Involvements by User zero size", initMocksGetInvolvementsEmpty, service, USER.getUsername(), Collections.emptySet(), null),
+                new TestCase("Get Involvements", initMocksGetInvolvements, service, USER.getUsername(), USER.getInvolvements(), null)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -216,9 +247,11 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> addParticipant() {
-        record TestCase(String name, Service service, Involvement involvement, User requester, Involvement expected,
+        record TestCase(String name, Runnable initialiseMocks, Service service, Involvement involvement, User requester,
+                        Involvement expected,
                         Class<? extends Exception> exception) {
             public void check() {
+                TestCase.this.initialiseMocks.run();
                 try {
                     Involvement result = TestCase.this.service.addParticipant(TestCase.this.involvement, TestCase.this.requester);
                     Assertions.assertNull(TestCase.this.exception);
@@ -230,45 +263,61 @@ class MasterServiceTest {
             }
         }
 
+        Involvement involvementToAdd = new Involvement(Role.UX_DESIGNER, USER, PROJECT);
         User userNonExistent = new User(Long.MAX_VALUE);
-        userNonExistent.setUsername("a");
-        Project projectNonExistent = new Project(Long.MAX_VALUE);
 
-        UserRepository defaultUserRepository = new DefaultUserRepository();
+        Runnable initMocksAddParticipantNonExistentRequester = () -> when(userRepository.find(any(Long.class)))
+                .thenReturn(Optional.empty());
+
+        Runnable initMocksAddParticipantWrongRequester = () -> {
+            when(userRepository.find(any(Long.class)))
+                    .thenReturn(Optional.of(USER));
+            when(projectRepository.find(any(Long.class)))
+                    .thenReturn(Optional.of(PROJECT));
+        };
+
+        Runnable initMocksAddParticipantNonExistentUser = () -> when(userRepository.find(userNonExistent.getId()))
+                .thenReturn(Optional.empty());
+
+        Runnable initMocksAddParticipantAlreadyAdded = () -> {
+            when(userRepository.find(any(Long.class)))
+                    .thenReturn(Optional.of(USER));
+            when(userRepository.findUserByUsername(any(String.class)))
+                    .thenReturn(Optional.of(USER));
+            when(projectRepository.find(any(Long.class)))
+                    .thenReturn(Optional.of(PROJECT));
+        };
 
         var testCases = new TestCase[]{
                 new TestCase("Add Participant non existent requester",
-                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new EmptyInvolvementRepository(), null, null),
-                        new Involvement(Role.UX_DESIGNER, Constants.USER, Constants.PROJECT),
+                        initMocksAddParticipantNonExistentRequester,
+                        service,
+                        involvementToAdd,
                         userNonExistent,
                         null,
                         UserNotFoundException.class
                 ),
                 new TestCase("Add Participant requester not a participant",
-                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new EmptyInvolvementRepository(), null, null),
-                        new Involvement(Role.BACK_END_DEVELOPER, userNonExistent, Constants.PROJECT),
-                        Constants.USER,
+                        initMocksAddParticipantWrongRequester,
+                        service,
+                        new Involvement(Role.BACK_END_DEVELOPER, USER, PROJECT_2),
+                        USER,
                         null,
                         UserNotInProjectException.class
                 ),
                 new TestCase("Add participant non existent user",
-                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new DefaultInvolvementRepository(), null, null),
-                        new Involvement(Role.TESTER, userNonExistent, Constants.PROJECT),
-                        Constants.OTHER_USER,
+                        initMocksAddParticipantNonExistentUser,
+                        service,
+                        new Involvement(Role.TESTER, userNonExistent, PROJECT),
+                        userNonExistent,
                         null,
                         UserNotFoundException.class
                 ),
-                new TestCase("Add participant non existent project",
-                        new MasterService(defaultUserRepository, new EmptyProjectRepository(), new EmptyInvolvementRepository(), null, null),
-                        new Involvement(Role.QA_LEAD, Constants.OTHER_USER, projectNonExistent),
-                        Constants.OTHER_USER,
-                        null,
-                        ProjectNotFoundException.class
-                ),
                 new TestCase("Add participant already added",
-                        new MasterService(defaultUserRepository, new DefaultProjectRepository(), new DefaultInvolvementRepository(), null, null),
-                        new Involvement(Role.FULL_STACK_DEVELOPER, Constants.OTHER_USER, Constants.PROJECT),
-                        Constants.OTHER_USER,
+                        initMocksAddParticipantAlreadyAdded,
+                        service,
+                        new Involvement(Role.FULL_STACK_DEVELOPER, USER, PROJECT),
+                        USER,
                         null,
                         UserAlreadyInProjectException.class
                 ),
@@ -279,8 +328,9 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> getAllUsernames() {
-        record TestCase(String name, Service service, List<String> expected) {
+        record TestCase(String name, Runnable initialiseMocks, Service service, List<String> expected) {
             public void check() {
+                TestCase.this.initialiseMocks.run();
                 List<String> computed = TestCase.this.service.getAllUsernames();
                 Assertions.assertEquals(TestCase.this.expected.size(), computed.size());
                 Assertions.assertTrue(TestCase.this.expected.containsAll(computed));
@@ -288,14 +338,14 @@ class MasterServiceTest {
             }
         }
 
-        UserRepository userRepository = new DefaultUserRepository();
-        List<String> usernames = StreamSupport.stream(userRepository.findAll().spliterator(), false)
-                .map(User::getUsername)
-                .collect(Collectors.toList());
+        Runnable initMocksGetAllUsernamesEmpty = () -> when(userRepository.getAllUsernames())
+                .thenReturn(Collections.emptySet());
+        Runnable initMocksGetAllUsernames = () -> when(userRepository.getAllUsernames())
+                .thenReturn(Set.of(USER.getUsername()));
 
         var testCases = new TestCase[]{
-                new TestCase("Get all usernames empty result", new MasterService(new EmptyUserRepository(), null, null, null, null), Collections.emptyList()),
-                new TestCase("Get all username default users", new MasterService(userRepository, null, null, null, null), usernames)
+                new TestCase("Get all usernames empty result", initMocksGetAllUsernamesEmpty, service, Collections.emptyList()),
+                new TestCase("Get all username default users", initMocksGetAllUsernames, service, List.of(USER.getUsername()))
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -303,9 +353,10 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> addIssue() {
-        record TestCase(String name, Service service, Issue issue, Issue expected,
+        record TestCase(String name, Runnable initialiseMocks, Service service, Issue issue, Issue expected,
                         Class<? extends Exception> exception) {
             public void check() {
+                TestCase.this.initialiseMocks.run();
                 try {
                     Issue computed = TestCase.this.service.addIssue(TestCase.this.issue);
                     Assertions.assertNull(TestCase.this.exception);
@@ -317,27 +368,70 @@ class MasterServiceTest {
             }
         }
 
-        IssueRepository emptyIssueRepo = new EmptyIssueRepository();
-        UserRepository defaultUserRepo = new DefaultUserRepository();
-        ProjectRepository defaultProjectRepo = new DefaultProjectRepository();
-        InvolvementRepository defaultInvolvementRepo = new DefaultInvolvementRepository();
+        Runnable initMocksNonExistentReporter = () -> {
+            try {
+                when(predictor.predictProfanityLevel(any(String.class)))
+                        .thenReturn(ProfanityLevel.NOT_OFFENSIVE);
+            } catch (AiServiceException e) {
+                e.printStackTrace();
+            }
+            when(userRepository.find(any(Long.class)))
+                    .thenReturn(Optional.empty());
+        };
 
-        Service service = new MasterService(defaultUserRepo, defaultProjectRepo, defaultInvolvementRepo, emptyIssueRepo, null);
+        Runnable initMocksAddIssueSuccessfully = () -> {
+            try {
+                when(predictor.predictProfanityLevel(any(String.class)))
+                        .thenReturn(ProfanityLevel.NOT_OFFENSIVE);
+            } catch (AiServiceException e) {
+                e.printStackTrace();
+            }
+            when(userRepository.find(any(Long.class)))
+                    .thenReturn(Optional.of(USER));
+            when(issueRepository.save(any(Issue.class)))
+                    .thenReturn(Optional.empty());
+        };
 
-        Issue issueNonExistentReporter = new Issue("Title", "Desc", Severity.BLOCKER, Status.TO_DO, IssueType.WONT_FIX, new Project(), new User(Long.MAX_VALUE));
-        Issue issue = new Issue("Title", "Desc", Severity.BLOCKER, Status.TO_DO, IssueType.DUPLICATE, Constants.OTHER_INVOLVEMENT.getProject(), Constants.OTHER_INVOLVEMENT.getUser());
+        Runnable initMocksOffensiveContent = () -> {
+            try {
+                when(predictor.predictProfanityLevel(any(String.class)))
+                        .thenReturn(ProfanityLevel.OFFENSIVE);
+            } catch (AiServiceException e) {
+                e.printStackTrace();
+            }
+        };
 
-        Issue issueNonExistentAssignee = new Issue("Title", "Desc", Severity.BLOCKER, Status.TO_DO, IssueType.DUPLICATE, Constants.OTHER_INVOLVEMENT.getProject(), Constants.OTHER_INVOLVEMENT.getUser());
-        issueNonExistentAssignee.setAssignee(new User(Long.MAX_VALUE));
+        Runnable initMocksNonExistentAssignee = () -> {
+            try {
+                when(predictor.predictProfanityLevel(any(String.class)))
+                        .thenReturn(ProfanityLevel.NOT_OFFENSIVE);
+            } catch (AiServiceException e) {
+                e.printStackTrace();
+            }
+            ISSUE.setAssignee(new User(Long.MAX_VALUE));
+            when(userRepository.find(any(Long.class)))
+                    .thenReturn(Optional.empty());
+        };
 
-        Issue issueWrongAssignee = new Issue("Title", "Desc", Severity.BLOCKER, Status.TO_DO, IssueType.DUPLICATE, Constants.OTHER_INVOLVEMENT.getProject(), Constants.OTHER_INVOLVEMENT.getUser());
-        issueWrongAssignee.setAssignee(Constants.USER);
+        Runnable initMocksAssigneeNotInProject = () -> {
+            try {
+                when(predictor.predictProfanityLevel(any(String.class)))
+                        .thenReturn(ProfanityLevel.NOT_OFFENSIVE);
+            } catch (AiServiceException e) {
+                e.printStackTrace();
+            }
+            when(userRepository.find(any(Long.class)))
+                    .thenReturn(Optional.of(USER));
+            ISSUE.setAssignee(USER);
+            USER.setInvolvements(Collections.emptySet());
+        };
 
         var testCases = new TestCase[]{
-                new TestCase("Save issue non existent reporter", service, issueNonExistentReporter, null, UserNotFoundException.class),
-                new TestCase("Save issue successfully", service, issue, issue, null),
-                new TestCase("Save issue non-existent assignee", service, issueNonExistentAssignee, null, UserNotFoundException.class),
-                new TestCase("Save issue assignee not in project", service, issueWrongAssignee, null, UserNotInProjectException.class)
+                new TestCase("Save issue non existent reporter", initMocksNonExistentReporter, service, ISSUE, null, UserNotFoundException.class),
+                new TestCase("Save issue successfully", initMocksAddIssueSuccessfully, service, ISSUE, ISSUE, null),
+                new TestCase("Save issues offensive content", initMocksOffensiveContent, service, ISSUE, null, IllegalArgumentException.class),
+                new TestCase("Save issue non-existent assignee", initMocksNonExistentAssignee, service, ISSUE, null, UserNotFoundException.class),
+                new TestCase("Save issue assignee not in project", initMocksAssigneeNotInProject, service, ISSUE, null, UserNotInProjectException.class),
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -345,9 +439,10 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> getAssignedIssues() {
-        record TestCase(String name, Service service, String username, List<Issue> expected,
+        record TestCase(String name, Runnable initialiseMocks, Service service, String username, List<Issue> expected,
                         Class<? extends Exception> exception) {
             public void check() {
+                TestCase.this.initialiseMocks.run();
                 try {
                     List<Issue> computed = TestCase.this.service.getAssignedIssues(TestCase.this.username);
                     Assertions.assertNull(TestCase.this.exception);
@@ -360,23 +455,14 @@ class MasterServiceTest {
             }
         }
 
-        List<Issue> assignedIssues = Arrays.stream(Constants.ISSUES)
-                .filter(issue -> issue.getAssignee() != null && issue.getAssignee().equals(Constants.USER))
-                .collect(Collectors.toList());
+        Runnable initMocksNonExistentUser = () -> when(userRepository.findUserByUsername(any(String.class)))
+                .thenReturn(Optional.empty());
+        Runnable initMocksDefault = () -> when(userRepository.findUserByUsername(any(String.class)))
+                .thenReturn(Optional.of(USER));
 
         var testCases = new TestCase[]{
-                new TestCase(
-                        "Service Get Assigned Issues non existent user",
-                        new MasterService(new EmptyUserRepository(), null, null, new EmptyIssueRepository(), null),
-                        Constants.USER.getUsername(),
-                        null,
-                        UserNotFoundException.class),
-                new TestCase("Service Get Assigned Issues not empty",
-                        new MasterService(new DefaultUserRepository(), new DefaultProjectRepository(), new DefaultInvolvementRepository(), new DefaultIssueRepository(), null),
-                        Constants.USER.getUsername(),
-                        assignedIssues,
-                        null
-                )
+                new TestCase("Service Get Assigned Issues non existent user", initMocksNonExistentUser, service, USER.getUsername(), null, UserNotFoundException.class),
+                new TestCase("Service Get Assigned Issues not empty", initMocksDefault, service, USER.getUsername(), USER.getAssignedIssues().stream().toList(), null)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -384,16 +470,22 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> getIssueById() {
-        record TestCase(String name, Service service, long id, Issue expected) {
+        record TestCase(String name, Runnable initialiseMocks, Service service, long id, Issue expected) {
             public void check() {
+                TestCase.this.initialiseMocks.run();
                 Issue computed = TestCase.this.service.getIssueById(TestCase.this.id);
                 Assertions.assertEquals(TestCase.this.expected, computed);
             }
         }
 
+        Runnable initMocksIdNonExistent = () -> when(issueRepository.find(any(Long.class)))
+                .thenReturn(Optional.empty());
+        Runnable initMocksSuccessfully = () -> when(issueRepository.find(any(Long.class)))
+                .thenReturn(Optional.of(ISSUE));
+
         var testCases = new TestCase[]{
-                new TestCase("Get Issue By Id non existent", new MasterService(null, null, null, new EmptyIssueRepository(), null), Long.MAX_VALUE, null),
-                new TestCase("Get Issue By Id successfully", new MasterService(null, null, null, new DefaultIssueRepository(), null), Constants.ISSUES[0].getId(), Constants.ISSUES[0])
+                new TestCase("Get Issue By Id non existent", initMocksIdNonExistent, service, Long.MAX_VALUE, null),
+                new TestCase("Get Issue By Id successfully", initMocksSuccessfully, service, ISSUE.getId(), ISSUE)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -401,10 +493,12 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> deleteIssue() {
-        record TestCase(String name, Service service, long id, String requester, Issue expected,
+        record TestCase(String name, Runnable initialiseMocks, Service service, long id, String requester,
+                        Issue expected,
                         Class<? extends Exception> exception) {
             public void check() {
                 try {
+                    TestCase.this.initialiseMocks.run();
                     Issue computed = TestCase.this.service.deleteIssue(TestCase.this.id, TestCase.this.requester);
                     Assertions.assertNull(TestCase.this.exception);
                     Assertions.assertEquals(expected, computed);
@@ -415,31 +509,21 @@ class MasterServiceTest {
             }
         }
 
+        Runnable initMocksIssueDoesNotExist = () -> when(issueRepository.find(any(Long.class)))
+                .thenReturn(Optional.empty());
+        Runnable initMocksRequesterNotParticipant = () -> when(issueRepository.find(any(Long.class)))
+                .thenReturn(Optional.of(ISSUE));
+        Runnable initMocksSuccessfully = () -> {
+            when(issueRepository.find(any(Long.class)))
+                    .thenReturn(Optional.of(ISSUE));
+            when(issueRepository.delete(any(Long.class)))
+                    .thenReturn(Optional.of(ISSUE));
+        };
+
         var testCases = new TestCase[]{
-                new TestCase(
-                        "Delete issue does not exist",
-                        new MasterService(null, null, null, new EmptyIssueRepository(), null),
-                        1,
-                        Constants.USER.getUsername(),
-                        null,
-                        IssueNotFoundException.class
-                ),
-                new TestCase(
-                        "Delete issue requester not a participant",
-                        new MasterService(null, null, null, new DefaultIssueRepository(), null),
-                        Constants.ISSUES[0].getId(),
-                        "",
-                        null,
-                        UserNotInProjectException.class
-                ),
-                new TestCase(
-                        "Delete issue successfully",
-                        new MasterService(null, null, null, new DefaultIssueRepository(), null),
-                        Constants.ISSUES[0].getId(),
-                        Constants.ISSUES[0].getAssignee().getUsername(),
-                        Constants.ISSUES[0],
-                        null
-                )
+                new TestCase("Delete issue does not exist", initMocksIssueDoesNotExist, service, Long.MAX_VALUE, USER.getUsername(), null, IssueNotFoundException.class),
+                new TestCase("Delete issue requester not a participant", initMocksRequesterNotParticipant, service, ISSUE.getId(), "", null, UserNotInProjectException.class),
+                new TestCase("Delete issue successfully", initMocksSuccessfully, service, ISSUE.getId(), ISSUE.getReporter().getUsername(), ISSUE, null)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -447,9 +531,11 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> updateIssue() {
-        record TestCase(String name, Service service, Issue issue, String requesterUsername, Issue expected,
+        record TestCase(String name, Runnable initialiseMocks, Service service, Issue issue, String requesterUsername,
+                        Issue expected,
                         Class<? extends Exception> exception) {
             public void check() {
+                TestCase.this.initialiseMocks.run();
                 try {
                     Issue computed = TestCase.this.service.updateIssue(TestCase.this.issue, TestCase.this.requesterUsername);
                     Assertions.assertNull(TestCase.this.exception);
@@ -461,15 +547,27 @@ class MasterServiceTest {
             }
         }
 
-        Service serviceNoIssues = new MasterService(null, null, null, new EmptyIssueRepository(), null);
-        Service serviceDefaultIssues = new MasterService(null, null, null, new DefaultIssueRepository(), null);
+        Runnable noMocksNeeded = () -> {
+        };
+        Runnable initMocksIssueNotFound = () -> when(issueRepository.find(any(Long.class)))
+                .thenReturn(Optional.empty());
+        Runnable initMocksUserNotInProject = () -> {
+            when(issueRepository.find(any(Long.class)))
+                    .thenReturn(Optional.of(ISSUE));
+        };
+        Runnable initMocksSuccessfully = () -> {
+            when(issueRepository.find(any(Long.class)))
+                    .thenReturn(Optional.of(ISSUE));
+            when(issueRepository.update(any(Issue.class)))
+                    .thenReturn(Optional.empty());
+        };
 
         var testCases = new TestCase[]{
-                new TestCase("Update Issue null issue and user", serviceNoIssues, null, null, null, IllegalArgumentException.class),
-                new TestCase("Update Issue null user", serviceNoIssues, Constants.ISSUES[0], null, null, IllegalArgumentException.class),
-                new TestCase("Update Issue issue not found", serviceNoIssues, Constants.ISSUES[0], "", null, IssueNotFoundException.class),
-                new TestCase("Update Issue user not in project", serviceDefaultIssues, Constants.ISSUES[0], "", null, UserNotInProjectException.class),
-                new TestCase("Update Issue successful", serviceDefaultIssues, Constants.ISSUES[0], Constants.ISSUES[0].getAssignee().getUsername(), Constants.ISSUES[0], null)
+                new TestCase("Update Issue null issue and user", noMocksNeeded, service, null, null, null, IllegalArgumentException.class),
+                new TestCase("Update Issue null user", noMocksNeeded, service, ISSUE, null, null, IllegalArgumentException.class),
+                new TestCase("Update Issue issue not found", initMocksIssueNotFound, service, ISSUE, "", null, IssueNotFoundException.class),
+                new TestCase("Update Issue user not in project", initMocksUserNotInProject, service, ISSUE, "", null, UserNotInProjectException.class),
+                new TestCase("Update Issue successful", initMocksSuccessfully, service, ISSUE, ISSUE.getAssignee().getUsername(), ISSUE, null)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
