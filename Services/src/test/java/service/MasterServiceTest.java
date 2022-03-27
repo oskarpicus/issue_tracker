@@ -4,6 +4,7 @@ import ai.Predictor;
 import exceptions.AiServiceException;
 import exceptions.EmailTakenException;
 import exceptions.IssueNotFoundException;
+import exceptions.ProjectNotFoundException;
 import exceptions.UserAlreadyInProjectException;
 import exceptions.UserNotFoundException;
 import exceptions.UserNotInProjectException;
@@ -18,11 +19,13 @@ import model.ProfanityLevel;
 import model.Project;
 import model.Role;
 import model.Severity;
+import model.SeverityLevel;
 import model.Status;
 import model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,6 +44,10 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -90,7 +97,7 @@ class MasterServiceTest {
                     Assertions.assertNull(TestCase.this.exception);
                 } catch (Exception e) {
                     Assertions.assertNotNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                    assertEquals(TestCase.this.exception, e.getClass());
                 }
             }
         }
@@ -124,10 +131,10 @@ class MasterServiceTest {
                 try {
                     User computed = TestCase.this.service.login(TestCase.this.username);
                     Assertions.assertNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.expected, computed);
+                    assertEquals(TestCase.this.expected, computed);
                 } catch (Exception e) {
                     Assertions.assertNotNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                    assertEquals(TestCase.this.exception, e.getClass());
                 }
             }
         }
@@ -157,10 +164,10 @@ class MasterServiceTest {
                 try {
                     Project computed = TestCase.this.service.createProject(TestCase.this.project);
                     Assertions.assertNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.expected, computed);
+                    assertEquals(TestCase.this.expected, computed);
                 } catch (Exception e) {
                     Assertions.assertNotNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                    assertEquals(TestCase.this.exception, e.getClass());
                 }
             }
         }
@@ -184,10 +191,10 @@ class MasterServiceTest {
                 try {
                     Project computed = TestCase.this.service.getProjectById(TestCase.this.id);
                     Assertions.assertNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.expected, computed);
+                    assertEquals(TestCase.this.expected, computed);
                 } catch (Exception e) {
                     Assertions.assertNotNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                    assertEquals(TestCase.this.exception, e.getClass());
                 }
             }
         }
@@ -215,10 +222,10 @@ class MasterServiceTest {
                 try {
                     Set<Involvement> computed = TestCase.this.service.getInvolvementsByUsername(username);
                     Assertions.assertNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.expected, computed);
+                    assertEquals(TestCase.this.expected, computed);
                 } catch (Exception e) {
                     Assertions.assertNotNull(TestCase.this.exception);
-                    Assertions.assertEquals(e.getClass(), TestCase.this.exception);
+                    assertEquals(e.getClass(), TestCase.this.exception);
                 }
             }
         }
@@ -255,10 +262,10 @@ class MasterServiceTest {
                 try {
                     Involvement result = TestCase.this.service.addParticipant(TestCase.this.involvement, TestCase.this.requester);
                     Assertions.assertNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.expected, result);
+                    assertEquals(TestCase.this.expected, result);
                 } catch (Exception e) {
                     Assertions.assertNotNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                    assertEquals(TestCase.this.exception, e.getClass());
                 }
             }
         }
@@ -332,7 +339,7 @@ class MasterServiceTest {
             public void check() {
                 TestCase.this.initialiseMocks.run();
                 List<String> computed = TestCase.this.service.getAllUsernames();
-                Assertions.assertEquals(TestCase.this.expected.size(), computed.size());
+                assertEquals(TestCase.this.expected.size(), computed.size());
                 Assertions.assertTrue(TestCase.this.expected.containsAll(computed));
                 Assertions.assertTrue(computed.containsAll(TestCase.this.expected));
             }
@@ -360,10 +367,10 @@ class MasterServiceTest {
                 try {
                     Issue computed = TestCase.this.service.addIssue(TestCase.this.issue);
                     Assertions.assertNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.expected, computed);
+                    assertEquals(TestCase.this.expected, computed);
                 } catch (Exception e) {
                     Assertions.assertNotNull(TestCase.this.exception);
-                    Assertions.assertEquals(e.getClass(), TestCase.this.exception);
+                    assertEquals(e.getClass(), TestCase.this.exception);
                 }
             }
         }
@@ -447,10 +454,10 @@ class MasterServiceTest {
                     List<Issue> computed = TestCase.this.service.getAssignedIssues(TestCase.this.username);
                     Assertions.assertNull(TestCase.this.exception);
 
-                    Assertions.assertEquals(TestCase.this.expected, computed);
+                    assertEquals(TestCase.this.expected, computed);
                 } catch (Exception e) {
                     Assertions.assertNotNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                    assertEquals(TestCase.this.exception, e.getClass());
                 }
             }
         }
@@ -474,7 +481,7 @@ class MasterServiceTest {
             public void check() {
                 TestCase.this.initialiseMocks.run();
                 Issue computed = TestCase.this.service.getIssueById(TestCase.this.id);
-                Assertions.assertEquals(TestCase.this.expected, computed);
+                assertEquals(TestCase.this.expected, computed);
             }
         }
 
@@ -501,10 +508,10 @@ class MasterServiceTest {
                     TestCase.this.initialiseMocks.run();
                     Issue computed = TestCase.this.service.deleteIssue(TestCase.this.id, TestCase.this.requester);
                     Assertions.assertNull(TestCase.this.exception);
-                    Assertions.assertEquals(expected, computed);
+                    assertEquals(expected, computed);
                 } catch (Exception e) {
                     Assertions.assertNotNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                    assertEquals(TestCase.this.exception, e.getClass());
                 }
             }
         }
@@ -539,10 +546,10 @@ class MasterServiceTest {
                 try {
                     Issue computed = TestCase.this.service.updateIssue(TestCase.this.issue, TestCase.this.requesterUsername);
                     Assertions.assertNull(TestCase.this.exception);
-                    Assertions.assertEquals(expected, computed);
+                    assertEquals(expected, computed);
                 } catch (Exception e) {
                     Assertions.assertNotNull(TestCase.this.exception);
-                    Assertions.assertEquals(TestCase.this.exception, e.getClass());
+                    assertEquals(TestCase.this.exception, e.getClass());
                 }
             }
         }
@@ -571,5 +578,69 @@ class MasterServiceTest {
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
+    }
+
+    @Test
+    void predictSeverityLevel() {
+        try {
+            when(predictor.predictSeverityLevel(any(String.class)))
+                    .thenReturn(SeverityLevel.SEVERE);
+            assertEquals(SeverityLevel.SEVERE, service.predictSeverityLevel("The database is lost"));
+        } catch (AiServiceException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void predictSeverityLevel_throwsError() {
+        try {
+            when(predictor.predictSeverityLevel(any(String.class)))
+                    .thenThrow(AiServiceException.class);
+            assertThrows(AiServiceException.class, () -> service.predictSeverityLevel(""));
+        } catch (AiServiceException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    void predictIssueType() {
+        try {
+            when(predictor.predictIssueType(any(String.class)))
+                    .thenReturn(IssueType.BUG);
+            assertEquals(IssueType.BUG, service.predictIssueType("this doesn't work"));
+        } catch (AiServiceException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void predictIssueType_throwsError() {
+        try {
+            when(predictor.predictIssueType(any(String.class)))
+                    .thenThrow(AiServiceException.class);
+            assertThrows(AiServiceException.class, () -> service.predictIssueType("this doesn't work"));
+        } catch (AiServiceException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    void retrieveDuplicateIssues() {
+        when(projectRepository.find(any(Long.class)))
+                .thenReturn(Optional.of(PROJECT));
+        try {
+            when(predictor.detectDuplicateIssues(any(List.class), any(Issue.class)))
+                    .thenReturn(List.of(ISSUE));
+            assertEquals(List.of(ISSUE), service.retrieveDuplicateIssues(ISSUE));
+        } catch (AiServiceException | ProjectNotFoundException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void retrieveDuplicateIssues_projectDoesNotExist() {
+        when(projectRepository.find(any(Long.class)))
+                .thenReturn(Optional.empty());
+        assertThrows(ProjectNotFoundException.class, () -> service.retrieveDuplicateIssues(ISSUE));
     }
 }
