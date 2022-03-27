@@ -1,11 +1,37 @@
 package service;
 
-import exceptions.*;
-import mocks.*;
-import model.*;
+import ai.Predictor;
+import exceptions.EmailTakenException;
+import exceptions.IssueNotFoundException;
+import exceptions.ProjectNotFoundException;
+import exceptions.UserAlreadyInProjectException;
+import exceptions.UserNotFoundException;
+import exceptions.UserNotInProjectException;
+import exceptions.UsernameTakenException;
+import mocks.Constants;
+import mocks.DefaultInvolvementRepository;
+import mocks.DefaultIssueRepository;
+import mocks.DefaultProjectRepository;
+import mocks.DefaultUserRepository;
+import mocks.EmptyInvolvementRepository;
+import mocks.EmptyIssueRepository;
+import mocks.EmptyProjectRepository;
+import mocks.EmptyUserRepository;
+import model.Involvement;
+import model.Issue;
+import model.IssueType;
+import model.Project;
+import model.Role;
+import model.Severity;
+import model.Status;
+import model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import repository.InvolvementRepository;
 import repository.IssueRepository;
 import repository.ProjectRepository;
@@ -15,17 +41,44 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 class MasterServiceTest {
+
+    @InjectMocks
+    private MasterService service;
+
+    @Mock
+    private Predictor predictor;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private InvolvementRepository involvementRepository;
+
+    @Mock
+    private ProjectRepository projectRepository;
+
+    @Mock
+    private IssueRepository issueRepository;
+
+    private static final User USER = new User("a", "b", "AB", "BA", "a@g.com");
 
     @TestFactory
     Stream<DynamicTest> createAccount() {
-        record TestCase(String name, Service service, User user, Class<? extends Exception> exception) {
+        record TestCase(String name, Runnable initialiseMocks, Service service, User user,
+                        Class<? extends Exception> exception) {
             public void check() {
+                TestCase.this.initialiseMocks.run();
                 try {
                     TestCase.this.service.createAccount(TestCase.this.user);
                     Assertions.assertNull(TestCase.this.exception);
@@ -36,10 +89,21 @@ class MasterServiceTest {
             }
         }
 
+        Runnable createAccountSuccessful = () -> {
+        };
+        Runnable createAccountDuplicateUsername = () -> when(userRepository.findUserByUsername(USER.getUsername()))
+                .thenReturn(Optional.of(USER));
+        Runnable createAccountDuplicateEmail = () -> {
+            when(userRepository.findUserByUsername(any(String.class)))
+                    .thenReturn(Optional.empty());
+            when(userRepository.findUserByEmail(USER.getEmail()))
+                    .thenReturn(Optional.of(USER));
+        };
+
         var testCases = new TestCase[]{
-                new TestCase("Create account successful", new MasterService(new EmptyUserRepository(), null, null, null, null), new User("a", "b", "AB", "BA", "a@g.com"), null),
-                new TestCase("Create account duplicate username", new MasterService(new DefaultUserRepository(), null, null, null, null), new User(Constants.USERNAME, "b", "AB", "BA", "a@g.c"), UsernameTakenException.class),
-                new TestCase("Create account duplicate email", new MasterService(new DefaultUserRepository(), null, null, null, null), new User("a", "b", "AB", "BA", Constants.EMAIL), EmailTakenException.class),
+                new TestCase("Create account successful", createAccountSuccessful, service, USER, null),
+                new TestCase("Create account duplicate username", createAccountDuplicateUsername, service, USER, UsernameTakenException.class),
+                new TestCase("Create account duplicate email", createAccountDuplicateEmail, service, USER, EmailTakenException.class),
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
