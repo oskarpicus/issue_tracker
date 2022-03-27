@@ -104,7 +104,7 @@ public class MasterService implements Service {
         boolean isParticipant = userRequester.get()
                 .getInvolvements()
                 .stream()
-                .anyMatch(involvement1 -> involvement1.getUser().equals(userRequester.get()));
+                .anyMatch(involvement1 -> involvement1.getProject().getId().equals(involvement.getProject().getId()));
         if (!isParticipant) {
             throw new UserNotInProjectException("Requester is not in the project");
         }
