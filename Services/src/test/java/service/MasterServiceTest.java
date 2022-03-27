@@ -26,6 +26,7 @@ import model.Severity;
 import model.Status;
 import model.User;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -89,11 +90,11 @@ class MasterServiceTest {
             }
         }
 
-        Runnable createAccountSuccessful = () -> {
+        Runnable initMocksCreateAccountSuccessful = () -> {
         };
-        Runnable createAccountDuplicateUsername = () -> when(userRepository.findUserByUsername(USER.getUsername()))
+        Runnable initMocksCreateAccountDuplicateUsername = () -> when(userRepository.findUserByUsername(USER.getUsername()))
                 .thenReturn(Optional.of(USER));
-        Runnable createAccountDuplicateEmail = () -> {
+        Runnable initMocksCreateAccountDuplicateEmail = () -> {
             when(userRepository.findUserByUsername(any(String.class)))
                     .thenReturn(Optional.empty());
             when(userRepository.findUserByEmail(USER.getEmail()))
@@ -101,9 +102,9 @@ class MasterServiceTest {
         };
 
         var testCases = new TestCase[]{
-                new TestCase("Create account successful", createAccountSuccessful, service, USER, null),
-                new TestCase("Create account duplicate username", createAccountDuplicateUsername, service, USER, UsernameTakenException.class),
-                new TestCase("Create account duplicate email", createAccountDuplicateEmail, service, USER, EmailTakenException.class),
+                new TestCase("Create account successful", initMocksCreateAccountSuccessful, service, USER, null),
+                new TestCase("Create account duplicate username", initMocksCreateAccountDuplicateUsername, service, USER, UsernameTakenException.class),
+                new TestCase("Create account duplicate email", initMocksCreateAccountDuplicateEmail, service, USER, EmailTakenException.class),
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
@@ -111,9 +112,10 @@ class MasterServiceTest {
 
     @TestFactory
     Stream<DynamicTest> login() {
-        record TestCase(String name, Service service, String username, User expected,
+        record TestCase(String name, Runnable initialiseMocks, Service service, String username, User expected,
                         Class<? extends Exception> exception) {
             public void check() {
+                TestCase.this.initialiseMocks.run();
                 try {
                     User computed = TestCase.this.service.login(TestCase.this.username);
                     Assertions.assertNull(TestCase.this.exception);
@@ -125,10 +127,17 @@ class MasterServiceTest {
             }
         }
 
+        Runnable initMocksLoginInvalidData = () -> when(userRepository.findUserByUsername(null))
+                .thenThrow(IllegalArgumentException.class);
+        Runnable initMocksLoginSuccessful = () -> when(userRepository.findUserByUsername(USER.getUsername()))
+                .thenReturn(Optional.of(USER));
+        Runnable initMocksLoginUnsuccessful = () -> when(userRepository.findUserByUsername(USER.getUsername()))
+                .thenReturn(Optional.empty());
+
         var testCases = new TestCase[]{
-                new TestCase("Login invalid data", new MasterService(new EmptyUserRepository(), null, null, null, null), null, null, IllegalArgumentException.class),
-                new TestCase("Login successful", new MasterService(new DefaultUserRepository(), null, null, null, null), Constants.USERNAME, Constants.USER, null),
-                new TestCase("Login unsuccessful", new MasterService(new EmptyUserRepository(), null, null, null, null), Constants.USERNAME, null, UserNotFoundException.class)
+                new TestCase("Login invalid data", initMocksLoginInvalidData, service, null, null, IllegalArgumentException.class),
+                new TestCase("Login successful", initMocksLoginSuccessful, service, USER.getUsername(), USER, null),
+                new TestCase("Login unsuccessful", initMocksLoginUnsuccessful, service, USER.getUsername(), null, UserNotFoundException.class)
         };
 
         return DynamicTest.stream(Stream.of(testCases), TestCase::name, TestCase::check);
