@@ -28,11 +28,11 @@ def __install_packages():
 
 
 app = Flask("Bugsby Artificial Intelligence API")
+__install_packages()
 severity_classifier = SeverityClassifier("resources/aiModels/severityModel.joblib")
 label_classifier = LabelClassifier("resources/aiModels/labelModel.joblib")
 offensive_language_classifier = OffensiveLanguageClassifier("resources/aiModels/offensiveLanguageModel.joblib")
 service = Service(severity_classifier, label_classifier, offensive_language_classifier)
-__install_packages()
 
 
 @app.route("/suggested-severity")
