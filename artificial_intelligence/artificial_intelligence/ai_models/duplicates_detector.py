@@ -6,7 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from artificial_intelligence.model.Issue import Issue
 
 __limit = 5
-__threshold = 0.4
+__threshold = 0.2
 
 
 def _get_wordnet_pos(treebank_tag):
