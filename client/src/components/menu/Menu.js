@@ -17,13 +17,7 @@ import ListItemText from '@mui/material/ListItemText';
 import './menu.css';
 import BugReportOutlinedIcon from "@mui/icons-material/BugReportOutlined";
 import {loginPage, viewAssignedIssuesPage, viewProjectsPage, websiteTitle} from "../../const";
-import {
-    AccountCircleOutlined,
-    BarChartOutlined,
-    CodeOutlined,
-    LogoutOutlined,
-    PestControlOutlined
-} from "@mui/icons-material";
+import {CodeOutlined, LogoutOutlined, PestControlOutlined} from "@mui/icons-material";
 import {Link, useHistory} from "react-router-dom";
 
 const drawerWidth = 240;
@@ -125,11 +119,6 @@ const Menu = ({content, credentials}) => {
 
     const actions = [
         {
-            icon: <AccountCircleOutlined htmlColor={"white"} fontSize={"large"}/>,
-            description: "My Account",
-            destination: "/"
-        },
-        {
             icon: <CodeOutlined htmlColor={"white"} fontSize={"large"}/>,
             description: "Projects",
             destination: viewProjectsPage.replaceAll(":username", credentials.user.username)
@@ -139,11 +128,6 @@ const Menu = ({content, credentials}) => {
             description: "Issues",
             destination: viewAssignedIssuesPage.replaceAll(":username", credentials.user.username)
         },
-        {
-            icon: <BarChartOutlined htmlColor={"white"} fontSize={"large"}/>,
-            description: "Statistics",
-            destination: "/"
-        }
     ];
 
     return (
